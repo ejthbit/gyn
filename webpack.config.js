@@ -15,15 +15,22 @@ const TARGET_ENV = {
     },
 }
 
-const TARGET_ENV_CONFIG =
-    TARGET_ENV[process.env.TARGET_ENV || DEFAULT_TARGET_ENV]
+const TARGET_ENV_CONFIG = TARGET_ENV[process.env.TARGET_ENV || DEFAULT_TARGET_ENV]
 
 module.exports = {
+    resolve: {
+        alias: {
+            '@components': path.resolve(__dirname, 'src/components/'),
+            '@utilities': path.resolve(__dirname, 'src/utils/'),
+        },
+    },
     entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
+        sourceMapFilename: '[name].[chunkhash:8].map',
     },
+    devtool: 'source-map',
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
         open: true,

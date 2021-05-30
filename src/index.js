@@ -1,12 +1,17 @@
+import DateFnsUtils from '@date-io/date-fns'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import csLocale from 'date-fns/locale/cs'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
 import { Provider } from 'react-redux'
+import App from './App'
 import { store } from './store/store'
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={csLocale}>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </MuiPickersUtilsProvider>,
     document.getElementById('root')
 )

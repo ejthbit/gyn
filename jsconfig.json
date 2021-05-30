@@ -1,6 +1,12 @@
 {
     "compilerOptions": {
-        "baseUrl": "src"
+        "baseUrl": ".",
+        "paths": {
+            //Assuming your components/utilities live in ./src
+            //Update this path as necessary
+            "@components/*": ["./src/components/*"],
+            "@utilities/*": ["./src/utils/*"]
+        }
     },
     "include": ["src"]
 }

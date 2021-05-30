@@ -1,14 +1,26 @@
 env:
-  browser: true
+    browser: true
 extends:
-  - 'plugin:react/recommended'
-  - airbnb
+    - 'plugin:react/recommended'
+    - airbnb
 parserOptions:
-  ecmaFeatures:
-    jsx: true
-  ecmaVersion: 8
-  sourceType: module
+    ecmaFeatures:
+        jsx: true
+    ecmaVersion: 8
+    sourceType: module
 plugins:
-  - react
+    - react
 rules:
-  { 'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }, 'react/semi': ['error', 'never']] }
+    no-unused-vars: warn
+    react/no-unused-prop-types: warn
+    no-console: warn
+    react/jsx-filename-extension: off
+    react/no-array-index-key: warn
+    react/jsx-indent: off
+    indent: off
+    semi: off
+    comma-dangle: off
+    import/named: off
+    react/jsx-indent-props: off
+    import/no-unresolved: off
+    import/prefer-default-export: off

@@ -15,14 +15,15 @@ export const fetchAvailableTimeslots = createAsyncThunk('bookings/fetchAvailable
 
 export const bookAnAppointment = createAsyncThunk('bookings/bookAnAppointment', async (arg, { dispatch, getState }) => {
     const state = getState()
-    const { name } = getContactInformation(state)
+    const { name, email, phone, birthDate } = getContactInformation(state)
     const selectedDate = getSelectedDate(state)
     const selectedTime = getSelectedTime(state)
 
     const URL = '/booking'
     const res = await axiosBookingsInstance.post(URL, {
-        // ...(contact && { contact }),
+        ...((email || phone) && { contact: { email, phone } }),
         name,
+        birthDate,
         timeofbooking: `${selectedDate}T${selectedTime}.000Z`,
     })
     dispatch(setOrderFinishedOk(res.data.status === 200))

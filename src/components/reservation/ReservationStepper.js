@@ -1,15 +1,10 @@
-import { Box } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
-import Step from '@material-ui/core/Step'
-import StepContent from '@material-ui/core/StepContent'
-import StepLabel from '@material-ui/core/StepLabel'
-import Stepper from '@material-ui/core/Stepper'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import { Done } from '@material-ui/icons'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { bookAnAppointment } from 'src/store/bookings/actions'
+import { clearReservation } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getActiveStep, getOrderFinishedOk } from 'src/store/reservationProcess/selectors'
+import StepContentWithBtn from '../buildingbBlocks/StepContentWithBtn'
 import ReservationContactInputs from './ReservationContactInputs'
 import ReservationStepperControls from './ReservationStepperControls'
 import ReservationSummary from './ReservationSummary'
@@ -22,14 +17,16 @@ const useStyles = makeStyles((theme) => ({
     actionsContainer: {
         marginBottom: theme.spacing(2),
     },
-    resetContainer: {
-        padding: theme.spacing(3),
+
+    button: {
+        marginTop: theme.spacing(2),
+        marginRight: theme.spacing(1),
     },
 }))
 
 const getSteps = () => [
     { label: 'Vyberte termín své navštevy', step: 'first' },
-    { label: 'Prosím vyplnte sve kontaktni udaje', step: 'second' },
+    { label: 'Prosím vyplňte své kontaktni údaje', step: 'second' },
     { label: 'Shrnutí objednávky', step: 'third' },
 ]
 
@@ -46,8 +43,30 @@ const getStepperContent = (step) => {
 const steps = getSteps()
 export const ReservationStepper = () => {
     const classes = useStyles()
+    const dispatch = useDispatch()
     const activeStep = useSelector(getActiveStep)
     const isOrderCompleted = useSelector(getOrderFinishedOk)
+
+    const renderCompletionMessage = useCallback(() => {
+        if (isOrderCompleted)
+            return (
+                <StepContentWithBtn
+                    text="Vaše objednávka byla uspěšná!"
+                    variant="success"
+                    btnText="Vytvořit novou objednávku"
+                    onBtnClick={() => dispatch(clearReservation())}
+                />
+            )
+        else
+            return (
+                <StepContentWithBtn
+                    text="Omlouváme se ale při vytvaření rezervace vznikl problém. Zkuste to prosím později "
+                    variant="error"
+                    btnText="Zkusit znovu"
+                    onBtnClick={() => dispatch(bookAnAppointment())}
+                />
+            )
+    }, [isOrderCompleted])
 
     return (
         <Box className={classes.root}>
@@ -64,13 +83,7 @@ export const ReservationStepper = () => {
                     </Step>
                 ))}
             </Stepper>
-            {isOrderCompleted && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                    <Typography>
-                        Vaše objednávka byla uspěšná! <Done />
-                    </Typography>
-                </Paper>
-            )}
+            {activeStep > 3 && renderCompletionMessage()}
         </Box>
     )
 }

@@ -2,7 +2,9 @@ env:
     browser: true
 extends:
     - 'plugin:react/recommended'
-    - airbnb
+    - 'eslint:recommended'
+    - 'plugin:import/warnings'
+    - 'plugin:import/recommended'
 parserOptions:
     ecmaFeatures:
         jsx: true

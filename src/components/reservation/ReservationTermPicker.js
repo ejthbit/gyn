@@ -15,7 +15,7 @@ const ReservationTermPicker = () => {
     const selectedTime = useSelector(getSelectedTime)
     // memoize
     const availableTimeSlots = useSelector(selectAvailableTimeslots)
-
+    // get OpeningHours
     useEffect(() => {
         if (!isNil(selectedDate))
             dispatch(
@@ -29,7 +29,7 @@ const ReservationTermPicker = () => {
     return (
         <Grid container direction="column">
             <DatePicker
-                label="Datum"
+                label="Datum návštevy"
                 variant="inline"
                 disableToolbar
                 format="dd-MM-yyyy"
@@ -41,7 +41,7 @@ const ReservationTermPicker = () => {
             />
             <FormControl>
                 <InputLabel id="timePickerLabel" required>
-                    Čas
+                    Čas návštevy
                 </InputLabel>
                 <Select value={selectedTime} onChange={(e) => dispatch(setSelectedTime(e.target.value))} displayEmpty>
                     {availableTimeSlots.map(({ timeSlotStart }) => (
@@ -54,7 +54,5 @@ const ReservationTermPicker = () => {
         </Grid>
     )
 }
-
-ReservationTermPicker.propTypes = {}
 
 export default ReservationTermPicker

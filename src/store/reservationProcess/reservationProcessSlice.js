@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
+import { isNil } from 'ramda'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
@@ -16,6 +17,7 @@ const reservationProcessInitialState = {
         birthDate: null,
     },
     orderFinishedOk: false,
+    isReservationBtnDisabled: false,
 }
 const reservationProcessSlice = createSlice({
     name: 'reservationProcess',
@@ -36,15 +38,26 @@ const reservationProcessSlice = createSlice({
                 name,
                 email,
                 phone,
-                birthDate: birthDate.slice(0, 10),
+                birthDate: !isNil(birthDate) ? birthDate.slice(0, 10) : state.contactInformation.birthDate,
             }
         },
         setOrderFinishedOk: (state, action) => {
             state.orderFinishedOk = action.payload
         },
+        setReservationBtnDisabled: (state, action) => {
+            state.isReservationBtnDisabled = action.payload
+        },
+        clearReservation: () => reservationProcessInitialState,
     },
 })
 
-export const { setActiveStep, setSelectedDate, setSelectedTime, setContactInformation, setOrderFinishedOk } =
-    reservationProcessSlice.actions
+export const {
+    setActiveStep,
+    setSelectedDate,
+    setSelectedTime,
+    setContactInformation,
+    setOrderFinishedOk,
+    clearReservation,
+    setReservationBtnDisabled,
+} = reservationProcessSlice.actions
 export default reservationProcessSlice.reducer

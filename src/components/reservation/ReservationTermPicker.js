@@ -1,5 +1,6 @@
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
+import useMemoizedSelector from '@utilities/useMemoSelector'
 import { isNil } from 'ramda'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,13 +9,11 @@ import { makeAvailableTimeslotsWithTimeOnly } from 'src/store/bookings/selectors
 import { setSelectedDate, setSelectedTime } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getSelectedDate, getSelectedTime } from 'src/store/reservationProcess/selectors'
 
-const selectAvailableTimeslots = makeAvailableTimeslotsWithTimeOnly()
 const ReservationTermPicker = () => {
     const dispatch = useDispatch()
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
-    // memoize
-    const availableTimeSlots = useSelector(selectAvailableTimeslots)
+    const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     // get OpeningHours
     useEffect(() => {
         if (!isNil(selectedDate))

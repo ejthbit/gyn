@@ -2,7 +2,7 @@ import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@materia
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bookAnAppointment } from 'src/store/bookings/actions'
-import { clearReservation } from 'src/store/reservationProcess/reservationProcessSlice'
+import { clearReservation, setActiveStep } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getActiveStep, getOrderFinishedOk } from 'src/store/reservationProcess/selectors'
 import StepContentWithBtn from '../buildingbBlocks/StepContentWithBtn'
 import ReservationContactInputs from './ReservationContactInputs'
@@ -60,10 +60,12 @@ export const ReservationStepper = () => {
         else
             return (
                 <StepContentWithBtn
-                    text="Omlouváme se ale při vytvaření rezervace vznikl problém. Zkuste to prosím později "
+                    text="Omlouváme se ale při vytvaření rezervace vznikl problém. Zkuste to prosím později" // Replace me by backend error msg
                     variant="error"
                     btnText="Zkusit znovu"
                     onBtnClick={() => dispatch(bookAnAppointment())}
+                    secondaryBtnText="Vratit se zpět"
+                    onSecondaryBtnClick={() => dispatch(setActiveStep(-4))}
                 />
             )
     }, [isOrderCompleted])

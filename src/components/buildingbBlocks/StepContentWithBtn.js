@@ -19,13 +19,18 @@ const VARIANT = {
     success: 'success',
 }
 
-const StepContentWithBtn = ({ text, variant, onBtnClick, btnText }) => {
+const StepContentWithBtn = ({ text, variant, onBtnClick, btnText, onSecondaryBtnClick, secondaryBtnText }) => {
     const classes = useStyles()
     return (
         <Paper square elevation={0} className={classes.root}>
             <Typography color={equals(variant, VARIANT.success) ? 'primary' : 'error'}>
                 {text} {equals(variant, VARIANT.success) ? <Done /> : <Error />}
             </Typography>
+            {onSecondaryBtnClick && secondaryBtnText && (
+                <Button variant="outlined" color="default" onClick={onSecondaryBtnClick} className={classes.button}>
+                    {secondaryBtnText}
+                </Button>
+            )}
             <Button variant="outlined" color="primary" onClick={onBtnClick} className={classes.button}>
                 {btnText}
             </Button>
@@ -38,6 +43,8 @@ StepContentWithBtn.propTypes = {
     variant: PropTypes.string,
     onBtnClick: PropTypes.func,
     btnText: PropTypes.string,
+    onSecondaryBtnClick: PropTypes.func,
+    secondaryBtnText: PropTypes.string,
 }
 
 export default StepContentWithBtn

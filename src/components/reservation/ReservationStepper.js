@@ -1,14 +1,18 @@
-import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
-import React, { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { bookAnAppointment } from 'src/store/bookings/actions'
-import { clearReservation, setActiveStep } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getActiveStep, getOrderFinishedOk } from 'src/store/reservationProcess/selectors'
-import StepContentWithBtn from '../buildingbBlocks/StepContentWithBtn'
+/* eslint-disable react/display-name */
+import { Box, makeStyles, Step, StepContent, StepLabel, Stepper, StepIcon } from '@material-ui/core'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import React from 'react'
+import { reject } from 'ramda'
+import { useSelector } from 'react-redux'
+import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import ReservationContactInputs from './ReservationContactInputs'
+import ReservationError from './ReservationError'
 import ReservationStepperControls from './ReservationStepperControls'
+import ReservationSuccess from './ReservationSuccess'
 import ReservationSummary from './ReservationSummary'
 import ReservationTermPicker from './ReservationTermPicker'
+import useMemoizedSelector from '@utilities/useMemoSelector'
+import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,10 +28,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const getSteps = () => [
+const getSteps = (error, completedOk = false) => [
     { label: 'Vyberte termín své navštevy', step: 'first' },
     { label: 'Prosím vyplňte své kontaktni údaje', step: 'second' },
     { label: 'Shrnutí objednávky', step: 'third' },
+    { ...(completedOk && { label: 'Úspěšná objednávka', step: 'success' }) },
+    { ...(error && { label: 'Nastala chyba', step: 'error' }) },
 ]
 
 const getStepperContent = (step) => {
@@ -35,57 +41,36 @@ const getStepperContent = (step) => {
         first: <ReservationTermPicker />,
         second: <ReservationContactInputs />,
         third: <ReservationSummary />,
-        default: 'Unknown step',
+        success: <ReservationSuccess />,
+        error: <ReservationError />,
     }
-    return content[step] || content.default
+    return content[step]
 }
 
-const steps = getSteps()
 export const ReservationStepper = () => {
     const classes = useStyles()
-    const dispatch = useDispatch()
-    const activeStep = useSelector(getActiveStep)
     const isOrderCompleted = useSelector(getOrderFinishedOk)
-
-    const renderCompletionMessage = useCallback(() => {
-        if (isOrderCompleted)
-            return (
-                <StepContentWithBtn
-                    text="Vaše objednávka byla uspěšná!"
-                    variant="success"
-                    btnText="Vytvořit novou objednávku"
-                    onBtnClick={() => dispatch(clearReservation())}
-                />
-            )
-        else
-            return (
-                <StepContentWithBtn
-                    text="Omlouváme se ale při vytvaření rezervace vznikl problém. Zkuste to prosím později" // Replace me by backend error msg
-                    variant="error"
-                    btnText="Zkusit znovu"
-                    onBtnClick={() => dispatch(bookAnAppointment())}
-                    secondaryBtnText="Vratit se zpět"
-                    onSecondaryBtnClick={() => dispatch(setActiveStep(-4))}
-                />
-            )
-    }, [isOrderCompleted])
+    const orderErrors = useMemoizedSelector(lastBookingErrors)
+    const activeStep = useSelector(getActiveStep)
+    const steps = reject(isNilOrEmpty, getSteps(orderErrors, isOrderCompleted))
 
     return (
         <Box className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map(({ label, step }) => (
                     <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
+                        <StepLabel error={!!orderErrors}>{label}</StepLabel>
                         <StepContent>
                             <Box>{getStepperContent(step)}</Box>
-                            <Box className={classes.actionsContainer}>
-                                <ReservationStepperControls steps={steps} />
-                            </Box>
+                            {activeStep < 3 && (
+                                <Box className={classes.actionsContainer}>
+                                    <ReservationStepperControls steps={steps} />
+                                </Box>
+                            )}
                         </StepContent>
                     </Step>
                 ))}
             </Stepper>
-            {activeStep > 3 && renderCompletionMessage()}
         </Box>
     )
 }

@@ -22,6 +22,7 @@ module.exports = {
         alias: {
             '@components': path.resolve(__dirname, 'src/components/'),
             '@utilities': path.resolve(__dirname, 'src/utils/'),
+            '@assets': path.resolve(__dirname, 'src/assets/'),
         },
     },
     entry: path.resolve(__dirname, 'src', 'index.js'),

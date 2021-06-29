@@ -4,6 +4,9 @@ import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
+export const lastBookingErrors = path([stateId, 'lastBooking', 'errors'])
+export const isSendingBooking = path([stateId, 'lastBooking', 'isLoading'])
+export const getOrderFinishedOk = path([stateId, 'lastBooking', 'orderFinishedOk'])
 
 export const makeAvailableTimeslotsWithTimeOnly = () =>
     createSelector([getAvailableTimeslots], (timeSlots) =>

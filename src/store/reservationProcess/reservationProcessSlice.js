@@ -16,8 +16,6 @@ const reservationProcessInitialState = {
         phone: '',
         birthDate: null,
     },
-    orderFinishedOk: false,
-    isReservationBtnDisabled: false,
 }
 const reservationProcessSlice = createSlice({
     name: 'reservationProcess',
@@ -40,9 +38,6 @@ const reservationProcessSlice = createSlice({
                 phone,
                 birthDate: !isNil(birthDate) ? birthDate.slice(0, 10) : state.contactInformation.birthDate,
             }
-        },
-        setOrderFinishedOk: (state, action) => {
-            state.orderFinishedOk = action.payload
         },
         setReservationBtnDisabled: (state, action) => {
             state.isReservationBtnDisabled = action.payload

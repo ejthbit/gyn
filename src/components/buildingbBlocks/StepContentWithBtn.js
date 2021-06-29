@@ -5,9 +5,6 @@ import { equals } from 'ramda'
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: theme.spacing(5),
-    },
     button: {
         marginTop: theme.spacing(2),
         marginRight: theme.spacing(1),
@@ -22,10 +19,14 @@ const VARIANT = {
 const StepContentWithBtn = ({ text, variant, onBtnClick, btnText, onSecondaryBtnClick, secondaryBtnText }) => {
     const classes = useStyles()
     return (
-        <Paper square elevation={0} className={classes.root}>
-            <Typography color={equals(variant, VARIANT.success) ? 'primary' : 'error'}>
-                {text} {equals(variant, VARIANT.success) ? <Done /> : <Error />}
-            </Typography>
+        <Paper square elevation={0}>
+            {equals(typeof text, 'string') ? (
+                <Typography color={equals(variant, VARIANT.success) ? 'primary' : 'error'}>
+                    {text} {equals(variant, VARIANT.success) ? <Done /> : <Error />}
+                </Typography>
+            ) : (
+                text
+            )}
             {onSecondaryBtnClick && secondaryBtnText && (
                 <Button variant="outlined" color="default" onClick={onSecondaryBtnClick} className={classes.button}>
                     {secondaryBtnText}
@@ -39,7 +40,7 @@ const StepContentWithBtn = ({ text, variant, onBtnClick, btnText, onSecondaryBtn
 }
 
 StepContentWithBtn.propTypes = {
-    text: PropTypes.string,
+    text: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     variant: PropTypes.string,
     onBtnClick: PropTypes.func,
     btnText: PropTypes.string,

@@ -1,10 +1,11 @@
-import React from 'react'
+import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Button, makeStyles } from '@material-ui/core'
-import { getActiveStep, getDisabledReservationBtn } from 'src/store/reservationProcess/selectors'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setActiveStep } from 'src/store/reservationProcess/reservationProcessSlice'
 import { bookAnAppointment } from 'src/store/bookings/actions'
+import { isSendingBooking, lastBookingErrors } from 'src/store/bookings/selectors'
+import { setActiveStep } from 'src/store/reservationProcess/reservationProcessSlice'
+import { getActiveStep, getDisabledReservationBtn } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -17,11 +18,13 @@ const ReservationStepperControls = ({ steps }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const activeStep = useSelector(getActiveStep)
+    const isLoading = useSelector(isSendingBooking)
+    const orderErrors = useSelector(lastBookingErrors)
     const disabledReservationBtn = useSelector(getDisabledReservationBtn)
     const handleChangeStep = (stepValue) => dispatch(setActiveStep(stepValue))
     const handleConfirmAppointment = () => {
-        handleChangeStep(3)
         dispatch(bookAnAppointment())
+        handleChangeStep(orderErrors ? 2 : 1)
     }
 
     return (
@@ -34,11 +37,12 @@ const ReservationStepperControls = ({ steps }) => {
             <Button
                 variant="outlined"
                 color="primary"
-                onClick={() => (activeStep === steps.length - 1 ? handleConfirmAppointment() : handleChangeStep(1))}
+                startIcon={isLoading && <CircularProgress color="primary" />}
+                onClick={() => (activeStep === 2 ? handleConfirmAppointment() : handleChangeStep(1))}
                 className={classes.button}
                 disabled={disabledReservationBtn}
             >
-                {activeStep === steps.length - 1 ? 'Odeslat objednávku' : 'Pokračovat dále'}
+                {activeStep === 2 ? 'Odeslat objednávku' : 'Pokračovat dále'}
             </Button>
         </>
     )

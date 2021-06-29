@@ -5,7 +5,8 @@
             //Assuming your components/utilities live in ./src
             //Update this path as necessary
             "@components/*": ["./src/components/*"],
-            "@utilities/*": ["./src/utils/*"]
+            "@utilities/*": ["./src/utils/*"],
+            "@assets/*": ["./src/assets/*"]
         }
     },
     "include": ["src"]

@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { axiosBookingsInstance } from '../../api/config'
 import { getSelectedDate, getSelectedTime, getContactInformation } from '../reservationProcess/selectors'
-import { setOrderFinishedOk } from '../reservationProcess/reservationProcessSlice'
 
 /**
  * @desc fetches availableTimeSlots between from and to dates.
@@ -13,19 +12,26 @@ export const fetchAvailableTimeslots = createAsyncThunk('bookings/fetchAvailable
     return res.data
 })
 
-export const bookAnAppointment = createAsyncThunk('bookings/bookAnAppointment', async (arg, { dispatch, getState }) => {
-    const state = getState()
-    const { name, email, phone, birthDate } = getContactInformation(state)
-    const selectedDate = getSelectedDate(state)
-    const selectedTime = getSelectedTime(state)
+export const bookAnAppointment = createAsyncThunk(
+    'bookings/bookAnAppointment',
+    async (arg, { getState, rejectWithValue }) => {
+        const state = getState()
+        const { name, email, phone, birthDate } = getContactInformation(state)
+        const selectedDate = getSelectedDate(state)
+        const selectedTime = getSelectedTime(state)
 
-    const URL = '/booking'
-    const res = await axiosBookingsInstance.post(URL, {
-        ...((email || phone) && { contact: { email, phone } }),
-        name,
-        birthDate,
-        timeofbooking: `${selectedDate}T${selectedTime}.000Z`,
-    })
-    dispatch(setOrderFinishedOk(res.data.status === 200))
-    return res.data
-})
+        const URL = '/booking'
+        try {
+            const res = await axiosBookingsInstance.post(URL, {
+                ...((email || phone) && { contact: { email, phone } }),
+                name,
+                birthDate,
+                timeofbooking: `${selectedDate}T${selectedTime}.000Z`,
+            })
+            return res.data
+        } catch (error) {
+            if (!error.response) throw error
+            return rejectWithValue(error.response.data)
+        }
+    }
+)

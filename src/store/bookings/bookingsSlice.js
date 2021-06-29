@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchAvailableTimeslots } from './actions'
+import { fetchAvailableTimeslots, bookAnAppointment } from './actions'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
@@ -10,8 +10,13 @@ const bookingsInitialState = {
     bookings: {},
     availableTimeslots: {
         isLoading: false,
-        error: undefined,
+        errors: undefined,
         slots: [],
+    },
+    lastBooking: {
+        isLoading: false,
+        errors: undefined,
+        orderFinishedOk: false,
     },
 }
 const bookingsSlice = createSlice({
@@ -20,6 +25,10 @@ const bookingsSlice = createSlice({
     reducers: {
         clearTimeslots: (state) => {
             state.availableTimeslots.slots = []
+        },
+        clearBooking: (state) => {
+            state.lastBooking.errors = undefined
+            state.lastBooking.orderFinishedOk = false
         },
     },
     extraReducers: (builder) => {
@@ -35,8 +44,22 @@ const bookingsSlice = createSlice({
             state.availableTimeslots.isLoading = false
             state.availableTimeslots.error = action.error
         })
+        builder.addCase(bookAnAppointment.pending, (state) => {
+            state.lastBooking.isLoading = true
+            state.lastBooking.errors = undefined
+        })
+        builder.addCase(bookAnAppointment.rejected, (state, action) => {
+            state.lastBooking.isLoading = false
+            state.lastBooking.errors = action.payload.errors
+        })
+
+        builder.addCase(bookAnAppointment.fulfilled, (state) => {
+            state.lastBooking.isLoading = false
+            state.lastBooking.errors = undefined
+            state.lastBooking.orderFinishedOk = true
+        })
     },
 })
 
-export const { clearTimeslots } = bookingsSlice.actions
+export const { clearTimeslots, clearBooking } = bookingsSlice.actions
 export default bookingsSlice.reducer

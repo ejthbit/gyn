@@ -12,6 +12,12 @@ export const fetchAvailableTimeslots = createAsyncThunk('bookings/fetchAvailable
     return res.data
 })
 
+export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async ({ from, to }) => {
+    const URL = `/getBookings/${from}/${to}`
+    const res = await axiosBookingsInstance.get(URL)
+    return res.data
+})
+
 export const bookAnAppointment = createAsyncThunk(
     'bookings/bookAnAppointment',
     async (arg, { getState, rejectWithValue }) => {

@@ -1,13 +1,21 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchAvailableTimeslots, bookAnAppointment } from './actions'
+import { fetchAvailableTimeslots, bookAnAppointment, fetchBookings } from './actions'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
 and Immer will safely return a correct immutably updated result. */
 
 const bookingsInitialState = {
-    bookings: {},
+    bookings: {
+        isLoading: false,
+        bookings: [],
+        error: undefined,
+        selectedDate: {
+            from: null,
+            to: null,
+        },
+    },
     availableTimeslots: {
         isLoading: false,
         errors: undefined,
@@ -29,6 +37,9 @@ const bookingsSlice = createSlice({
         clearBooking: (state) => {
             state.lastBooking.errors = undefined
             state.lastBooking.orderFinishedOk = false
+        },
+        setBookingsViewDate: (state, action) => {
+            state.bookings.selectedDate = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -58,8 +69,20 @@ const bookingsSlice = createSlice({
             state.lastBooking.errors = undefined
             state.lastBooking.orderFinishedOk = true
         })
+        builder.addCase(fetchBookings.pending, (state) => {
+            state.bookings.isLoading = true
+            state.bookings.error = undefined
+        })
+        builder.addCase(fetchBookings.fulfilled, (state, action) => {
+            state.bookings.isLoading = false
+            state.bookings.bookings = action.payload
+        })
+        builder.addCase(fetchBookings.rejected, (state, action) => {
+            state.bookings.isLoading = false
+            state.bookings.error = action.error
+        })
     },
 })
 
-export const { clearTimeslots, clearBooking } = bookingsSlice.actions
+export const { clearTimeslots, clearBooking, setBookingsViewDate } = bookingsSlice.actions
 export default bookingsSlice.reducer

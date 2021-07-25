@@ -7,6 +7,7 @@ This means you can write code that "mutates" the state inside the reducer,
 and Immer will safely return a correct immutably updated result. */
 
 const reservationProcessInitialState = {
+    preferredDoctor: '',
     selectedDate: new Date().toISOString().slice(0, 10),
     selectedTime: '',
     activeStep: 0,
@@ -26,6 +27,9 @@ const reservationProcessSlice = createSlice({
         },
         setSelectedDate: (state, action) => {
             state.selectedDate = action.payload.slice(0, 10)
+        },
+        setPreferredDoctor: (state, action) => {
+            state.preferredDoctor = action.payload
         },
         setSelectedTime: (state, action) => {
             state.selectedTime = action.payload
@@ -49,6 +53,7 @@ const reservationProcessSlice = createSlice({
 export const {
     setActiveStep,
     setSelectedDate,
+    setPreferredDoctor,
     setSelectedTime,
     setContactInformation,
     setOrderFinishedOk,

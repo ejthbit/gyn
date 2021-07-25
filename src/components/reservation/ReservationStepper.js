@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import { Box, makeStyles, Step, StepContent, StepLabel, Stepper, StepIcon } from '@material-ui/core'
+import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import React from 'react'
 import { reject } from 'ramda'
@@ -13,6 +13,7 @@ import ReservationSummary from './ReservationSummary'
 import ReservationTermPicker from './ReservationTermPicker'
 import useMemoizedSelector from '@utilities/useMemoSelector'
 import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
+import ReservationDoctorPreference from './ReservationDoctorPreference'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,18 +30,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const getSteps = (error, completedOk = false) => [
-    { label: 'Vyberte termín své navštevy', step: 'first' },
-    { label: 'Prosím vyplňte své kontaktni údaje', step: 'second' },
-    { label: 'Shrnutí objednávky', step: 'third' },
+    { label: 'Preference lékaře', step: 'first' },
+    { label: 'Vyberte termín své navštevy', step: 'second' },
+    { label: 'Prosím vyplňte své kontaktni údaje', step: 'third' },
+    { label: 'Shrnutí objednávky', step: 'forth' },
     { ...(completedOk && { label: 'Úspěšná objednávka', step: 'success' }) },
     { ...(error && { label: 'Nastala chyba', step: 'error' }) },
 ]
 
 const getStepperContent = (step) => {
     const content = {
-        first: <ReservationTermPicker />,
-        second: <ReservationContactInputs />,
-        third: <ReservationSummary />,
+        first: <ReservationDoctorPreference />,
+        second: <ReservationTermPicker />,
+        third: <ReservationContactInputs />,
+        forth: <ReservationSummary />,
         success: <ReservationSuccess />,
         error: <ReservationError />,
     }
@@ -62,7 +65,7 @@ export const ReservationStepper = () => {
                         <StepLabel error={!!orderErrors}>{label}</StepLabel>
                         <StepContent>
                             <Box>{getStepperContent(step)}</Box>
-                            {activeStep < 3 && (
+                            {activeStep < 4 && (
                                 <Box className={classes.actionsContainer}>
                                     <ReservationStepperControls steps={steps} />
                                 </Box>

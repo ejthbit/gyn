@@ -1,14 +1,19 @@
 /* eslint-disable max-len */
-import { map, path } from 'ramda'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import { map, path, filter, equals } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
+const DOCTOR_ID = (_, { doctorId }) => doctorId
+
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
 export const lastBookingErrors = path([stateId, 'lastBooking', 'errors'])
 export const isSendingBooking = path([stateId, 'lastBooking', 'isLoading'])
 export const getOrderFinishedOk = path([stateId, 'lastBooking', 'orderFinishedOk'])
 export const getBookingsSelectedDate = path([stateId, 'bookings', 'selectedDate'])
 export const getBookings = path([stateId, 'bookings', 'bookings'])
+export const getDoctorServicesForSelectedMonth = path([stateId, 'doctorServicesForSelectedMonth', 'data'])
+export const getDoctorServicesDaysForSelectedMonth = path([stateId, 'doctorServicesForSelectedMonth', 'data', 'days'])
 
 export const makeAvailableTimeslotsWithTimeOnly = () =>
     createSelector([getAvailableTimeslots], (timeSlots) =>
@@ -25,4 +30,9 @@ export const makeBookingsSelector = () =>
         map(({ contact, name, timeofbooking, birthdate }) => {
             return { timeofbooking, name, birthdate, email: '', phone: '' }
         }, bookings)
+    )
+
+export const makeDoctorServicesByDoctorId = () =>
+    createSelector([getDoctorServicesDaysForSelectedMonth, DOCTOR_ID], (days, doctorId) =>
+        equals(doctorId, '') ? days : filter((day) => equals(day.doctorId.toString(), doctorId), days ?? [])
     )

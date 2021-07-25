@@ -1,7 +1,6 @@
-// import ReservationStepper from '@components/reservation/ReservationStepper'
 import React from 'react'
-import AdminView from './pages/adminView/AdminView'
+import Routes from './Routes'
 
-const App = () => <AdminView />
+const App = () => <Routes />
 
 export default App

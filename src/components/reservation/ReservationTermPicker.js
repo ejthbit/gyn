@@ -1,28 +1,74 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select } from '@material-ui/core'
+import { FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, Typography } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
+import getDoctorById from '@utilities/getDoctorById'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { isNil } from 'ramda'
+import format from 'date-fns/format'
+import { equals, find, isNil } from 'ramda'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAvailableTimeslots } from 'src/store/bookings/actions'
-import { makeAvailableTimeslotsWithTimeOnly } from 'src/store/bookings/selectors'
-import { setSelectedDate, setSelectedTime } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getSelectedDate, getSelectedTime } from 'src/store/reservationProcess/selectors'
+import { fetchAvailableTimeslots, fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
+import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
+import { makeAvailableTimeslotsWithTimeOnly, makeDoctorServicesByDoctorId } from 'src/store/bookings/selectors'
+import {
+    setReservationBtnDisabled,
+    setSelectedDate,
+    setSelectedTime,
+} from 'src/store/reservationProcess/reservationProcessSlice'
+import { getPreferredDoctor, getSelectedDate, getSelectedTime } from 'src/store/reservationProcess/selectors'
+
+const useStyles = makeStyles((theme) => ({
+    dayWithDotContainer: {
+        position: 'relative',
+    },
+    disabledDayContainer: {
+        pointerEvents: 'none',
+        '& .MuiPickersDay-day': {
+            opacity: 0.25,
+        },
+    },
+    dayWithDot: {
+        position: 'absolute',
+        height: 0,
+        width: 0,
+        border: '2px solid',
+        borderRadius: 4,
+        borderColor: theme.palette.primary.main,
+        right: '47%',
+        transform: 'translateX(1px)',
+        top: '10%',
+    },
+}))
 
 const ReservationTermPicker = () => {
+    const classes = useStyles()
     const dispatch = useDispatch()
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
+    const selectedDoctor = useSelector(getPreferredDoctor)
+    const doctorServicesByDoctorId = useMemoizedSelector(makeDoctorServicesByDoctorId, { doctorId: selectedDoctor }, [
+        selectedDoctor,
+    ])
+
+    const isDoctorServing = !isNilOrEmpty(find(({ date }) => equals(date, selectedDate), doctorServicesByDoctorId))
+
+    useEffect(() => {
+        dispatch(setReservationBtnDisabled(!isDoctorServing))
+    }, [isDoctorServing])
+
     // get OpeningHours
     useEffect(() => {
-        if (!isNil(selectedDate))
-            dispatch(
-                fetchAvailableTimeslots({
-                    from: `${selectedDate}T07:00:00.000Z`,
-                    to: `${selectedDate}T15:00:00.000Z`,
-                })
-            )
+        if (!isNil(selectedDate)) {
+            if (isDoctorServing)
+                dispatch(
+                    fetchAvailableTimeslots({
+                        from: `${selectedDate}T07:00:00.000Z`,
+                        to: `${selectedDate}T15:00:00.000Z`,
+                    })
+                )
+            else dispatch(clearTimeslots())
+        }
     }, [selectedDate])
 
     return (
@@ -32,24 +78,44 @@ const ReservationTermPicker = () => {
                 variant="inline"
                 disableToolbar
                 format="dd-MM-yyyy"
-                margin="normal"
                 value={selectedDate}
+                onMonthChange={(date) => dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))}
+                renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
+                    const renderedDate = format(day, 'yyyy-MM-dd')
+                    const isSelected =
+                        dayInCurrentMonth && find(({ date }) => equals(date, renderedDate), doctorServicesByDoctorId)
+                    return (
+                        <div className={isSelected ? classes.dayWithDotContainer : classes.disabledDayContainer}>
+                            {dayComponent}
+                            {isSelected && <div className={classes.dayWithDot}></div>}
+                        </div>
+                    )
+                }}
                 autoOk
+                views={['year', 'month', 'date']}
                 disablePast
                 onChange={(date) => dispatch(setSelectedDate(date.toISOString()))}
             />
-            <FormControl>
-                <InputLabel id="timePickerLabel" required>
-                    Čas návštevy
-                </InputLabel>
-                <Select value={selectedTime} onChange={(e) => dispatch(setSelectedTime(e.target.value))} displayEmpty>
-                    {availableTimeSlots.map(({ timeSlotStart }) => (
-                        <MenuItem key={timeSlotStart} value={timeSlotStart}>
-                            {timeSlotStart}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            {!isNilOrEmpty(availableTimeSlots) ? (
+                <FormControl>
+                    <InputLabel id="timePickerLabel" required>
+                        Čas návštevy
+                    </InputLabel>
+                    <Select
+                        value={selectedTime}
+                        onChange={(e) => dispatch(setSelectedTime(e.target.value))}
+                        displayEmpty
+                    >
+                        {availableTimeSlots.map(({ timeSlotStart }) => (
+                            <MenuItem key={timeSlotStart} value={timeSlotStart}>
+                                {timeSlotStart}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            ) : (
+                <Typography>Omlouváme se ale tento den {getDoctorById(selectedDoctor).name} neordinuje</Typography>
+            )}
         </Grid>
     )
 }

@@ -17,6 +17,15 @@ export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async ({
     const res = await axiosBookingsInstance.get(URL)
     return res.data
 })
+export const fetchDoctorServicesForSelectedMonth = createAsyncThunk(
+    'bookings/fetchDoctorServicesForSelectedMonth',
+    async (month) => {
+        console.log(month)
+        const URL = `/getDoctorServicesForMonth`
+        const res = await axiosBookingsInstance.get(URL)
+        return res.data
+    }
+)
 
 export const bookAnAppointment = createAsyncThunk(
     'bookings/bookAnAppointment',

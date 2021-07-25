@@ -63,6 +63,10 @@ module.exports = {
                     },
                 ],
             },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|mtl|obj)$/,
+                use: [require.resolve('url-loader')],
+            },
         ],
     },
     plugins: [

@@ -21,10 +21,11 @@ const ReservationStepperControls = ({ steps }) => {
     const isLoading = useSelector(isSendingBooking)
     const orderErrors = useSelector(lastBookingErrors)
     const disabledReservationBtn = useSelector(getDisabledReservationBtn)
+
     const handleChangeStep = (stepValue) => dispatch(setActiveStep(stepValue))
     const handleConfirmAppointment = () => {
         dispatch(bookAnAppointment())
-        handleChangeStep(orderErrors ? 2 : 1)
+        handleChangeStep(orderErrors ? 3 : 1)
     }
 
     return (
@@ -38,11 +39,11 @@ const ReservationStepperControls = ({ steps }) => {
                 variant="outlined"
                 color="primary"
                 startIcon={isLoading && <CircularProgress color="primary" />}
-                onClick={() => (activeStep === 2 ? handleConfirmAppointment() : handleChangeStep(1))}
+                onClick={() => (activeStep === 3 ? handleConfirmAppointment() : handleChangeStep(1))}
                 className={classes.button}
                 disabled={disabledReservationBtn}
             >
-                {activeStep === 2 ? 'Odeslat objednávku' : 'Pokračovat dále'}
+                {activeStep === 3 ? 'Odeslat objednávku' : 'Pokračovat dále'}
             </Button>
         </>
     )

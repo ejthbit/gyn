@@ -41,6 +41,4 @@ const ReservationSummary = () => {
     )
 }
 
-ReservationSummary.propTypes = {}
-
 export default ReservationSummary

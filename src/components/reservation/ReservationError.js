@@ -19,7 +19,7 @@ const ReservationError = () => {
             secondaryBtnText="Vratit se zpět"
             onSecondaryBtnClick={() => {
                 dispatch(clearBooking())
-                dispatch(setActiveStep(-3))
+                dispatch(setActiveStep(-4))
             }}
         />
     )

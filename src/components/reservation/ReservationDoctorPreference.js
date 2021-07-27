@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { getDoctorServicesForSelectedMonth } from 'src/store/bookings/selectors'
-import { setPreferredDoctor } from 'src/store/reservationProcess/reservationProcessSlice'
+import { setPreferredDoctor, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getPreferredDoctor } from 'src/store/reservationProcess/selectors'
 import format from 'date-fns/format'
 
@@ -17,6 +17,7 @@ const ReservationDoctorPreference = () => {
     const handleChangeDoctor = (e) => dispatch(setPreferredDoctor(e.target.value))
 
     useEffect(() => {
+        dispatch(setReservationBtnDisabled(false))
         if (isNilOrEmpty(doctorServicesForSelectedMonth))
             dispatch(fetchDoctorServicesForSelectedMonth(format(Date.now(), 'yyyy-MM')))
     }, [])

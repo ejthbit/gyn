@@ -1,4 +1,15 @@
-import { FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, Typography } from '@material-ui/core'
+import {
+    FormControl,
+    Grid,
+    InputAdornment,
+    InputLabel,
+    makeStyles,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+} from '@material-ui/core'
+import { Today } from '@material-ui/icons'
 import { DatePicker } from '@material-ui/pickers'
 import getDoctorById from '@utilities/getDoctorById'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
@@ -15,7 +26,12 @@ import {
     setSelectedDate,
     setSelectedTime,
 } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getPreferredDoctor, getSelectedDate, getSelectedTime } from 'src/store/reservationProcess/selectors'
+import {
+    getDisabledReservationBtn,
+    getPreferredDoctor,
+    getSelectedDate,
+    getSelectedTime,
+} from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     dayWithDotContainer: {
@@ -38,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translateX(1px)',
         top: '10%',
     },
+    timepicker: {
+        marginTop: theme.spacing(1),
+    },
 }))
 
 const ReservationTermPicker = () => {
@@ -47,15 +66,17 @@ const ReservationTermPicker = () => {
     const selectedTime = useSelector(getSelectedTime)
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     const selectedDoctor = useSelector(getPreferredDoctor)
+    const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
     const doctorServicesByDoctorId = useMemoizedSelector(makeDoctorServicesByDoctorId, { doctorId: selectedDoctor }, [
         selectedDoctor,
     ])
 
     const isDoctorServing = !isNilOrEmpty(find(({ date }) => equals(date, selectedDate), doctorServicesByDoctorId))
-
     useEffect(() => {
-        dispatch(setReservationBtnDisabled(!isDoctorServing))
-    }, [isDoctorServing])
+        if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
+        else if (!isNilOrEmpty(selectedTime)) dispatch(setReservationBtnDisabled(false))
+        if (!isDoctorServing && !isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
+    }, [isDoctorServing, selectedTime])
 
     // get OpeningHours
     useEffect(() => {
@@ -75,8 +96,7 @@ const ReservationTermPicker = () => {
         <Grid container direction="column">
             <DatePicker
                 label="Datum návštevy"
-                variant="inline"
-                disableToolbar
+                variant="dialog"
                 format="dd-MM-yyyy"
                 value={selectedDate}
                 onMonthChange={(date) => dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))}
@@ -93,11 +113,26 @@ const ReservationTermPicker = () => {
                 }}
                 autoOk
                 views={['year', 'month', 'date']}
+                TextFieldComponent={({ value, onClick, onChange, inputRef }) => (
+                    <TextField
+                        inputRef={inputRef}
+                        onClick={onClick}
+                        value={value}
+                        onChange={onChange}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <Today />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                )}
                 disablePast
                 onChange={(date) => dispatch(setSelectedDate(date.toISOString()))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
-                <FormControl>
+                <FormControl className={classes.timepicker}>
                     <InputLabel id="timePickerLabel" required>
                         Čas návštevy
                     </InputLabel>

@@ -18,11 +18,15 @@ import ReservationDoctorPreference from './ReservationDoctorPreference'
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
+        [theme.breakpoints.down('sm')]: {
+            '& .MuiPaper-root': {
+                padding: 0,
+            },
+        },
     },
     actionsContainer: {
         marginBottom: theme.spacing(2),
     },
-
     button: {
         marginTop: theme.spacing(2),
         marginRight: theme.spacing(1),

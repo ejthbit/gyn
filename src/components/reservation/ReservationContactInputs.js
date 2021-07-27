@@ -1,4 +1,5 @@
-import { Grid, makeStyles, TextField } from '@material-ui/core'
+import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
+import { EmailOutlined, PhoneOutlined, Today } from '@material-ui/icons'
 import { DatePicker } from '@material-ui/pickers'
 import debounce from '@utilities/debounce'
 import React, { useCallback, useState } from 'react'
@@ -46,9 +47,6 @@ const ReservationContactInputs = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <DatePicker
-                    className={classes.input}
-                    label="Datum narození"
-                    placeholder="Zadejte prosím své datum narození"
                     format="dd-MM-yyyy"
                     margin="normal"
                     value={birthDate}
@@ -58,10 +56,29 @@ const ReservationContactInputs = () => {
                     onChange={(date) =>
                         dispatch(setContactInformation({ ...contactInfo, birthDate: date.toISOString() }))
                     }
+                    TextFieldComponent={({ value, onClick, onChange, inputRef }) => (
+                        <TextField
+                            className={classes.input}
+                            label="Datum narození"
+                            placeholder="Zadejte prosím své datum narození"
+                            inputRef={inputRef}
+                            onClick={onClick}
+                            value={value}
+                            onChange={onChange}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Today />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            fullWidth
+                            required
+                        />
+                    )}
+                    autoOk
                     okLabel="potvrdit"
                     cancelLabel="zrušit"
-                    fullWidth
-                    required
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -70,6 +87,13 @@ const ReservationContactInputs = () => {
                     placeholder="Zadejte prosím své telefonní číslo"
                     value={phone}
                     onChange={(e) => handleChange(e, 'phone')}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <PhoneOutlined />
+                            </InputAdornment>
+                        ),
+                    }}
                     fullWidth
                 />
             </Grid>
@@ -79,6 +103,13 @@ const ReservationContactInputs = () => {
                     placeholder="Zadejte prosím svůj e-mail"
                     value={email}
                     onChange={(e) => handleChange(e, 'email')}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <EmailOutlined />
+                            </InputAdornment>
+                        ),
+                    }}
                     fullWidth
                 />
             </Grid>

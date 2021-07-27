@@ -36,6 +36,18 @@ const gynBookingTheme = createTheme({
                 marginBottom: 12,
             },
         },
+        MuiPickersSlideTransition: {
+            transitionContainer: {
+                marginBottom: 12,
+            },
+        },
+        MuiPickersModal: {
+            dialogRoot: {
+                '& .MuiDialogActions-root': {
+                    display: `none !important`,
+                },
+            },
+        },
         MuiFormLabel: {
             asterisk: {
                 color: '#db3131',

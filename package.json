@@ -19,6 +19,7 @@
         "@material-ui/pickers": "^3.3.10",
         "babel-loader": "^8.2.2",
         "babel-plugin-module-resolver": "^4.1.0",
+        "date-fns-tz": "^1.1.6",
         "eslint": "^7.27.0",
         "eslint-plugin-import": "^2.23.4",
         "eslint-plugin-jsx-a11y": "^6.4.1",
@@ -51,5 +52,6 @@
     "scripts": {
         "dev": "webpack serve --mode development --env development",
         "build": "webpack"
-    }
+    },
+    "proxy": "http://localhost:9000"
 }

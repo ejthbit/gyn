@@ -1,8 +1,7 @@
-import React from 'react'
 import { AppBar, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import routingPaths from 'src/routingPaths'
-import { BorderBottom } from '@material-ui/icons'
 
 const routes = [
     {

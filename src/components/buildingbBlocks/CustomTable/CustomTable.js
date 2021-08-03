@@ -7,13 +7,14 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import { format } from 'date-fns'
+import PropTypes from 'prop-types'
+import { always, ascend, descend, equals, ifElse, prop, sortWith } from 'ramda'
 import React from 'react'
+import { compose } from 'redux'
 import CustomTableHeader from './CustomTableHeader'
 import CustomTableToolbar from './CustomTableToolbar'
-import PropTypes from 'prop-types'
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { always, ascend, descend, equals, ifElse, map, prop, sortWith, values } from 'ramda'
-import { compose } from 'redux'
 
 const sortDirection = ifElse(equals('desc'), always(descend), always(ascend))
 const sortByProperty = (order, orderBy, data) => sortWith([compose(sortDirection(order), prop)(orderBy)], data)
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
     },
     paper: {
+        boxShadow: 'none',
         width: '100%',
         marginBottom: theme.spacing(2),
     },
@@ -101,7 +103,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                         <Table
                             className={classes.table}
                             aria-labelledby="tableTitle"
-                            size={'medium'}
+                            size="medium"
                             aria-label="enhanced table"
                         >
                             <CustomTableHeader
@@ -119,6 +121,9 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         const isItemSelected = isSelected(row.name)
+                                        const date = new Date(row.timeofbooking)
+                                        const rowDate = format(date, 'yyyy/MM/dd')
+                                        const rowTime = row.timeofbooking.substr(11, 8)
                                         const labelId = `enhanced-table-checkbox-${index}`
                                         return (
                                             <TableRow
@@ -136,7 +141,8 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                         inputProps={{ 'aria-labelledby': labelId }}
                                                     />
                                                 </TableCell>
-                                                <TableCell id={labelId}>{row.timeofbooking}</TableCell>
+                                                <TableCell id={labelId}>{rowDate}</TableCell>
+                                                <TableCell>{rowTime}</TableCell>
                                                 <TableCell>{row.name}</TableCell>
                                                 <TableCell>{row.birthdate}</TableCell>
                                                 <TableCell>{row.email || ''}</TableCell>
@@ -159,8 +165,8 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                         count={data.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        onPageChange={handleChangePage}
                     />
                 </Paper>
             </div>

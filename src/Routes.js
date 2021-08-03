@@ -1,4 +1,5 @@
 /* eslint-disable react/no-children-prop */
+import AdminToolbar from '@components/adminView/AdminToolbar'
 import Navbar from '@components/Navbar/Navbar'
 import { Grid, LinearProgress } from '@material-ui/core'
 import React, { Suspense, lazy } from 'react'
@@ -19,10 +20,13 @@ const Routes = () => {
                     </Grid>
                 }
             >
-                <Route path="*" children={<Navbar />} />
+                <Route
+                    path="*"
+                    children={window.location.pathname.includes('/admin') ? <AdminToolbar /> : <Navbar />}
+                />
                 <Switch>
                     <Route path="/" exact children={<LandingPage />} />
-                    <Route path={routingPaths.admin} exact children={<AdminView />} />
+                    <Route path={routingPaths.admin} children={<AdminView />} />
                     <Route path={routingPaths.reservation} exact children={<Reservation />} />
                 </Switch>
             </Suspense>

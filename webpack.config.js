@@ -27,6 +27,7 @@ module.exports = {
     },
     entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
     },
     devtool: 'source-map',

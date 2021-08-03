@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
 import {
     AppBar,
-    Toolbar,
-    IconButton,
-    Button,
-    Typography,
-    makeStyles,
-    Drawer,
+    Box,
     Divider,
+    Drawer,
+    Grid,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    useTheme,
-    Box,
+    makeStyles,
+    Toolbar,
+    Typography,
 } from '@material-ui/core'
-import { Menu, Inbox, Mail, ChevronLeft, ChevronRight } from '@material-ui/icons'
+import { AccountCircle, Event, Schedule } from '@material-ui/icons'
+import { map } from 'ramda'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import routingPaths, { adminPaths } from 'src/routingPaths'
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        color: '#000',
+        backgroundColor: '#FFF',
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
+    appBar: {
+        marginLeft: 200,
     },
     title: {
         flexGrow: 1,
@@ -33,63 +36,80 @@ const useStyles = makeStyles((theme) => ({
     },
     drawerPaper: {
         width: 200,
+        backgroundColor: theme.palette.primary.main,
     },
     drawerHeader: {
+        textDecoration: 'none',
+        cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
-        padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
-        ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
+        color: '#FFF',
+        padding: theme.spacing(2),
+        minHeight: theme.spacing(8),
+    },
+    drawerListItem: {
+        '& svg': {
+            color: '#FFF',
+        },
+        color: '#FFF',
     },
 }))
+const adminToolbarContent = [
+    { icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
+    { icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
+]
 
 const AdminToolbar = () => {
     const classes = useStyles()
-    const theme = useTheme()
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const handleToogleDrawer = () => setIsDrawerOpen((prevState) => !prevState)
+    const [selectedItem, setSelectedItem] = useState('Administrace')
     return (
         <>
             <AppBar position="static" className={classes.root} color="primary">
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={handleToogleDrawer}
-                    >
-                        <Menu />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Menu
-                    </Typography>
-                    <Button color="inherit">Prihlasit se</Button>
+                <Toolbar className={classes.appBar}>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item md={8}>
+                            <Typography variant="h6" className={classes.title}>
+                                {selectedItem}
+                            </Typography>
+                        </Grid>
+                        <Grid container item md={4} justifyContent="flex-end">
+                            <Box marginRight={2}>
+                                <Typography>Vítej, Admine</Typography>
+                            </Box>
+                            <AccountCircle />
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <Drawer
                 className={classes.drawer}
-                variant="persistent"
+                variant="permanent"
                 anchor="left"
-                open={isDrawerOpen}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
             >
-                <Box className={classes.drawerHeader}>
-                    <IconButton onClick={handleToogleDrawer}>
-                        {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
-                    </IconButton>
+                <Box className={classes.drawerHeader} component={Link} to={routingPaths.admin}>
+                    <Typography> VANEK GYNEKOLOGIE</Typography>
                 </Box>
                 <Divider />
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <Inbox /> : <Mail />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
+                    {map(
+                        ({ icon, text, link }) => (
+                            <ListItem
+                                className={classes.drawerListItem}
+                                button
+                                component={Link}
+                                to={link}
+                                key={text}
+                                onClick={() => setSelectedItem(text)}
+                            >
+                                <ListItemIcon>{icon}</ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ),
+                        adminToolbarContent
+                    )}
                 </List>
             </Drawer>
         </>

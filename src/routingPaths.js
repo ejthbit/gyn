@@ -7,4 +7,8 @@ const routingPaths = {
     contact: '/kontakt',
     admin: '/admin',
 }
+export const adminPaths = {
+    orders: `${routingPaths.admin}/orders`,
+    doctorServices: `${routingPaths.admin}/doctorsServices`,
+}
 export default routingPaths

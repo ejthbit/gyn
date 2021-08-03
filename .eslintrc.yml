@@ -14,7 +14,7 @@ parserOptions:
 plugins:
     - react
 rules:
-    no-unused-vars: warn
+    no-unused-vars: error
     react/no-unused-prop-types: warn
     no-console: warn
     react/jsx-filename-extension: off
@@ -25,5 +25,5 @@ rules:
     comma-dangle: off
     import/named: off
     react/jsx-indent-props: off
-    import/no-unresolved: off
+    import/no-unresolved: warn
     import/prefer-default-export: off

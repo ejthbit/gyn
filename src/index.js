@@ -1,7 +1,7 @@
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiThemeProvider, CssBaseline } from '@material-ui/core'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
-import csLocale from 'date-fns/locale/cs'
+import { cs } from 'date-fns/locale'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
@@ -10,7 +10,7 @@ import gynBookingTheme from './gynBookingTheme'
 import { store } from './store/store'
 
 ReactDOM.render(
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={csLocale}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={cs}>
         <MuiThemeProvider theme={gynBookingTheme}>
             <Provider store={store}>
                 <CssBaseline />

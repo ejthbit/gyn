@@ -3,8 +3,10 @@ import { Button, Grid, makeStyles } from '@material-ui/core'
 import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import { DatePicker } from '@material-ui/pickers'
 import { getMonth, getYear } from 'date-fns'
-import { includes } from 'ramda'
+import { includes, map } from 'ramda'
 import { ArrowBack } from '@material-ui/icons'
+import ServicesTable from './ServicesTable'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
 
 const useStyles = makeStyles((theme) => ({
     datePicker: {
@@ -30,11 +32,24 @@ const DoctorServicesView = () => {
     const classes = useStyles()
     const [selectedAction, setSelectedAction] = useState(0)
     const [selectedMonth, setSelectedMonth] = useState(null)
+    const [dates, setDates] = useState([])
     const handleSetActionWorkflow = (value) => setSelectedAction(value)
     const handleGenerateTable = (date) => {
-        console.log(getWorkDaysInMonth(getMonth(date), getYear(date)))
+        const workingDates = getWorkDaysInMonth(getMonth(date), getYear(date))
+        setDates(
+            map(
+                (date) => ({
+                    date,
+                    doctorId: '',
+                    start: '',
+                    end: '',
+                }),
+                workingDates
+            )
+        )
         return setSelectedMonth(date)
     }
+
     return (
         <Grid container>
             <Grid container spacing={2} alignContent="flex-end">
@@ -74,9 +89,13 @@ const DoctorServicesView = () => {
                     </>
                 )}
             </Grid>
+            {!isNilOrEmpty(dates) && (
+                <Grid item xs={12}>
+                    <ServicesTable data={dates} />
+                </Grid>
+            )}
         </Grid>
     )
 }
-DoctorServicesView.propTypes = {}
 
 export default DoctorServicesView

@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { Button, Grid, makeStyles } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import { DatePicker } from '@material-ui/pickers'
-import { getMonth, getYear } from 'date-fns'
-import { includes, map } from 'ramda'
+import { getMonth, getYear, format } from 'date-fns'
+import { equals, includes, map } from 'ramda'
 import { ArrowBack } from '@material-ui/icons'
 import ServicesTable from './ServicesTable'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import { useDispatch } from 'react-redux'
+import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 
 const useStyles = makeStyles((theme) => ({
     datePicker: {
@@ -26,28 +28,47 @@ const useStyles = makeStyles((theme) => ({
             width: '33%',
         },
     },
+    serviceExists: {
+        marginTop: theme.spacing(2),
+    },
 }))
 
 const DoctorServicesView = () => {
     const classes = useStyles()
+    const dispatch = useDispatch()
+
     const [selectedAction, setSelectedAction] = useState(0)
     const [selectedMonth, setSelectedMonth] = useState(null)
     const [dates, setDates] = useState([])
+    const [serviceExists, setServiceExists] = useState(false)
     const handleSetActionWorkflow = (value) => setSelectedAction(value)
-    const handleGenerateTable = (date) => {
-        const workingDates = getWorkDaysInMonth(getMonth(date), getYear(date))
-        setDates(
-            map(
-                (date) => ({
-                    date,
-                    doctorId: '',
-                    start: '',
-                    end: '',
-                }),
-                workingDates
+
+    const handleClearActionsWorkflow = () => {
+        setDates([])
+        setServiceExists(false)
+        handleSetActionWorkflow(0)
+    }
+
+    const handleGenerateDataForTable = async (date) => {
+        setSelectedMonth(date)
+        const { payload } = await dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))
+        if (equals(selectedAction, 2)) {
+            setDates(payload.days)
+        } else if (!payload) {
+            const workingDates = getWorkDaysInMonth(getMonth(date), getYear(date))
+            setDates(
+                map(
+                    (date) => ({
+                        date,
+                        doctorId: '',
+                        start: '',
+                        end: '',
+                    }),
+                    workingDates
+                )
             )
-        )
-        return setSelectedMonth(date)
+            setServiceExists(false)
+        } else setServiceExists(true)
     }
 
     return (
@@ -56,7 +77,7 @@ const DoctorServicesView = () => {
                 {includes(selectedAction, [1, 2]) ? (
                     <>
                         <Grid item>
-                            <Button variant="contained" color="primary" onClick={() => handleSetActionWorkflow(0)}>
+                            <Button variant="contained" color="primary" onClick={handleClearActionsWorkflow}>
                                 <ArrowBack />
                             </Button>
                         </Grid>
@@ -68,7 +89,7 @@ const DoctorServicesView = () => {
                                 format="MMMM, yyyy"
                                 margin="none"
                                 value={selectedMonth}
-                                onChange={(date) => handleGenerateTable(date)}
+                                onChange={(date) => handleGenerateDataForTable(date)}
                                 views={['year', 'month']}
                                 autoOk
                             />
@@ -91,8 +112,17 @@ const DoctorServicesView = () => {
             </Grid>
             {!isNilOrEmpty(dates) && (
                 <Grid item xs={12}>
-                    <ServicesTable data={dates} />
+                    <ServicesTable
+                        data={dates}
+                        selectedMonth={format(selectedMonth, 'yyyy-MM')}
+                        isEditingServices={equals(selectedAction, 2)}
+                    />
                 </Grid>
+            )}
+            {serviceExists && (
+                <Typography className={classes.serviceExists} color="error">
+                    Na daný měsíc již existuje rozpis.
+                </Typography>
             )}
         </Grid>
     )

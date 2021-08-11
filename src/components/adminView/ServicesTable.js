@@ -1,3 +1,4 @@
+import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import FormSelectInput from '@components/buildingbBlocks/FormInputs/FormSelectInput'
 import {
     Button,
@@ -11,11 +12,14 @@ import {
     TableRow,
     makeStyles,
 } from '@material-ui/core'
+import getOpeningHours from '@utilities/getOpeningHours'
 import PropTypes from 'prop-types'
 import { addIndex, map, values } from 'ramda'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 import DOCTORS from 'src/constants/doctors'
+import { createDoctorServiceForMonth, updateDoctorServiceForMonth } from 'src/store/administration/actions'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,37 +51,49 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const ServicesTable = ({ data }) => {
+const openingHours = getOpeningHours()
+const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
     const classes = useStyles()
-
-    const { handleSubmit, formState, control } = useForm({
+    const dispatch = useDispatch()
+    const { handleSubmit, control } = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: { data },
     })
 
-    const onSubmit = (data) => console.log(data)
-
+    const onSubmit = ({ data }) => {
+        const apiData = { month: selectedMonth, days: data }
+        !isEditingServices
+            ? dispatch(createDoctorServiceForMonth(apiData))
+            : dispatch(updateDoctorServiceForMonth(apiData))
+    }
     return (
         <TableContainer component={Paper} className={classes.paper}>
             <Table className={classes.table} size="medium">
                 <TableHead>
                     <TableRow className={classes.tableRow}>
+                        <TableCell width="5%">Den</TableCell>
                         <TableCell width="10%">Datum</TableCell>
-                        <TableCell width="40%">Doktor</TableCell>
-                        <TableCell width="25%">Od:</TableCell>
-                        <TableCell width="25%">Do:</TableCell>
+                        <TableCell width="20%">Doktor</TableCell>
+                        <TableCell width="15%">Od:</TableCell>
+                        <TableCell width="15%">Do:</TableCell>
+                        <TableCell width="35%">Poznámka:</TableCell>
                         <TableCell>
-                            <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+                            <Button color="primary" variant="contained" onClick={handleSubmit(onSubmit)}>
+                                Uložit
+                            </Button>
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {addIndex(map)(
-                        ({ date, doctorId, start, end }, index) => (
+                        ({ date }, index) => (
                             <TableRow key={date} className={classes.tableRow}>
+                                <TableCell width="5%">
+                                    {new Date(date).toLocaleString('cs-CZ', { weekday: 'long' })}
+                                </TableCell>
                                 <TableCell width="10%">{date}</TableCell>
-                                <TableCell width="40%">
+                                <TableCell width="20%">
                                     {
                                         <FormSelectInput
                                             name={`data.${index}.doctorId`}
@@ -96,8 +112,33 @@ const ServicesTable = ({ data }) => {
                                         </FormSelectInput>
                                     }
                                 </TableCell>
-                                <TableCell width="25%">{start}</TableCell>
-                                <TableCell width="25%">{end}</TableCell>
+                                <TableCell width="15%">
+                                    <FormSelectInput name={`data.${index}.start`} control={control} fullWidth required>
+                                        {map(
+                                            (entry) => (
+                                                <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
+                                                    {entry}
+                                                </MenuItem>
+                                            ),
+                                            openingHours
+                                        )}
+                                    </FormSelectInput>
+                                </TableCell>
+                                <TableCell width="15%">
+                                    <FormSelectInput name={`data.${index}.end`} control={control} fullWidth required>
+                                        {map(
+                                            (entry) => (
+                                                <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
+                                                    {entry}
+                                                </MenuItem>
+                                            ),
+                                            openingHours
+                                        )}
+                                    </FormSelectInput>
+                                </TableCell>
+                                <TableCell width="35%">
+                                    <FormInput name={`data.${index}.note`} control={control} fullWidth />
+                                </TableCell>
                             </TableRow>
                         ),
 
@@ -111,6 +152,8 @@ const ServicesTable = ({ data }) => {
 
 ServicesTable.propTypes = {
     data: PropTypes.array,
+    selectedMonth: PropTypes.string,
+    isEditingServices: PropTypes.bool,
 }
 
 export default ServicesTable

@@ -34,5 +34,5 @@ export const makeBookingsSelector = () =>
 
 export const makeDoctorServicesByDoctorId = () =>
     createSelector([getDoctorServicesDaysForSelectedMonth, DOCTOR_ID], (days, doctorId) =>
-        equals(doctorId, '') ? days : filter((day) => equals(day.doctorId.toString(), doctorId), days ?? [])
+        equals(doctorId, '') ? days ?? [] : filter((day) => equals(day.doctorId.toString(), doctorId), days ?? [])
     )

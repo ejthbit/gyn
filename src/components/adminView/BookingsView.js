@@ -3,7 +3,7 @@ import { Button, Grid, makeStyles } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { endOfDay, startOfDay } from 'date-fns'
+import { endOfDay, endOfWeek, startOfDay, startOfWeek } from 'date-fns'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchBookings } from 'src/store/bookings/actions'
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
             [theme.breakpoints.down('xs')]: {
                 width: '100%',
             },
-            width: '33%',
+            width: '100%',
         },
     },
 }))
@@ -40,6 +40,14 @@ const BookingsView = () => {
     const handleSetTodayDate = () =>
         dispatch(
             setBookingsViewDate({ from: startOfDay(Date.now()).toISOString(), to: endOfDay(Date.now()).toISOString() })
+        )
+
+    const handleSetThisWeekDate = () =>
+        dispatch(
+            setBookingsViewDate({
+                from: startOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
+                to: endOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
+            })
         )
 
     useEffect(() => {
@@ -89,9 +97,14 @@ const BookingsView = () => {
                         autoOk
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
                     <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetTodayDate}>
                         Dnes
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetThisWeekDate}>
+                        Týden
                     </Button>
                 </Grid>
             </Grid>

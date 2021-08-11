@@ -1,28 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { axiosBookingsInstance } from '../../api/config'
+import { axiosGynInstance } from '../../api/config'
 import { getSelectedDate, getSelectedTime, getContactInformation } from '../reservationProcess/selectors'
 
 /**
  * @desc fetches availableTimeSlots between from and to dates.
  * @returns {array} Array of object - which contains availableTimeslots between from and to
  */
+const ID = '/bookings'
 export const fetchAvailableTimeslots = createAsyncThunk('bookings/fetchAvailableTimeslots', async ({ from, to }) => {
-    const URL = `/getAvailableSlots/${from}/${to}`
-    const res = await axiosBookingsInstance.get(URL)
+    const URL = `${ID}/getAvailableSlots/${from}/${to}`
+    const res = await axiosGynInstance.get(URL)
     return res.data
 })
 
 export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async ({ from, to }) => {
-    const URL = `/getBookings/${from}/${to}`
-    const res = await axiosBookingsInstance.get(URL)
+    const URL = `${ID}/getBookings/${from}/${to}`
+    const res = await axiosGynInstance.get(URL)
     return res.data
 })
+
 export const fetchDoctorServicesForSelectedMonth = createAsyncThunk(
     'bookings/fetchDoctorServicesForSelectedMonth',
     async (month) => {
-        console.log(month)
-        const URL = `/getDoctorServicesForMonth`
-        const res = await axiosBookingsInstance.get(URL)
+        const URL = `${ID}/getDoctorServicesForMonth/${month}`
+        const res = await axiosGynInstance.get(URL)
         return res.data
     }
 )
@@ -35,9 +36,9 @@ export const bookAnAppointment = createAsyncThunk(
         const selectedDate = getSelectedDate(state)
         const selectedTime = getSelectedTime(state)
 
-        const URL = '/booking'
+        const URL = `${ID}/booking`
         try {
-            const res = await axiosBookingsInstance.post(URL, {
+            const res = await axiosGynInstance.post(URL, {
                 ...((email || phone) && { contact: { email, phone } }),
                 name,
                 birthDate,

@@ -62,16 +62,19 @@ const useStyles = makeStyles((theme) => ({
 const ReservationTermPicker = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
-    const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
-    const selectedDoctor = useSelector(getPreferredDoctor)
     const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
+    const selectedDoctor = useSelector(getPreferredDoctor)
+
+    const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     const doctorServicesByDoctorId = useMemoizedSelector(makeDoctorServicesByDoctorId, { doctorId: selectedDoctor }, [
         selectedDoctor,
     ])
 
     const isDoctorServing = !isNilOrEmpty(find(({ date }) => equals(date, selectedDate), doctorServicesByDoctorId))
+
     useEffect(() => {
         if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
         else if (!isNilOrEmpty(selectedTime)) dispatch(setReservationBtnDisabled(false))
@@ -81,14 +84,13 @@ const ReservationTermPicker = () => {
     // get OpeningHours
     useEffect(() => {
         if (!isNil(selectedDate)) {
-            if (isDoctorServing)
-                dispatch(
-                    fetchAvailableTimeslots({
-                        from: `${selectedDate}T07:00:00.000Z`,
-                        to: `${selectedDate}T15:00:00.000Z`,
-                    })
+            if (isDoctorServing) {
+                const { start: from, end: to } = find(
+                    ({ date }) => equals(date, selectedDate),
+                    doctorServicesByDoctorId
                 )
-            else dispatch(clearTimeslots())
+                dispatch(fetchAvailableTimeslots({ from, to }))
+            } else dispatch(clearTimeslots())
         }
     }, [selectedDate])
 
@@ -101,9 +103,9 @@ const ReservationTermPicker = () => {
                 value={selectedDate}
                 onMonthChange={(date) => dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))}
                 renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
-                    const renderedDate = format(day, 'yyyy-MM-dd')
                     const isSelected =
-                        dayInCurrentMonth && find(({ date }) => equals(date, renderedDate), doctorServicesByDoctorId)
+                        dayInCurrentMonth &&
+                        find(({ date }) => equals(date, format(day, 'yyyy-MM-dd')), doctorServicesByDoctorId)
                     return (
                         <div className={isSelected ? classes.dayWithDotContainer : classes.disabledDayContainer}>
                             {dayComponent}

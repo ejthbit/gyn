@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: '10%',
         paddingRight: '10%',
+        paddingBottom: '10%',
         '& .MuiTypography-h2': {
             marginBottom: theme.spacing(2),
             textAlign: 'center',

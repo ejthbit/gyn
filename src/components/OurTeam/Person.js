@@ -1,6 +1,7 @@
-import { Box, makeStyles, Typography, Backdrop } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import PersonDetail from './PersonDetail'
 const useStyles = makeStyles((theme) => ({
     root: { textAlign: 'center' },
     image: {
@@ -36,9 +37,7 @@ const Person = ({ image, fullName, specialization }) => {
             <Typography variant="caption" color="textSecondary">
                 {specialization}
             </Typography>
-            <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
-                Show Detail - majbeee
-            </Backdrop>
+            <PersonDetail open={open} handleClose={handleClose} />
         </Box>
     )
 }

@@ -15,11 +15,10 @@ const useStyles = makeStyles((theme) => ({
             textAlign: 'center',
         },
     },
-    personContainer: {
-        margin: '0px 20px 20px 0px',
-    },
     personSectionTypo: {
         margin: 'auto',
+        marginBottom: '20px',
+        marginTop: '20px',
     },
 }))
 const doctors = [
@@ -42,7 +41,7 @@ const OurTeam = () => {
             <Typography variant="overline" className={classes.personSectionTypo}>
                 Doktoři
             </Typography>
-            <Grid container justifyContent="center" spacing={4} className={classes.personContainer}>
+            <Grid container justifyContent="center" spacing={8}>
                 {doctors.map((doctor) => (
                     <Grid item key={doctor.fullName}>
                         <Person {...doctor} />
@@ -52,7 +51,7 @@ const OurTeam = () => {
             <Typography variant="overline" className={classes.personSectionTypo}>
                 Zdravotní sestry
             </Typography>
-            <Grid container justifyContent="center" spacing={4} className={classes.personContainer}>
+            <Grid container justifyContent="center" spacing={8}>
                 {nurses.map((nurse) => (
                     <Grid item key={nurse.fullName}>
                         <Person {...nurse} />

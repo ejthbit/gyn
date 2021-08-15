@@ -4,7 +4,7 @@ import Service from './Service'
 
 const services = [
     {
-        icon: <></>,
+        Icon: <></>,
         label: 'Preventivní prohlídky',
         description:
             'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní',
@@ -51,6 +51,7 @@ const Services = () => {
             <Grid item xs={12}>
                 <Typography variant="h2">Naše služby</Typography>
             </Grid>
+
             {services.map(({ icon, label, description }) => (
                 <Grid xs={6} item key={label}>
                     <Service icon={icon} label={label} description={description} />

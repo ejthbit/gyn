@@ -36,7 +36,7 @@ const Service = ({ icon, label, description }) => {
 }
 
 Service.propTypes = {
-    icon: PropTypes.node,
+    icon: PropTypes.element,
     label: PropTypes.string,
     description: PropTypes.string,
 }

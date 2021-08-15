@@ -8,10 +8,10 @@ const useStyles = makeStyles((theme) => ({
         width: 270,
         height: 270,
         transition: 'border 0.5s ease',
-        border: '10px solid #d7f4f3',
+        border: '10px solid #1f7a74',
         borderRadius: '50%',
         marginBottom: '10px',
-        '&:hover': { border: '10px solid #1F7672', cursor: 'pointer' },
+        '&:hover': { border: '10px solid #70dbd4', cursor: 'pointer' },
     },
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,

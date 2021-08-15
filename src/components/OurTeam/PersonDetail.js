@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
-        color: theme.palette.grey[500],
     },
 }))
 const PersonDetail = ({ open, handleClose }) => {
@@ -18,7 +17,7 @@ const PersonDetail = ({ open, handleClose }) => {
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle disableTypography onClose={handleClose}>
                 <Typography variant="h6">Modal title</Typography>
-                <IconButton className={classes.closeButton} onClick={handleClose}>
+                <IconButton className={classes.closeButton} onClick={handleClose} color="primary">
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>

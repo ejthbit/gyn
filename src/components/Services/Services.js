@@ -1,38 +1,40 @@
+import { SonographyIcon } from '@assets/SvgIcons'
 import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Service from './Service'
 
 const services = [
     {
-        Icon: <></>,
+        icon: <SonographyIcon />,
         label: 'Preventivní prohlídky',
         description:
             'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní',
     },
-    { icon: <></>, label: 'Péče o těhotné', description: 'lorem ipsum' },
+    { icon: <SonographyIcon />, label: 'Péče o těhotné', description: 'lorem ipsum' },
     {
-        icon: <></>,
+        icon: <SonographyIcon />,
         label: 'Poradenství',
         description: 'Nabizíme poradenství v oblastech antikoncepce, přechodu a gynekologických potížích',
     },
     {
-        icon: <></>,
+        icon: <SonographyIcon />,
         label: 'Sonografie prsu',
         description:
             'Sonografické, neboli ultrazvukové vyšetření prsou patří v dnešní době k nejdůležitějším vyšetřovacím praktikám sloužícím k včasnému nálezu rakoviny prsou',
     },
     {
-        icon: <></>,
+        icon: <SonographyIcon />,
         label: 'Gynefix',
         description:
             'Nehormonální nitroděložní tělísko bez pevného plastového těla a ramének, které má díky svému inovativnímu designu a způsobu zavádění méně vedlejších nežádoucích účinků než klasická tělíska a je proto vhodné pro většinu žen včetně těch, které ještě nerodily',
     },
     {
-        icon: <></>,
+        icon: <SonographyIcon />,
         label: 'Speciální gynekologické vyšetrení',
         description: '',
     },
 ]
+
 const useStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: '10%',
@@ -44,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }))
+
 const Services = () => {
     const classes = useStyles()
     return (

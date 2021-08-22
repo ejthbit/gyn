@@ -1,4 +1,5 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
+import ContactForm from './ContactForm'
 import Contact from './Contact'
 import React from 'react'
 
@@ -70,6 +71,7 @@ const Contacts = () => {
                     ))}
                 </Grid>
             </Grid>
+            <ContactForm />
         </Grid>
     )
 }

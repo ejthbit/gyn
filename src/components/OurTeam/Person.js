@@ -8,17 +8,17 @@ const useStyles = makeStyles((theme) => ({
         width: 270,
         height: 270,
         transition: 'border 0.5s ease',
-        border: '10px solid #1f7a74',
+        border: '5px solid #1f7a74',
         borderRadius: '50%',
         marginBottom: '10px',
-        '&:hover': { border: '10px solid #70dbd4', cursor: 'pointer' },
+        '&:hover': { border: '5px solid #70dbd4', cursor: 'pointer' },
     },
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
     },
 }))
-const Person = ({ image, fullName, specialization }) => {
+const Person = ({ image, fullName, specialization, text }) => {
     const classes = useStyles()
     const [open, setOpen] = useState(false)
 
@@ -37,7 +37,7 @@ const Person = ({ image, fullName, specialization }) => {
             <Typography variant="caption" color="textSecondary">
                 {specialization}
             </Typography>
-            <PersonDetail open={open} handleClose={handleClose} />
+            <PersonDetail open={open} handleClose={handleClose} title={fullName} text={text} />
         </Box>
     )
 }
@@ -46,6 +46,7 @@ Person.propTypes = {
     image: PropTypes.string,
     fullName: PropTypes.string,
     specialization: PropTypes.string,
+    text: PropTypes.object,
 }
 
 export default Person

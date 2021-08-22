@@ -1,9 +1,10 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Person from '@components/OurTeam/Person'
-import Vanek from '../../assets/OurTeam/vanek.png'
-import Sebestova from '../../assets/OurTeam/sebestova.png'
-import Unknown from '../../assets/OurTeam/unknown.png'
+import Vanek from '../../assets/OurTeam/Img/vanek.png'
+import { vanekText } from '../../assets/OurTeam/Text/vanek'
+import Sebestova from '../../assets/OurTeam/Img/sebestova.png'
+import Unknown from '../../assets/OurTeam/Img/unknown.png'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 const doctors = [
-    { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek },
+    { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
     { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Unknown },
     { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Unknown },
 ]

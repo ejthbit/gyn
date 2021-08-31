@@ -1,7 +1,7 @@
 import { AppBar, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import { SupervisedUserCircle } from '@material-ui/icons'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import routingPaths from 'src/routingPaths'
 
 const routes = [
@@ -65,27 +65,30 @@ const useStyles = makeStyles((theme) => ({
 }))
 const Navbar = () => {
     const classes = useStyles()
+    const location = useLocation()
     return (
-        <AppBar className={classes.navbar} position="static" color="primary">
-            <Toolbar>
-                <Grid container spacing={3} alignItems="center">
-                    <Grid item md={6}>
-                        <Typography className={classes.logo} variant="h5">
-                            <NavLink to={'/'}>Gynekologie Vaněk</NavLink>
-                        </Typography>
+        !location.pathname.match(routingPaths.admin) && (
+            <AppBar className={classes.navbar} position="static" color="primary">
+                <Toolbar>
+                    <Grid container spacing={3} alignItems="center">
+                        <Grid item md={6}>
+                            <Typography className={classes.logo} variant="h5">
+                                <NavLink to={'/'}>Gynekologie Vaněk</NavLink>
+                            </Typography>
+                        </Grid>
+                        <Grid container md={6} spacing={3} item alignItems="center" justifyContent="flex-end">
+                            {routes.map(({ text, link }) => (
+                                <Grid key={link} item>
+                                    <Typography variant="body1" className={classes.menuItem}>
+                                        <NavLink to={link}>{text}</NavLink>
+                                    </Typography>
+                                </Grid>
+                            ))}
+                        </Grid>
                     </Grid>
-                    <Grid container md={6} spacing={3} item alignItems="center" justifyContent="flex-end">
-                        {routes.map(({ text, link }) => (
-                            <Grid key={link} item>
-                                <Typography variant="body1" className={classes.menuItem}>
-                                    <NavLink to={link}>{text}</NavLink>
-                                </Typography>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Grid>
-            </Toolbar>
-        </AppBar>
+                </Toolbar>
+            </AppBar>
+        )
     )
 }
 

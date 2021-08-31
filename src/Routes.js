@@ -1,20 +1,16 @@
-import AdminToolbar from '@components/adminView/AdminToolbar'
 import LoginPageForm from '@components/LoginPageForm/LoginPageForm'
 import Navbar from '@components/Navbar/Navbar'
 import ProtectedRoute from '@components/ProtectedRoute/ProtectedRoute'
 import { Grid, LinearProgress } from '@material-ui/core'
 import React, { lazy, Suspense } from 'react'
-import { useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import routingPaths from './routingPaths'
-import { isLoggedIn } from './store/administration/selectors'
 
 const AdminView = lazy(() => import('./pages/adminView/AdminView'))
 const Reservation = lazy(() => import('@components/reservation/ReservationStepper'))
 const LandingPage = lazy(() => import('./pages/LandingPage/LandingPage'))
 
 const Routes = () => {
-    const isAuthenticated = useSelector(isLoggedIn)
     return (
         <Router>
             <Suspense
@@ -24,7 +20,7 @@ const Routes = () => {
                     </Grid>
                 }
             >
-                <Route path="*" children={isAuthenticated ? <AdminToolbar /> : <Navbar />} />
+                <Route path="*" children={<Navbar />} />
                 <Switch>
                     <Route path="/" exact children={<LandingPage />} />
                     <ProtectedRoute path={routingPaths.admin} children={<AdminView />} shouldLogin />

@@ -6,13 +6,15 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { logIntoAdministration } from 'src/store/administration/actions'
-import { isLoggedIn } from 'src/store/administration/selectors'
+import { getAdminStateErrors, isLoggedIn } from 'src/store/administration/selectors'
 import * as yup from 'yup'
 
 const LoginPageForm = () => {
     const dispatch = useDispatch()
     const history = useHistory()
     const isAdminLoggedIn = useSelector(isLoggedIn)
+    const loggingError = useSelector(getAdminStateErrors)
+    const LOGGING_ATTEMPT_LIMIT = 3
 
     const { handleSubmit, control, formState } = useForm({
         mode: 'onSubmit',
@@ -57,11 +59,18 @@ const LoginPageForm = () => {
                     onClick={handleSubmit(onSubmit)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSubmit(onSubmit)}
                     fullWidth
-                    disabled={!formState.isValid}
+                    disabled={!formState.isValid || formState.submitCount >= LOGGING_ATTEMPT_LIMIT}
                 >
                     Přihlásit se
                 </Button>
             </Grid>
+            {loggingError && (
+                <Grid item>
+                    <Typography variant="body1" color="error">
+                        {loggingError?.message}
+                    </Typography>
+                </Grid>
+            )}
         </Grid>
     )
 }

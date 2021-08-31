@@ -1,4 +1,5 @@
 /* eslint-disable react/no-children-prop */
+import AdminToolbar from '@components/adminView/AdminToolbar'
 import BookingsView from '@components/adminView/BookingsView'
 import DoctorServicesView from '@components/adminView/DoctorServicesView'
 import { Box, makeStyles, Typography } from '@material-ui/core'
@@ -19,11 +20,14 @@ const useStyles = makeStyles(() => ({
 const AdminView = () => {
     const classes = useStyles()
     return (
-        <Box className={classes.root}>
-            <Route path={adminPaths.orders} children={<BookingsView />} />
-            <Route path={adminPaths.doctorServices} children={<DoctorServicesView />} />
-            <Route path={routingPaths.admin} exact children={<Typography variant="h2">Vítej, admine</Typography>} />
-        </Box>
+        <>
+            <Route path="*" children={<AdminToolbar />} />
+            <Box className={classes.root}>
+                <Route path={adminPaths.orders} children={<BookingsView />} />
+                <Route path={adminPaths.doctorServices} children={<DoctorServicesView />} />
+                <Route path={routingPaths.admin} exact children={<Typography variant="h2">Vítej, admine</Typography>} />
+            </Box>
+        </>
     )
 }
 

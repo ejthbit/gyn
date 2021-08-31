@@ -14,7 +14,7 @@ const LoginPageForm = () => {
     const history = useHistory()
     const isAdminLoggedIn = useSelector(isLoggedIn)
     const loggingError = useSelector(getAdminStateErrors)
-    const LOGGING_ATTEMPT_LIMIT = 3
+    const LOGGING_ATTEMPT_LIMIT = 5
 
     const { handleSubmit, control, formState } = useForm({
         mode: 'onSubmit',

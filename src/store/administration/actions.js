@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { axiosGynInstance } from '../../api/config'
+import axiosGynInstance from '../../api/config'
 
 const ID = '/administration'
 
@@ -28,6 +28,24 @@ export const updateDoctorServiceForMonth = createAsyncThunk(
             const res = await axiosGynInstance.put(URL, {
                 days,
             })
+            return res.data
+        } catch (error) {
+            if (!error.response) throw error
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const logIntoAdministration = createAsyncThunk(
+    'adminstration/logIntoAdministration',
+    async ({ email, password }, { rejectWithValue }) => {
+        const URL = `${ID}/signIn`
+        try {
+            const res = await axiosGynInstance.post(URL, {
+                email,
+                password,
+            })
+            localStorage.setItem('user', JSON.stringify(res.data))
             return res.data
         } catch (error) {
             if (!error.response) throw error

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { axiosGynInstance } from '../../api/config'
+import axiosGynInstance from '../../api/config'
 import { getSelectedDate, getSelectedTime, getContactInformation } from '../reservationProcess/selectors'
 
 /**

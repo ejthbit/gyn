@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { map, path, filter, equals } from 'ramda'
+import { equals, filter, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'

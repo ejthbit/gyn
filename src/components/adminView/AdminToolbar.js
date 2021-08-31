@@ -12,11 +12,14 @@ import {
     Toolbar,
     Typography,
 } from '@material-ui/core'
-import { AccountCircle, Event, Schedule } from '@material-ui/icons'
+import { Event, ExitToApp, Schedule } from '@material-ui/icons'
+import SM from '@utilities/StorageManager'
 import { map } from 'ramda'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import routingPaths, { adminPaths } from 'src/routingPaths'
+import { logout } from 'src/store/administration/administrationSlice'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,6 +56,12 @@ const useStyles = makeStyles((theme) => ({
         },
         color: '#FFF',
     },
+    logOutIcon: {
+        cursor: 'pointer',
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
+    },
 }))
 const adminToolbarContent = [
     { icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
@@ -61,7 +70,14 @@ const adminToolbarContent = [
 
 const AdminToolbar = () => {
     const classes = useStyles()
+    const dispatch = useDispatch()
     const [selectedItem, setSelectedItem] = useState('Administrace')
+
+    const handleLogout = (e) => {
+        SM.clearLSStorage(e)
+        dispatch(logout())
+    }
+
     return (
         <>
             <AppBar position="static" className={classes.root} color="primary">
@@ -76,7 +92,7 @@ const AdminToolbar = () => {
                             <Box marginRight={2}>
                                 <Typography>Vítej, Admine</Typography>
                             </Box>
-                            <AccountCircle />
+                            <ExitToApp className={classes.logOutIcon} onClick={handleLogout} />
                         </Grid>
                     </Grid>
                 </Toolbar>

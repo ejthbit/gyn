@@ -11,6 +11,8 @@ import format from 'date-fns/format'
 const ReservationDoctorPreference = () => {
     const dispatch = useDispatch()
 
+    const SELECTED_WORKPLACE_ID = 1
+
     const selectedDoctor = useSelector(getPreferredDoctor)
     const doctorServicesForSelectedMonth = useSelector(getDoctorServicesForSelectedMonth)
 
@@ -19,7 +21,12 @@ const ReservationDoctorPreference = () => {
     useEffect(() => {
         dispatch(setReservationBtnDisabled(false))
         if (isNilOrEmpty(doctorServicesForSelectedMonth))
-            dispatch(fetchDoctorServicesForSelectedMonth(format(Date.now(), 'yyyy-MM')))
+            dispatch(
+                fetchDoctorServicesForSelectedMonth({
+                    month: format(Date.now(), 'yyyy-MM'),
+                    workplace: SELECTED_WORKPLACE_ID,
+                })
+            )
     }, [])
 
     return (

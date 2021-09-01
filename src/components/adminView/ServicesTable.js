@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const openingHours = getOpeningHours()
-const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
+const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkplaceId }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const { handleSubmit, control } = useForm({
@@ -62,7 +62,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
     })
 
     const onSubmit = ({ data }) => {
-        const apiData = { month: selectedMonth, days: data }
+        const apiData = { month: selectedMonth, days: data, workplace: selectedWorkplaceId }
         !isEditingServices
             ? dispatch(createDoctorServiceForMonth(apiData))
             : dispatch(updateDoctorServiceForMonth(apiData))
@@ -154,6 +154,7 @@ ServicesTable.propTypes = {
     data: PropTypes.array,
     selectedMonth: PropTypes.string,
     isEditingServices: PropTypes.bool,
+    selectedWorkplaceId: PropTypes.string,
 }
 
 export default ServicesTable

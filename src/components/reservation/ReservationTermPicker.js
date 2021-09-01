@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 const ReservationTermPicker = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const SELECTED_WORKPLACE_ID = 1
 
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
@@ -89,7 +90,7 @@ const ReservationTermPicker = () => {
                     ({ date }) => equals(date, selectedDate),
                     doctorServicesByDoctorId
                 )
-                dispatch(fetchAvailableTimeslots({ from, to }))
+                dispatch(fetchAvailableTimeslots({ from, to, workplace: SELECTED_WORKPLACE_ID }))
             } else dispatch(clearTimeslots())
         }
     }, [selectedDate])
@@ -101,7 +102,14 @@ const ReservationTermPicker = () => {
                 variant="dialog"
                 format="dd-MM-yyyy"
                 value={selectedDate}
-                onMonthChange={(date) => dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))}
+                onMonthChange={(date) =>
+                    dispatch(
+                        fetchDoctorServicesForSelectedMonth({
+                            month: format(date, 'yyyy-MM'),
+                            workplace: SELECTED_WORKPLACE_ID,
+                        })
+                    )
+                }
                 renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
                     const isSelected =
                         dayInCurrentMonth &&

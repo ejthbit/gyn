@@ -37,6 +37,7 @@ const DoctorServicesView = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const SELECTED_WORKPLACE_ID = 1
     const [selectedAction, setSelectedAction] = useState(0)
     const [selectedMonth, setSelectedMonth] = useState(null)
     const [dates, setDates] = useState([])
@@ -51,7 +52,12 @@ const DoctorServicesView = () => {
 
     const handleGenerateDataForTable = async (date) => {
         setSelectedMonth(date)
-        const { payload } = await dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))
+        const { payload } = await dispatch(
+            fetchDoctorServicesForSelectedMonth({
+                month: format(Date.now(), 'yyyy-MM'),
+                workplace: SELECTED_WORKPLACE_ID,
+            })
+        )
         if (equals(selectedAction, 2)) {
             setDates(payload.days)
         } else if (!payload) {
@@ -116,6 +122,7 @@ const DoctorServicesView = () => {
                         data={dates}
                         selectedMonth={format(selectedMonth, 'yyyy-MM')}
                         isEditingServices={equals(selectedAction, 2)}
+                        selectedWorkplaceId={SELECTED_WORKPLACE_ID}
                     />
                 </Grid>
             )}

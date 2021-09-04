@@ -1,12 +1,22 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { isNil } from 'ramda'
+import { fetchAmbulances } from './actions'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
 and Immer will safely return a correct immutably updated result. */
 
+const configurationInitialState = {
+    ambulances: {
+        isLoading: false,
+        error: undefined,
+        data: [],
+    },
+}
 const reservationProcessInitialState = {
+    selectedAmbulance: 1,
     preferredDoctor: '',
     selectedDate: new Date().toISOString().slice(0, 10),
     selectedTime: '',
@@ -17,10 +27,11 @@ const reservationProcessInitialState = {
         phone: '',
         birthDate: null,
     },
+    isReservationBtnDisabled: false,
 }
 const reservationProcessSlice = createSlice({
     name: 'reservationProcess',
-    initialState: reservationProcessInitialState,
+    initialState: { ...configurationInitialState, ...reservationProcessInitialState },
     reducers: {
         setActiveStep: (state, action) => {
             state.activeStep += action.payload
@@ -34,6 +45,9 @@ const reservationProcessSlice = createSlice({
         setSelectedTime: (state, action) => {
             state.selectedTime = action.payload
         },
+        setSelectedAmbulance: (state, action) => {
+            state.selectedAmbulance = action.payload
+        },
         setContactInformation: (state, action) => {
             const { name, email, phone, birthDate } = action.payload
             state.contactInformation = {
@@ -46,7 +60,23 @@ const reservationProcessSlice = createSlice({
         setReservationBtnDisabled: (state, action) => {
             state.isReservationBtnDisabled = action.payload
         },
-        clearReservation: () => reservationProcessInitialState,
+        clearReservation: (state) => (state = { ...state, ...reservationProcessInitialState }),
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchAmbulances.pending, (state) => {
+            state.ambulances.isLoading = true
+            state.ambulances.error = undefined
+        })
+        builder.addCase(fetchAmbulances.fulfilled, (state, action) => {
+            const { data } = action.payload
+            state.ambulances.isLoading = false
+            state.ambulances.data = data
+            state.selectedAmbulance = !isNilOrEmpty(data) ? data[0]?.workplace_id : ''
+        })
+        builder.addCase(fetchAmbulances.rejected, (state, action) => {
+            state.ambulances.isLoading = false
+            state.ambulances.error = action.error
+        })
     },
 })
 
@@ -54,6 +84,7 @@ export const {
     setActiveStep,
     setSelectedDate,
     setPreferredDoctor,
+    setSelectedAmbulance,
     setSelectedTime,
     setContactInformation,
     setOrderFinishedOk,

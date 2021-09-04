@@ -1,6 +1,6 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,8 +9,17 @@ import { logIntoAdministration } from 'src/store/administration/actions'
 import { getAdminStateErrors, isLoggedIn } from 'src/store/administration/selectors'
 import * as yup from 'yup'
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(2),
+        },
+    },
+}))
+
 const LoginPageForm = () => {
     const dispatch = useDispatch()
+    const classes = useStyles()
     const history = useHistory()
     const isAdminLoggedIn = useSelector(isLoggedIn)
     const loggingError = useSelector(getAdminStateErrors)
@@ -35,7 +44,7 @@ const LoginPageForm = () => {
     }, [isAdminLoggedIn])
 
     return (
-        <Grid container alignContent="center" direction="column" spacing={2}>
+        <Grid container alignContent="center" direction="column" spacing={2} className={classes.root}>
             <Typography variant="h4"> Pro pokračování se prosím přihlašte</Typography>
             <Grid item>
                 <FormInput name={'email'} control={control} placeholder="E-mail" label="E-mail" required fullWidth />

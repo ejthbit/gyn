@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 const LandingPageReservationModal = ({ isOpen, onClose }) => {
     const classes = useStyles()
+
     return (
         <Dialog maxWidth="md" open={isOpen} onClose={onClose} fullWidth>
             <DialogTitle className={classes.title} disableTypography>

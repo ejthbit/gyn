@@ -1,10 +1,10 @@
 import { IconButton, lighten, makeStyles, Toolbar, Tooltip, Typography } from '@material-ui/core'
 import { Delete, FilterList } from '@material-ui/icons'
-import React from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
+import React from 'react'
 
-const useToolbarStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(1),
@@ -24,28 +24,28 @@ const useToolbarStyles = makeStyles((theme) => ({
     },
 }))
 
-const CustomTableToolbar = ({ numSelected, title }) => {
-    const classes = useToolbarStyles()
+const CustomTableToolbar = ({ selectedItems, onDelete, title }) => {
+    const classes = useStyles()
+    const NUMBER_OF_SELECTED_ITEMS = selectedItems.length
 
     return (
         <Toolbar
             className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
+                [classes.highlight]: NUMBER_OF_SELECTED_ITEMS > 0,
             })}
         >
-            {numSelected > 0 ? (
+            {NUMBER_OF_SELECTED_ITEMS > 0 ? (
                 <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} Vybraných záznamů
+                    {NUMBER_OF_SELECTED_ITEMS} Vybraných záznamů
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                     {title}
                 </Typography>
             )}
-
-            {numSelected > 0 ? (
+            {NUMBER_OF_SELECTED_ITEMS > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={onDelete}>
                         <Delete />
                     </IconButton>
                 </Tooltip>
@@ -61,7 +61,8 @@ const CustomTableToolbar = ({ numSelected, title }) => {
 }
 
 CustomTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
+    selectedItems: PropTypes.array.isRequired,
+    onDelete: PropTypes.func.isRequired,
     title: PropTypes.string,
 }
 

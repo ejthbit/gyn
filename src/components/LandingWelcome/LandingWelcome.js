@@ -35,7 +35,7 @@ const LandingWelcome = () => {
 
     const handleToggleReservationModal = () => {
         setIsReservationModalOpen((prevState) => !prevState)
-        dispatch(clearReservation())
+        if (isReservationModalOpen) dispatch(clearReservation())
     }
 
     return (

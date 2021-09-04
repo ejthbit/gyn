@@ -1,4 +1,4 @@
-import { AppBar, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Divider, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import { SupervisedUserCircle } from '@material-ui/icons'
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'

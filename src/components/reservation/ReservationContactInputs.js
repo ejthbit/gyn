@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => ({
     input: {
         marginTop: theme.spacing(0),
         marginBottom: theme.spacing(0),
+        '& .MuiInput-root': {
+            cursor: 'pointer',
+        },
     },
 }))
 

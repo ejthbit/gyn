@@ -1,6 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { forEach } from 'ramda'
 import axiosGynInstance from '../../api/config'
-import { getSelectedDate, getSelectedTime, getContactInformation } from '../reservationProcess/selectors'
+import {
+    getContactInformation,
+    getSelectedAmbulance,
+    getSelectedDate,
+    getSelectedTime,
+} from '../reservationProcess/selectors'
 
 /**
  * @desc fetches availableTimeSlots between from and to dates.
@@ -18,9 +24,9 @@ export const fetchAvailableTimeslots = createAsyncThunk(
 
 // TODO: fetchBookingsByCriteria
 
-export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async ({ from, to }) => {
+export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async ({ from, to, workplace }) => {
     const URL = `${ID}/getBookings/${from}/${to}`
-    const res = await axiosGynInstance.get(URL)
+    const res = await axiosGynInstance.get(workplace ? `${URL}/${workplace}` : URL)
     return res.data
 })
 
@@ -38,7 +44,8 @@ export const bookAnAppointment = createAsyncThunk(
     async (arg, { getState, rejectWithValue }) => {
         const state = getState()
         const { name, email, phone, birthDate } = getContactInformation(state)
-        const SELECTED_WORKPLACE_ID = 1
+        const selectedAmbulanceId = getSelectedAmbulance(state)
+
         const selectedDate = getSelectedDate(state)
         const selectedTime = getSelectedTime(state)
 
@@ -49,7 +56,7 @@ export const bookAnAppointment = createAsyncThunk(
                 name,
                 birthDate,
                 timeofbooking: `${selectedDate}T${selectedTime}.000Z`,
-                workplace: SELECTED_WORKPLACE_ID,
+                workplace: selectedAmbulanceId,
             })
             return res.data
         } catch (error) {
@@ -58,3 +65,12 @@ export const bookAnAppointment = createAsyncThunk(
         }
     }
 )
+
+export const deleteBooking = createAsyncThunk('bookings/deleteBookings', async (bookingId) => {
+    const URL = `${ID}/booking/${bookingId}`
+    const res = await axiosGynInstance.delete(URL)
+    return res.data
+})
+
+export const deleteBookings = (selectedItems) => (dispatch) =>
+    forEach((bookingId) => dispatch(deleteBooking(bookingId)), selectedItems)

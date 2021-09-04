@@ -14,6 +14,7 @@ import ReservationTermPicker from './ReservationTermPicker'
 import useMemoizedSelector from '@utilities/useMemoSelector'
 import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
 import ReservationDoctorPreference from './ReservationDoctorPreference'
+import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,20 +38,22 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const getSteps = (error, completedOk = false) => [
-    { label: 'Preference lékaře', step: 'first' },
-    { label: 'Vyberte termín své navštevy', step: 'second' },
-    { label: 'Prosím vyplňte své kontaktni údaje', step: 'third' },
-    { label: 'Shrnutí objednávky', step: 'forth' },
+    { label: 'Výběr ambulance', step: 'first' },
+    { label: 'Preference lékaře', step: 'second' },
+    { label: 'Vyberte termín své navštevy', step: 'third' },
+    { label: 'Prosím vyplňte své kontaktni údaje', step: 'forth' },
+    { label: 'Shrnutí objednávky', step: 'fifth' },
     { ...(completedOk && { label: 'Úspěšná objednávka', step: 'success' }) },
     { ...(error && { label: 'Nastala chyba', step: 'error' }) },
 ]
 
 const getStepperContent = (step) => {
     const content = {
-        first: <ReservationDoctorPreference />,
-        second: <ReservationTermPicker />,
-        third: <ReservationContactInputs />,
-        forth: <ReservationSummary />,
+        first: <AmbulanceSelect />,
+        second: <ReservationDoctorPreference />,
+        third: <ReservationTermPicker />,
+        forth: <ReservationContactInputs />,
+        fifth: <ReservationSummary />,
         success: <ReservationSuccess />,
         error: <ReservationError />,
     }
@@ -72,7 +75,7 @@ export const ReservationStepper = () => {
                         <StepLabel error={!!orderErrors}>{label}</StepLabel>
                         <StepContent>
                             <Box>{getStepperContent(step)}</Box>
-                            {activeStep < 4 && (
+                            {activeStep < 5 && (
                                 <Box className={classes.actionsContainer}>
                                     <ReservationStepperControls steps={steps} />
                                 </Box>

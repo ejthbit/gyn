@@ -1,5 +1,4 @@
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bookAnAppointment } from 'src/store/bookings/actions'
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const ReservationStepperControls = ({ steps }) => {
+const ReservationStepperControls = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const activeStep = useSelector(getActiveStep)
@@ -25,7 +24,7 @@ const ReservationStepperControls = ({ steps }) => {
     const handleChangeStep = (stepValue) => dispatch(setActiveStep(stepValue))
     const handleConfirmAppointment = () => {
         dispatch(bookAnAppointment())
-        handleChangeStep(orderErrors ? 3 : 1)
+        handleChangeStep(orderErrors ? 4 : 1)
     }
 
     return (
@@ -39,18 +38,14 @@ const ReservationStepperControls = ({ steps }) => {
                 variant="outlined"
                 color="primary"
                 startIcon={isLoading && <CircularProgress color="primary" />}
-                onClick={() => (activeStep === 3 ? handleConfirmAppointment() : handleChangeStep(1))}
+                onClick={() => (activeStep === 4 ? handleConfirmAppointment() : handleChangeStep(1))}
                 className={classes.button}
                 disabled={disabledReservationBtn}
             >
-                {activeStep === 3 ? 'Odeslat objednávku' : 'Pokračovat dále'}
+                {activeStep === 4 ? 'Odeslat objednávku' : 'Pokračovat dále'}
             </Button>
         </>
     )
-}
-
-ReservationStepperControls.propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 export default ReservationStepperControls

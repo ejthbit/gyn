@@ -1,11 +1,21 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { map } from 'ramda'
 import { MenuItem, Select } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import { map, propEq, find } from 'ramda'
+import React from 'react'
 
-const Dropdown = ({ value, options, onChange, className, label, notSelectedLabel }) => {
+const Dropdown = ({ value, options, onChange, className, label, notSelectedLabel, ...otherSelectProps }) => {
+    const isSelectedValuePartOfOptions = find(propEq('value', value), options)
+
     return (
-        <Select value={value} onChange={onChange} displayEmpty className={className} label={label} fullWidth>
+        <Select
+            value={isSelectedValuePartOfOptions ? value : ''}
+            onChange={onChange}
+            displayEmpty
+            className={className}
+            label={label}
+            fullWidth
+            {...otherSelectProps}
+        >
             <MenuItem key="" value="" disabled={!notSelectedLabel} selected>
                 {notSelectedLabel ? notSelectedLabel : 'Nevybráno'}
             </MenuItem>
@@ -22,7 +32,7 @@ const Dropdown = ({ value, options, onChange, className, label, notSelectedLabel
 }
 
 Dropdown.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     options: PropTypes.array,
     onChange: PropTypes.func,
     className: PropTypes.string,

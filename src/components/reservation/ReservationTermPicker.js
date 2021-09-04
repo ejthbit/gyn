@@ -29,6 +29,7 @@ import {
 import {
     getDisabledReservationBtn,
     getPreferredDoctor,
+    getSelectedAmbulance,
     getSelectedDate,
     getSelectedTime,
 } from 'src/store/reservationProcess/selectors'
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const ReservationTermPicker = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const SELECTED_WORKPLACE_ID = 1
+    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
@@ -74,7 +75,11 @@ const ReservationTermPicker = () => {
         selectedDoctor,
     ])
 
-    const isDoctorServing = !isNilOrEmpty(find(({ date }) => equals(date, selectedDate), doctorServicesByDoctorId))
+    const isDoctorServing = !isNilOrEmpty(
+        find(({ date, doctorId }) => {
+            if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
+        }, doctorServicesByDoctorId)
+    )
 
     useEffect(() => {
         if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
@@ -90,10 +95,10 @@ const ReservationTermPicker = () => {
                     ({ date }) => equals(date, selectedDate),
                     doctorServicesByDoctorId
                 )
-                dispatch(fetchAvailableTimeslots({ from, to, workplace: SELECTED_WORKPLACE_ID }))
+                dispatch(fetchAvailableTimeslots({ from, to, workplace: selectedAmbulanceId }))
             } else dispatch(clearTimeslots())
         }
-    }, [selectedDate])
+    }, [selectedDate, selectedAmbulanceId])
 
     return (
         <Grid container direction="column">
@@ -106,14 +111,17 @@ const ReservationTermPicker = () => {
                     dispatch(
                         fetchDoctorServicesForSelectedMonth({
                             month: format(date, 'yyyy-MM'),
-                            workplace: SELECTED_WORKPLACE_ID,
+                            workplace: selectedAmbulanceId,
                         })
                     )
                 }
                 renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
                     const isSelected =
                         dayInCurrentMonth &&
-                        find(({ date }) => equals(date, format(day, 'yyyy-MM-dd')), doctorServicesByDoctorId)
+                        find(({ date, doctorId }) => {
+                            if (!isNilOrEmpty(doctorId)) return equals(date, format(day, 'yyyy-MM-dd'))
+                        }, doctorServicesByDoctorId)
+
                     return (
                         <div className={isSelected ? classes.dayWithDotContainer : classes.disabledDayContainer}>
                             {dayComponent}
@@ -153,7 +161,7 @@ const ReservationTermPicker = () => {
                     >
                         {availableTimeSlots.map(({ timeSlotStart }) => (
                             <MenuItem key={timeSlotStart} value={timeSlotStart}>
-                                {timeSlotStart}
+                                {timeSlotStart.slice(0, 5)}
                             </MenuItem>
                         ))}
                     </Select>

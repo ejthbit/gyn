@@ -26,8 +26,8 @@ export const makeAvailableTimeslotsWithTimeOnly = () =>
 
 export const makeBookingsSelector = () =>
     createSelector([getBookings], (bookings) =>
-        map(({ contact, name, timeofbooking, birthdate }) => {
-            return { timeofbooking, name, birthdate, email: '', phone: '' }
+        map(({ id, contact, name, timeofbooking, birthdate }) => {
+            return { id, timeofbooking, name, birthdate, email: '', phone: '' }
         }, bookings)
     )
 

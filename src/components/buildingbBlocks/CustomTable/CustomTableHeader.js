@@ -25,8 +25,12 @@ const CustomTableHeader = ({
                         inputProps={{ 'aria-label': 'select all items' }}
                     />
                 </TableCell>
-                {headCells.map((headCell) => (
-                    <TableCell key={headCell.id} padding={'default'} sortDirection={orderBy === headCell.id && order}>
+                {headCells.map((headCell, index) => (
+                    <TableCell
+                        key={`${headCell.id}-${index}`}
+                        padding="normal"
+                        sortDirection={orderBy === headCell.id && order}
+                    >
                         <TableSortLabel
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}

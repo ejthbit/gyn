@@ -1,25 +1,27 @@
 import Dropdown from '@components/buildingbBlocks/Dropdown.js'
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import format from 'date-fns/format'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
-import { getDoctorServicesForSelectedMonth } from 'src/store/bookings/selectors'
 import { setPreferredDoctor, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getPreferredDoctor } from 'src/store/reservationProcess/selectors'
-import format from 'date-fns/format'
+import { getPreferredDoctor, getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
 const ReservationDoctorPreference = () => {
     const dispatch = useDispatch()
 
-    const selectedDoctor = useSelector(getPreferredDoctor)
-    const doctorServicesForSelectedMonth = useSelector(getDoctorServicesForSelectedMonth)
+    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
+    const selectedDoctor = useSelector(getPreferredDoctor)
     const handleChangeDoctor = (e) => dispatch(setPreferredDoctor(e.target.value))
 
     useEffect(() => {
         dispatch(setReservationBtnDisabled(false))
-        if (isNilOrEmpty(doctorServicesForSelectedMonth))
-            dispatch(fetchDoctorServicesForSelectedMonth(format(Date.now(), 'yyyy-MM')))
+        dispatch(
+            fetchDoctorServicesForSelectedMonth({
+                month: format(Date.now(), 'yyyy-MM'),
+                workplace: selectedAmbulanceId,
+            })
+        )
     }, [])
 
     return (

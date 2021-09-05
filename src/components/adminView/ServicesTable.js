@@ -2,6 +2,7 @@ import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import FormSelectInput from '@components/buildingbBlocks/FormInputs/FormSelectInput'
 import {
     Button,
+    makeStyles,
     MenuItem,
     Paper,
     Table,
@@ -10,9 +11,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    makeStyles,
 } from '@material-ui/core'
 import getOpeningHours from '@utilities/getOpeningHours'
+import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { addIndex, map, values } from 'ramda'
 import React from 'react'
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const openingHours = getOpeningHours()
-const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
+const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkplaceId }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const { handleSubmit, control } = useForm({
@@ -62,7 +63,11 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
     })
 
     const onSubmit = ({ data }) => {
-        const apiData = { month: selectedMonth, days: data }
+        const apiData = {
+            month: selectedMonth,
+            days: data,
+            workplace: selectedWorkplaceId,
+        }
         !isEditingServices
             ? dispatch(createDoctorServiceForMonth(apiData))
             : dispatch(updateDoctorServiceForMonth(apiData))
@@ -73,8 +78,8 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
                 <TableHead>
                     <TableRow className={classes.tableRow}>
                         <TableCell width="5%">Den</TableCell>
-                        <TableCell width="10%">Datum</TableCell>
-                        <TableCell width="20%">Doktor</TableCell>
+                        <TableCell width="15%">Datum</TableCell>
+                        <TableCell width="15%">Doktor</TableCell>
                         <TableCell width="15%">Od:</TableCell>
                         <TableCell width="15%">Do:</TableCell>
                         <TableCell width="35%">Poznámka:</TableCell>
@@ -92,8 +97,8 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices }) => {
                                 <TableCell width="5%">
                                     {new Date(date).toLocaleString('cs-CZ', { weekday: 'long' })}
                                 </TableCell>
-                                <TableCell width="10%">{date}</TableCell>
-                                <TableCell width="20%">
+                                <TableCell width="15%">{format(new Date(date), 'dd-MM-yyyy')}</TableCell>
+                                <TableCell width="15%">
                                     {
                                         <FormSelectInput
                                             name={`data.${index}.doctorId`}
@@ -154,6 +159,7 @@ ServicesTable.propTypes = {
     data: PropTypes.array,
     selectedMonth: PropTypes.string,
     isEditingServices: PropTypes.bool,
+    selectedWorkplaceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 export default ServicesTable

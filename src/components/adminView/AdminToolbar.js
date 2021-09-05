@@ -1,9 +1,11 @@
+import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 import {
     AppBar,
     Box,
     Divider,
     Drawer,
     Grid,
+    Hidden,
     List,
     ListItem,
     ListItemIcon,
@@ -12,11 +14,14 @@ import {
     Toolbar,
     Typography,
 } from '@material-ui/core'
-import { AccountCircle, Event, Schedule } from '@material-ui/icons'
+import { Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
+import SM from '@utilities/StorageManager'
 import { map } from 'ramda'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import routingPaths, { adminPaths } from 'src/routingPaths'
+import { adminPaths } from 'src/routingPaths'
+import { logout } from 'src/store/administration/administrationSlice'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,16 +31,25 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
         marginLeft: 200,
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: 60,
+        },
     },
     title: {
         flexGrow: 1,
     },
     drawer: {
         width: 200,
+        [theme.breakpoints.down('sm')]: {
+            width: 60,
+        },
         flexShrink: 0,
     },
     drawerPaper: {
         width: 200,
+        [theme.breakpoints.down('sm')]: {
+            width: 60,
+        },
         backgroundColor: theme.palette.primary.main,
     },
     drawerHeader: {
@@ -46,12 +60,59 @@ const useStyles = makeStyles((theme) => ({
         color: '#FFF',
         padding: theme.spacing(2),
         minHeight: theme.spacing(8),
+        [theme.breakpoints.down('sm')]: {
+            minHeight: theme.spacing(3),
+        },
+        '&:hover': {
+            color: '#000',
+        },
     },
     drawerListItem: {
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2),
         '& svg': {
             color: '#FFF',
         },
+        [theme.breakpoints.down('sm')]: {
+            '& .MuiTypography-root': {
+                display: 'none',
+            },
+        },
         color: '#FFF',
+    },
+    logOutIcon: {
+        marginTop: theme.spacing(1),
+        [theme.breakpoints.up('md')]: {
+            marginTop: theme.spacing(1),
+        },
+        cursor: 'pointer',
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
+    },
+    ambulanceSelect: {
+        flexFlow: 'row',
+        '& .MuiInputBase-root': {
+            paddingTop: theme.spacing(1),
+            height: theme.spacing(3),
+        },
+        '& .MuiSelect-selectMenu': {
+            '&:focus': {
+                backgroundColor: 'transparent',
+            },
+            height: theme.spacing(3),
+        },
+        [theme.breakpoints.down('sm')]: {
+            flexFlow: 'column',
+            '& .MuiInputBase-root': {
+                textAlign: 'center',
+            },
+        },
+    },
+    headerContent: {
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'center',
+        },
     },
 }))
 const adminToolbarContent = [
@@ -61,22 +122,47 @@ const adminToolbarContent = [
 
 const AdminToolbar = () => {
     const classes = useStyles()
+    const dispatch = useDispatch()
     const [selectedItem, setSelectedItem] = useState('Administrace')
+
+    const handleLogout = (e) => {
+        SM.clearLSStorage(e)
+        dispatch(logout())
+    }
+
     return (
         <>
             <AppBar position="static" className={classes.root} color="primary">
                 <Toolbar className={classes.appBar}>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid item md={8}>
+                    <Grid container spacing={2} alignItems="center" className={classes.headerContent}>
+                        <Grid item md={5}>
                             <Typography variant="h6" className={classes.title}>
                                 {selectedItem}
                             </Typography>
                         </Grid>
-                        <Grid container item md={4} justifyContent="flex-end">
-                            <Box marginRight={2}>
-                                <Typography>Vítej, Admine</Typography>
-                            </Box>
-                            <AccountCircle />
+                        <Grid
+                            container
+                            item
+                            md={7}
+                            justifyContent="flex-end"
+                            direction="row"
+                            alignItems="center"
+                            spacing={2}
+                        >
+                            <Grid item container md={5} alignItems="center" className={classes.ambulanceSelect}>
+                                <Box marginRight={2}>
+                                    <Typography>Ambulance:</Typography>
+                                </Box>
+                                <AmbulanceSelect variant="outlined" />
+                            </Grid>
+                            <Grid item>
+                                <Box marginRight={3}>
+                                    <Typography>Vítej, Admine</Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item md={1}>
+                                <ExitToApp className={classes.logOutIcon} onClick={handleLogout} />
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Toolbar>
@@ -89,11 +175,16 @@ const AdminToolbar = () => {
                     paper: classes.drawerPaper,
                 }}
             >
-                <Box className={classes.drawerHeader} component={Link} to={routingPaths.admin}>
-                    <Typography> VANEK GYNEKOLOGIE</Typography>
+                <Box className={classes.drawerHeader} component={Link} to={'/'}>
+                    <Hidden smDown>
+                        <Typography> VANEK GYNEKOLOGIE</Typography>
+                    </Hidden>
+                    <Hidden mdUp>
+                        <Home />
+                    </Hidden>
                 </Box>
                 <Divider />
-                <List>
+                <List disablePadding>
                     {map(
                         ({ icon, text, link }) => (
                             <ListItem

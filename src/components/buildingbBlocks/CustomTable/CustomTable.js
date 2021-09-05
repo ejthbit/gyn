@@ -12,7 +12,9 @@ import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { always, ascend, descend, equals, ifElse, prop, sortWith } from 'ramda'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { compose } from 'redux'
+import { deleteBookings } from 'src/store/bookings/actions'
 import CustomTableHeader from './CustomTableHeader'
 import CustomTableToolbar from './CustomTableToolbar'
 
@@ -51,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
     const classes = useStyles()
+    const dispatch = useDispatch()
+
     const [order, setOrder] = React.useState('asc')
     const [orderBy, setOrderBy] = React.useState(orderedBy)
     const [selected, setSelected] = React.useState([])
@@ -62,20 +66,19 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
     }
-
     const handleSelectAllClick = (e) => {
         if (e.target.checked) {
-            const newSelecteds = data.map((n) => n.name)
-            setSelected(newSelecteds)
+            const newSelectedIds = data.map((booking) => booking.id)
+            setSelected(newSelectedIds)
             return
         }
         setSelected([])
     }
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name)
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id)
         let newSelected = []
-        if (selectedIndex === -1) newSelected = newSelected.concat(selected, name)
+        if (selectedIndex === -1) newSelected = newSelected.concat(selected, id)
         else if (selectedIndex === 0) newSelected = newSelected.concat(selected.slice(1))
         else if (selectedIndex === selected.length - 1) newSelected = newSelected.concat(selected.slice(0, -1))
         else if (selectedIndex > 0)
@@ -90,7 +93,15 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         setPage(0)
     }
 
-    const isSelected = (name) => selected.indexOf(name) !== -1
+    const handleDeleteSelectedItems = async () => {
+        const shouldDelete = window.confirm('Jste si jisti, že chcete odstranit vybrané položky? ')
+        if (shouldDelete) {
+            const { error } = await dispatch(deleteBookings(selected))
+            if (!error) setSelected([])
+        }
+    }
+
+    const isSelected = (id) => selected.indexOf(id) !== -1
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
@@ -98,7 +109,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         !isNilOrEmpty(data) && (
             <div className={classes.root}>
                 <Paper className={classes.paper}>
-                    <CustomTableToolbar title={title} numSelected={selected.length} />
+                    <CustomTableToolbar title={title} selectedItems={selected} onDelete={handleDeleteSelectedItems} />
                     <TableContainer>
                         <Table
                             className={classes.table}
@@ -120,7 +131,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                 {sortByProperty(order, orderBy, data)
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const isItemSelected = isSelected(row.name)
+                                        const isItemSelected = isSelected(row.id)
                                         const date = new Date(row.timeofbooking)
                                         const rowDate = format(date, 'yyyy/MM/dd')
                                         const rowTime = row.timeofbooking.substr(11, 8)
@@ -128,11 +139,11 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(e) => handleClick(e, row.name)}
+                                                onClick={(e) => handleClick(e, row.id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}
-                                                key={`${row}-${index}`}
+                                                key={`${rowDate}-${rowTime}`}
                                                 selected={isItemSelected}
                                             >
                                                 <TableCell padding="checkbox">

@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { map, path, filter, equals } from 'ramda'
+import { equals, filter, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
@@ -27,8 +26,8 @@ export const makeAvailableTimeslotsWithTimeOnly = () =>
 
 export const makeBookingsSelector = () =>
     createSelector([getBookings], (bookings) =>
-        map(({ contact, name, timeofbooking, birthdate }) => {
-            return { timeofbooking, name, birthdate, email: '', phone: '' }
+        map(({ id, contact, name, timeofbooking, birthdate }) => {
+            return { id, timeofbooking, name, birthdate, email: '', phone: '' }
         }, bookings)
     )
 

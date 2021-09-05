@@ -1,10 +1,12 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
+import { equals, filter } from 'ramda'
 import {
     fetchAvailableTimeslots,
     bookAnAppointment,
     fetchBookings,
     fetchDoctorServicesForSelectedMonth,
+    deleteBooking,
 } from './actions'
 
 /* RTK uses on background Immer library.
@@ -53,56 +55,60 @@ const bookingsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchAvailableTimeslots.pending, (state) => {
-            state.availableTimeslots.isLoading = true
-            state.availableTimeslots.error = undefined
-        })
-        builder.addCase(fetchAvailableTimeslots.fulfilled, (state, action) => {
-            state.availableTimeslots.isLoading = false
-            state.availableTimeslots.slots = action.payload
-        })
-        builder.addCase(fetchAvailableTimeslots.rejected, (state, action) => {
-            state.availableTimeslots.isLoading = false
-            state.availableTimeslots.error = action.error
-        })
-        builder.addCase(bookAnAppointment.pending, (state) => {
-            state.lastBooking.isLoading = true
-            state.lastBooking.errors = undefined
-        })
-        builder.addCase(bookAnAppointment.rejected, (state, action) => {
-            state.lastBooking.isLoading = false
-            state.lastBooking.errors = action.payload.errors
-        })
+        builder
+            .addCase(fetchAvailableTimeslots.pending, (state) => {
+                state.availableTimeslots.isLoading = true
+                state.availableTimeslots.error = undefined
+            })
+            .addCase(fetchAvailableTimeslots.fulfilled, (state, action) => {
+                state.availableTimeslots.isLoading = false
+                state.availableTimeslots.slots = action.payload
+            })
+            .addCase(fetchAvailableTimeslots.rejected, (state, action) => {
+                state.availableTimeslots.isLoading = false
+                state.availableTimeslots.error = action.error
+            })
+            .addCase(bookAnAppointment.pending, (state) => {
+                state.lastBooking.isLoading = true
+                state.lastBooking.errors = undefined
+            })
+            .addCase(bookAnAppointment.rejected, (state, action) => {
+                state.lastBooking.isLoading = false
+                state.lastBooking.errors = action.payload.errors
+            })
 
-        builder.addCase(bookAnAppointment.fulfilled, (state) => {
-            state.lastBooking.isLoading = false
-            state.lastBooking.errors = undefined
-            state.lastBooking.orderFinishedOk = true
-        })
-        builder.addCase(fetchBookings.pending, (state) => {
-            state.bookings.isLoading = true
-            state.bookings.error = undefined
-        })
-        builder.addCase(fetchBookings.fulfilled, (state, action) => {
-            state.bookings.isLoading = false
-            state.bookings.bookings = action.payload
-        })
-        builder.addCase(fetchBookings.rejected, (state, action) => {
-            state.bookings.isLoading = false
-            state.bookings.error = action.error
-        })
-        builder.addCase(fetchDoctorServicesForSelectedMonth.pending, (state) => {
-            state.doctorServicesForSelectedMonth.isLoading = true
-            state.doctorServicesForSelectedMonth.error = undefined
-        })
-        builder.addCase(fetchDoctorServicesForSelectedMonth.fulfilled, (state, action) => {
-            state.doctorServicesForSelectedMonth.isLoading = false
-            state.doctorServicesForSelectedMonth.data = action.payload
-        })
-        builder.addCase(fetchDoctorServicesForSelectedMonth.rejected, (state, action) => {
-            state.doctorServicesForSelectedMonth.isLoading = false
-            state.doctorServicesForSelectedMonth.error = action.error
-        })
+            .addCase(bookAnAppointment.fulfilled, (state) => {
+                state.lastBooking.isLoading = false
+                state.lastBooking.errors = undefined
+                state.lastBooking.orderFinishedOk = true
+            })
+            .addCase(fetchBookings.pending, (state) => {
+                state.bookings.isLoading = true
+                state.bookings.error = undefined
+            })
+            .addCase(fetchBookings.fulfilled, (state, action) => {
+                state.bookings.isLoading = false
+                state.bookings.bookings = action.payload
+            })
+            .addCase(fetchBookings.rejected, (state, action) => {
+                state.bookings.isLoading = false
+                state.bookings.error = action.error
+            })
+            .addCase(fetchDoctorServicesForSelectedMonth.pending, (state) => {
+                state.doctorServicesForSelectedMonth.isLoading = true
+                state.doctorServicesForSelectedMonth.error = undefined
+            })
+            .addCase(fetchDoctorServicesForSelectedMonth.fulfilled, (state, action) => {
+                state.doctorServicesForSelectedMonth.isLoading = false
+                state.doctorServicesForSelectedMonth.data = action.payload
+            })
+            .addCase(fetchDoctorServicesForSelectedMonth.rejected, (state, action) => {
+                state.doctorServicesForSelectedMonth.isLoading = false
+                state.doctorServicesForSelectedMonth.error = action.error
+            })
+            .addCase(deleteBooking.fulfilled, (state, action) => {
+                state.bookings.bookings = filter(({ id }) => !equals(id, action.meta.arg), state.bookings.bookings)
+            })
     },
 })
 

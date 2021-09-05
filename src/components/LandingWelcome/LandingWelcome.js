@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
         paddingLeft: '10%',
         paddingRight: 20,
         paddingTop: 100,
+        marginTop: -40,
     },
     firstHeadline: {
         fontWeight: 'bold',
@@ -34,7 +35,7 @@ const LandingWelcome = () => {
 
     const handleToggleReservationModal = () => {
         setIsReservationModalOpen((prevState) => !prevState)
-        dispatch(clearReservation())
+        if (isReservationModalOpen) dispatch(clearReservation())
     }
 
     return (

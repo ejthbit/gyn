@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
-import { DatePicker } from '@material-ui/pickers'
-import { getMonth, getYear, format } from 'date-fns'
-import { equals, includes, map } from 'ramda'
 import { ArrowBack } from '@material-ui/icons'
-import ServicesTable from './ServicesTable'
+import { DatePicker } from '@material-ui/pickers'
+import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { useDispatch } from 'react-redux'
+import { format, getMonth, getYear } from 'date-fns'
+import { equals, includes, map } from 'ramda'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
+import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
+import ServicesTable from './ServicesTable'
 
 const useStyles = makeStyles((theme) => ({
     datePicker: {
@@ -37,8 +38,10 @@ const DoctorServicesView = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
+    const d = new Date()
     const [selectedAction, setSelectedAction] = useState(0)
-    const [selectedMonth, setSelectedMonth] = useState(null)
+    const [selectedMonth, setSelectedMonth] = useState(new Date(d.setMonth(d.getMonth() + 1)))
     const [dates, setDates] = useState([])
     const [serviceExists, setServiceExists] = useState(false)
     const handleSetActionWorkflow = (value) => setSelectedAction(value)
@@ -51,7 +54,13 @@ const DoctorServicesView = () => {
 
     const handleGenerateDataForTable = async (date) => {
         setSelectedMonth(date)
-        const { payload } = await dispatch(fetchDoctorServicesForSelectedMonth(format(date, 'yyyy-MM')))
+        const { payload } = await dispatch(
+            fetchDoctorServicesForSelectedMonth({
+                month: format(date, 'yyyy-MM'),
+                workplace: selectedAmbulanceId,
+            })
+        )
+        // FIXME:Co kdyz neexistuje sluzba case
         if (equals(selectedAction, 2)) {
             setDates(payload.days)
         } else if (!payload) {
@@ -116,6 +125,7 @@ const DoctorServicesView = () => {
                         data={dates}
                         selectedMonth={format(selectedMonth, 'yyyy-MM')}
                         isEditingServices={equals(selectedAction, 2)}
+                        selectedWorkplaceId={selectedAmbulanceId}
                     />
                 </Grid>
             )}

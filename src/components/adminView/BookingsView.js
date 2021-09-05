@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchBookings } from 'src/store/bookings/actions'
 import { setBookingsViewDate } from 'src/store/bookings/bookingsSlice'
 import { getBookingsSelectedDate, makeBookingsSelector } from 'src/store/bookings/selectors'
+import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
@@ -33,6 +34,7 @@ const BookingsView = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
     const bookingsViewDate = useSelector(getBookingsSelectedDate)
     const bookings = useMemoizedSelector(makeBookingsSelector, {}, [bookingsViewDate])
 
@@ -52,10 +54,13 @@ const BookingsView = () => {
 
     useEffect(() => {
         const { from, to } = bookingsViewDate
-        if (!isNilOrEmpty(from) && !isNilOrEmpty(to)) dispatch(fetchBookings({ from, to }))
+        if (!isNilOrEmpty(from) && !isNilOrEmpty(to))
+            dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
         if (!isNilOrEmpty(from) && isNilOrEmpty(to))
-            dispatch(fetchBookings({ from, to: endOfDay(new Date(from)).toISOString() }))
-    }, [bookingsViewDate])
+            dispatch(
+                fetchBookings({ from, to: endOfDay(new Date(from)).toISOString(), workplace: selectedAmbulanceId })
+            )
+    }, [bookingsViewDate, selectedAmbulanceId])
 
     const headCells = [
         { id: 'timeofbooking', numeric: false, disablePadding: false, label: 'Datum návštevy' },

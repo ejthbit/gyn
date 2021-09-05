@@ -1,4 +1,5 @@
 const routingPaths = {
+    login: '/login',
     services: '/sluzby',
     employees: '/zamestnanci',
     officeHours: '/ordinacni-hodiny',

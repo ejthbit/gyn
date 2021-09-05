@@ -6,11 +6,12 @@ import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format, getMonth, getYear } from 'date-fns'
 import { equals, includes, map } from 'ramda'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearServicesOperationState } from 'src/store/administration/administrationSlice'
 import { servicesOperationError, servicesOperationFinishedOk } from 'src/store/administration/selectors'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
+import { fetchDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/actions'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import ServicesTable from './ServicesTable'
 
@@ -86,6 +87,11 @@ const DoctorServicesView = () => {
             setServiceExists(false)
         } else setServiceExists(true)
     }
+
+    useEffect(() => {
+        if (!equals(selectedAction, 0)) handleGenerateDataForTable(selectedMonth)
+        dispatch(fetchDoctorsForSelectedAmbulance(selectedAmbulanceId))
+    }, [selectedAmbulanceId])
 
     return (
         <Grid container>

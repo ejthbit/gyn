@@ -1,10 +1,16 @@
 import Dropdown from '@components/buildingbBlocks/Dropdown.js'
+import useMemoizedSelector from '@utilities/useMemoSelector'
 import format from 'date-fns/format'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
+import { fetchDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/actions'
 import { setPreferredDoctor, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getPreferredDoctor, getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
+import {
+    getPreferredDoctor,
+    getSelectedAmbulance,
+    makeArrayOfValueLabelDoctors,
+} from 'src/store/reservationProcess/selectors'
 
 const ReservationDoctorPreference = () => {
     const dispatch = useDispatch()
@@ -12,6 +18,8 @@ const ReservationDoctorPreference = () => {
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
     const selectedDoctor = useSelector(getPreferredDoctor)
+    const doctorsForSelectedAmbulance = useMemoizedSelector(makeArrayOfValueLabelDoctors, {}, [selectedAmbulanceId])
+
     const handleChangeDoctor = (e) => dispatch(setPreferredDoctor(e.target.value))
 
     useEffect(() => {
@@ -22,18 +30,15 @@ const ReservationDoctorPreference = () => {
                 workplace: selectedAmbulanceId,
             })
         )
-    }, [])
+        dispatch(fetchDoctorsForSelectedAmbulance(selectedAmbulanceId))
+    }, [selectedAmbulanceId])
 
     return (
         <Dropdown
             value={selectedDoctor}
             onChange={handleChangeDoctor}
             notSelectedLabel="Nemám preferenci"
-            options={[
-                { value: '1', label: 'MUDr. Miroslav Vaněk' },
-                { value: '2', label: 'MUDr. Jana Medvecká' },
-                { value: '3', label: 'MUDr. Hana Vaňková - Sonografie' },
-            ]}
+            options={doctorsForSelectedAmbulance}
         />
     )
 }

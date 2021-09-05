@@ -17,11 +17,11 @@ import getOpeningHours from '@utilities/getOpeningHours'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { addIndex, map, values } from 'ramda'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import DOCTORS from 'src/constants/doctors'
+import { useDispatch, useSelector } from 'react-redux'
 import { createDoctorServiceForMonth, updateDoctorServiceForMonth } from 'src/store/administration/actions'
+import { getDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,7 +57,10 @@ const openingHours = getOpeningHours()
 const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkplaceId }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const { handleSubmit, control, formState } = useForm({
+
+    const selectedDoctors = useSelector(getDoctorsForSelectedAmbulance)
+
+    const { handleSubmit, control, formState, setValue, reset } = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: { data },
@@ -73,6 +76,11 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
             ? dispatch(createDoctorServiceForMonth(apiData))
             : dispatch(updateDoctorServiceForMonth(apiData))
     }
+
+    useEffect(() => {
+        reset({ data })
+    }, [data])
+
     return (
         <TableContainer component={Paper} className={classes.paper}>
             <Table className={classes.table} size="medium">
@@ -102,13 +110,22 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                             fullWidth
                                             required
                                         >
+                                            <MenuItem
+                                                value=""
+                                                onClick={() => {
+                                                    setValue(`data.${index}.start`, '')
+                                                    setValue(`data.${index}.end`, '')
+                                                }}
+                                            >
+                                                Zavřeno
+                                            </MenuItem>
                                             {map(
-                                                ({ doctorId: value, name }) => (
+                                                ({ doctor_id: value, name }) => (
                                                     <MenuItem key={value} value={value}>
                                                         {name}
                                                     </MenuItem>
                                                 ),
-                                                values(DOCTORS)
+                                                values(selectedDoctors)
                                             )}
                                         </FormSelectInput>
                                     }

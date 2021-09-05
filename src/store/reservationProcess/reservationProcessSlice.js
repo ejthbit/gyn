@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { isNil } from 'ramda'
-import { fetchAmbulances } from './actions'
+import { fetchAmbulances, fetchDoctorsForSelectedAmbulance } from './actions'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
@@ -10,6 +10,11 @@ and Immer will safely return a correct immutably updated result. */
 
 const configurationInitialState = {
     ambulances: {
+        isLoading: false,
+        error: undefined,
+        data: [],
+    },
+    doctorsForSelectedAmbulance: {
         isLoading: false,
         error: undefined,
         data: [],
@@ -63,20 +68,34 @@ const reservationProcessSlice = createSlice({
         clearReservation: (state) => (state = { ...state, ...reservationProcessInitialState }),
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchAmbulances.pending, (state) => {
-            state.ambulances.isLoading = true
-            state.ambulances.error = undefined
-        })
-        builder.addCase(fetchAmbulances.fulfilled, (state, action) => {
-            const { data } = action.payload
-            state.ambulances.isLoading = false
-            state.ambulances.data = data
-            state.selectedAmbulance = !isNilOrEmpty(data) ? data[0]?.workplace_id : ''
-        })
-        builder.addCase(fetchAmbulances.rejected, (state, action) => {
-            state.ambulances.isLoading = false
-            state.ambulances.error = action.error
-        })
+        builder
+            .addCase(fetchAmbulances.pending, (state) => {
+                state.ambulances.isLoading = true
+                state.ambulances.error = undefined
+            })
+            .addCase(fetchAmbulances.fulfilled, (state, action) => {
+                const { data } = action.payload
+                state.ambulances.isLoading = false
+                state.ambulances.data = data
+                state.selectedAmbulance = !isNilOrEmpty(data) ? data[0]?.workplace_id : ''
+            })
+            .addCase(fetchAmbulances.rejected, (state, action) => {
+                state.ambulances.isLoading = false
+                state.ambulances.error = action.error
+            })
+            .addCase(fetchDoctorsForSelectedAmbulance.pending, (state) => {
+                state.doctorsForSelectedAmbulance.isLoading = true
+                state.doctorsForSelectedAmbulance.error = undefined
+            })
+            .addCase(fetchDoctorsForSelectedAmbulance.fulfilled, (state, action) => {
+                const { data } = action.payload
+                state.doctorsForSelectedAmbulance.isLoading = false
+                state.doctorsForSelectedAmbulance.data = data
+            })
+            .addCase(fetchDoctorsForSelectedAmbulance.rejected, (state, action) => {
+                state.doctorsForSelectedAmbulance.isLoading = false
+                state.doctorsForSelectedAmbulance.error = action.error
+            })
     },
 })
 

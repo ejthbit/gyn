@@ -1,5 +1,6 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Button, Grid, makeStyles, Snackbar, Typography } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
+import { Alert } from '@material-ui/lab'
 import { DatePicker } from '@material-ui/pickers'
 import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
@@ -7,6 +8,8 @@ import { format, getMonth, getYear } from 'date-fns'
 import { equals, includes, map } from 'ramda'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { clearServicesOperationState } from 'src/store/administration/administrationSlice'
+import { servicesOperationError, servicesOperationFinishedOk } from 'src/store/administration/selectors'
 import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import ServicesTable from './ServicesTable'
@@ -39,11 +42,15 @@ const DoctorServicesView = () => {
     const dispatch = useDispatch()
 
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
+    const serviceOperationFinishedOk = useSelector(servicesOperationFinishedOk)
+    const serviceOperationError = useSelector(servicesOperationError)
+
     const d = new Date()
     const [selectedAction, setSelectedAction] = useState(0)
     const [selectedMonth, setSelectedMonth] = useState(new Date(d.setMonth(d.getMonth() + 1)))
     const [dates, setDates] = useState([])
     const [serviceExists, setServiceExists] = useState(false)
+
     const handleSetActionWorkflow = (value) => setSelectedAction(value)
 
     const handleClearActionsWorkflow = () => {
@@ -129,6 +136,21 @@ const DoctorServicesView = () => {
                     />
                 </Grid>
             )}
+            {
+                <Box>
+                    <Snackbar
+                        open={serviceOperationFinishedOk || serviceOperationError}
+                        autoHideDuration={6000}
+                        onClose={() => dispatch(clearServicesOperationState())}
+                    >
+                        {serviceOperationError ? (
+                            <Alert severity="error">Při ukládání nastala chyba</Alert>
+                        ) : (
+                            <Alert severity="success">Úspěšně uloženo</Alert>
+                        )}
+                    </Snackbar>
+                </Box>
+            }
             {serviceExists && (
                 <Typography className={classes.serviceExists} color="error">
                     Na daný měsíc již existuje rozpis.

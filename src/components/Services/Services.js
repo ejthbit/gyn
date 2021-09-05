@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiTypography-h2': {
             marginBottom: theme.spacing(2),
             textAlign: 'center',
+            [theme.breakpoints.down('xs')]: {
+                textAlign: 'left',
+            },
         },
     },
 }))
@@ -51,7 +54,7 @@ const Services = () => {
                 <Typography variant="h2">Naše služby</Typography>
             </Grid>
             {services.map(({ icon, label, description }) => (
-                <Grid xs={6} item key={label}>
+                <Grid xs={12} sm={6} item key={label}>
                     <Service icon={icon} label={label} description={description} />
                 </Grid>
             ))}

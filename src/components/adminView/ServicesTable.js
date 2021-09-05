@@ -1,6 +1,7 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import FormSelectInput from '@components/buildingbBlocks/FormInputs/FormSelectInput'
 import {
+    Box,
     Button,
     makeStyles,
     MenuItem,
@@ -56,7 +57,7 @@ const openingHours = getOpeningHours()
 const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkplaceId }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const { handleSubmit, control } = useForm({
+    const { handleSubmit, control, formState } = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: { data },
@@ -83,11 +84,6 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                         <TableCell width="15%">Od:</TableCell>
                         <TableCell width="15%">Do:</TableCell>
                         <TableCell width="35%">Poznámka:</TableCell>
-                        <TableCell>
-                            <Button color="primary" variant="contained" onClick={handleSubmit(onSubmit)}>
-                                Uložit
-                            </Button>
-                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -151,6 +147,16 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                     )}
                 </TableBody>
             </Table>
+            <Box margin={1}>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={formState.submitCount === 1}
+                >
+                    Uložit
+                </Button>
+            </Box>
         </TableContainer>
     )
 }

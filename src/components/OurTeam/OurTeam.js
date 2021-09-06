@@ -35,7 +35,7 @@ const nurses = [
 const OurTeam = () => {
     const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2}>
+        <Grid className={classes.root} container spacing={2} id="personnel">
             <Grid item xs={12}>
                 <Typography variant="h2">Náš tým</Typography>
             </Grid>

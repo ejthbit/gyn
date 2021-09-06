@@ -3,7 +3,8 @@ import { Button, Grid, makeStyles } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { endOfDay, endOfWeek, startOfDay, startOfWeek } from 'date-fns'
+import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfWeek } from 'date-fns'
+import startOfMonth from 'date-fns/startOfMonth'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchBookings } from 'src/store/bookings/actions'
@@ -52,6 +53,14 @@ const BookingsView = () => {
             })
         )
 
+    const handleSetThisMonthDate = () =>
+        dispatch(
+            setBookingsViewDate({
+                from: startOfMonth(Date.now()).toISOString(),
+                to: endOfMonth(Date.now()).toISOString(),
+            })
+        )
+
     useEffect(() => {
         const { from, to } = bookingsViewDate
         if (!isNilOrEmpty(from) && !isNilOrEmpty(to))
@@ -74,7 +83,7 @@ const BookingsView = () => {
     return (
         <Grid container>
             <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny od: "
@@ -88,7 +97,7 @@ const BookingsView = () => {
                         onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny do: "
@@ -102,14 +111,24 @@ const BookingsView = () => {
                         autoOk
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                     <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetTodayDate}>
                         Dnes
                     </Button>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                     <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetThisWeekDate}>
                         Týden
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Button
+                        className={classes.item}
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleSetThisMonthDate}
+                    >
+                        Měsíc
                     </Button>
                 </Grid>
             </Grid>

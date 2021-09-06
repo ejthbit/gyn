@@ -1,5 +1,5 @@
 import { IconButton, lighten, makeStyles, Toolbar, Tooltip, Typography } from '@material-ui/core'
-import { Delete, FilterList } from '@material-ui/icons'
+import { Delete } from '@material-ui/icons'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
             ? {
                   color: theme.palette.secondary.main,
                   backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+                  marginTop: theme.spacing(2),
+                  borderRadius: 6,
               }
             : {
                   color: theme.palette.text.primary,
@@ -43,16 +45,10 @@ const CustomTableToolbar = ({ selectedItems, onDelete, title }) => {
                     {title}
                 </Typography>
             )}
-            {NUMBER_OF_SELECTED_ITEMS > 0 ? (
+            {NUMBER_OF_SELECTED_ITEMS > 0 && (
                 <Tooltip title="Delete">
                     <IconButton aria-label="delete" onClick={onDelete}>
                         <Delete />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton aria-label="filter list">
-                        <FilterList />
                     </IconButton>
                 </Tooltip>
             )}

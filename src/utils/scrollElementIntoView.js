@@ -3,8 +3,8 @@ const scrollElementIntoView = (e, behavior) => {
 
     // Furthermore, if you have for example a header outside the iframe
     // you need to factor in its dimensions when calculating the position to scroll to
-
-    const finalOffset = e.getBoundingClientRect().top + scrollTop
+    const headerHeight = 144
+    const finalOffset = e.getBoundingClientRect().top + scrollTop - headerHeight
 
     window.parent.scrollTo({
         top: finalOffset,

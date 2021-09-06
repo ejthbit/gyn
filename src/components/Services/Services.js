@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 const Services = () => {
     const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2} id="sluzby">
+        <Grid className={classes.root} container spacing={2} id="services">
             <Grid item xs={12}>
                 <Typography variant="h2">Naše služby</Typography>
             </Grid>

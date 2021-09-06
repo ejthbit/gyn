@@ -60,7 +60,7 @@ const ordinances = [
 const Contacts = () => {
     const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2}>
+        <Grid className={classes.root} container spacing={2} id="contact" justifyContent="center">
             <Grid item xs={12}>
                 <Typography variant="h2">Kontakty</Typography>
                 <Grid container spacing={4}>
@@ -71,7 +71,9 @@ const Contacts = () => {
                     ))}
                 </Grid>
             </Grid>
-            <ContactForm />
+            <Grid item xs={4}>
+                <ContactForm />
+            </Grid>
         </Grid>
     )
 }

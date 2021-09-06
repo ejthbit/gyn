@@ -1,11 +1,11 @@
 const routingPaths = {
     login: '/login',
-    services: '/#sluzby',
-    employees: '/#zamestnanci',
+    services: '/#services',
+    employees: '/#personnel',
     officeHours: '/#ordinacni-hodiny',
     ambulations: '/ordinace',
     reservation: '/rezervace',
-    contact: '/#kontakt',
+    contact: '/#contact',
     admin: '/admin',
 }
 export const adminPaths = {

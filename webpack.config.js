@@ -32,6 +32,7 @@ module.exports = {
     },
     devtool: 'source-map',
     devServer: {
+        host: '192.168.0.45',
         contentBase: path.resolve(__dirname, 'dist'),
         open: true,
         clientLogLevel: 'silent',

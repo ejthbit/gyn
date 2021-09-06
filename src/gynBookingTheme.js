@@ -29,6 +29,9 @@ const gynBookingTheme = createTheme({
                     padding: 0,
                     overflowX: 'hidden',
                 },
+                body: {
+                    backgroundColor: '#f8f8f8',
+                },
             },
         },
         MuiPickersCalendar: {

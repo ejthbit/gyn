@@ -2,7 +2,7 @@ import { Box, Button, Grid, Hidden, makeStyles, Typography } from '@material-ui/
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearReservation } from 'src/store/reservationProcess/reservationProcessSlice'
-import LandingPageImg from '../../assets/LandingPage.jpg'
+import LandingPageImg from '../../assets/landingImg.jpg'
 import LandingPageReservationModal from './LandingPageReservationModal'
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: 100,
         [theme.breakpoints.down('xs')]: {
             minHeight: 280,
-            height: '35vh',
+            height: '100vh',
             backgroundImage: 'none',
         },
         marginTop: -24,

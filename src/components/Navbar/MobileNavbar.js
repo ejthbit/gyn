@@ -4,6 +4,8 @@ import { AppBar, Box, Drawer, Grid, IconButton, makeStyles, Toolbar, Typography 
 import { Menu as MenuIcon, Close as CloseIcon } from '@material-ui/icons'
 import { NavLink } from 'react-router-dom'
 import Logo from '@components/Logo/Logo'
+import { HashLink } from 'react-router-hash-link'
+import scrollElementIntoView from '@utilities/scrollElementIntoView'
 
 const useStyles = makeStyles((theme) => ({
     logo: {
@@ -19,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     toolbar: {
-        paddingTop: theme.spacing(3),
+        background: theme.palette.common.white,
+        paddingTop: theme.spacing(2),
     },
     menuItem: {
         padding: theme.spacing(1.5),
@@ -74,7 +77,9 @@ const MobileNavbar = ({ routes }) => {
                     {routes.map(({ text, link }) => (
                         <Grid key={link} item onClick={handleToggleDrawer}>
                             <Typography variant="body1" className={classes.menuItem}>
-                                <NavLink to={link}>{text}</NavLink>
+                                <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                    {text}
+                                </HashLink>
                             </Typography>
                         </Grid>
                     ))}

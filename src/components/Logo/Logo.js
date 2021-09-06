@@ -1,8 +1,9 @@
+import scrollToTop from '@utilities/scrollToTop'
 import React from 'react'
 
 const Logo = () => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 468 344">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 468 344" onClick={scrollToTop}>
             <path
                 d="M250,422q-115.84,0-231.7.05c-1.88,0-2.3-.42-2.3-2.3Q16.08,250,16,80.3c0-1.88.42-2.3,2.3-2.3q231.69.07,463.4,0c1.88,0,2.3.42,2.3,2.3q-.08,169.7,0,339.4c0,1.88-.42,2.3-2.3,2.3Q365.86,421.92,250,422Z"
                 transform="translate(-16 -78)"

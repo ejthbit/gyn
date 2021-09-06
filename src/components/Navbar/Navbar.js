@@ -1,9 +1,11 @@
 import Logo from '@components/Logo/Logo'
 import { AppBar, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import { SupervisedUserCircle } from '@material-ui/icons'
-import { isMobile, isTablet } from '@utilities/checkDeviceType'
+import { isMobile } from '@utilities/checkDeviceType'
+import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import { HashLink } from 'react-router-hash-link'
 import routingPaths from 'src/routingPaths'
 import MobileNavbar from './MobileNavbar'
 
@@ -61,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     menuItem: {
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
         '& a': {
             fontSize: 20,
             color: theme.palette.common.white,
@@ -82,23 +86,25 @@ const Navbar = () => {
     const location = useLocation()
     return (
         !location.pathname.match(routingPaths.admin) &&
-        (isMobile() || isTablet() ? (
+        (isMobile() ? (
             <MobileNavbar routes={routes} />
         ) : (
             <AppBar className={classes.navbar} position="fixed">
                 <AppBar className={classes.navbarBackground} position="fixed">
                     <Toolbar>
                         <Grid container spacing={3} alignItems="center">
-                            <Grid item md={6}>
+                            <Grid item md={2}>
                                 <NavLink to={'/'} className={classes.logo}>
                                     <Logo />
                                 </NavLink>
                             </Grid>
-                            <Grid container md={6} spacing={2} item alignItems="center" justifyContent="flex-end">
+                            <Grid container md={10} spacing={2} item alignItems="center" justifyContent="flex-end">
                                 {routes.map(({ text, link }) => (
                                     <Grid key={link} item>
                                         <Typography variant="body1" className={classes.menuItem}>
-                                            <NavLink to={link}>{text}</NavLink>
+                                            <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                                {text}
+                                            </HashLink>
                                         </Typography>
                                     </Grid>
                                 ))}

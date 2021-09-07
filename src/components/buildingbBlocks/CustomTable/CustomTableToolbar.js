@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+                  color: theme.palette.primary.main,
+                  backgroundColor: lighten(theme.palette.primary.main, 0.85),
                   marginTop: theme.spacing(2),
                   borderRadius: 6,
               }

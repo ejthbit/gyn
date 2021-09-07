@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core'
+import { createTheme, lighten } from '@material-ui/core'
 
 const gynBookingTheme = createTheme({
     typography: {
@@ -48,6 +48,16 @@ const gynBookingTheme = createTheme({
             dialogRoot: {
                 '& .MuiDialogActions-root': {
                     display: `none !important`,
+                },
+            },
+        },
+        MuiTableRow: {
+            root: {
+                '&$selected': {
+                    backgroundColor: lighten('#2DAAA3', 0.85),
+                    '&:hover': {
+                        backgroundColor: '#0000000a',
+                    },
                 },
             },
         },

@@ -11,6 +11,7 @@ const administrationInitialState = {
         isLoading: false,
         error: undefined,
         isLoggedIn: JSON.parse(localStorage.getItem('user'))?.success ?? false,
+        automaticallyLoggedOut: false,
     },
     servicesOperation: {
         isLoading: false,
@@ -24,6 +25,10 @@ const administrationSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.adminState.isLoggedIn = false
+        },
+        logOutAutomatically: (state) => {
+            state.adminState.isLoggedIn = false
+            state.adminState.automaticallyLoggedOut = !state.adminState.automaticallyLoggedOut
         },
         clearServicesOperationState: (state) => {
             state.servicesOperation = administrationInitialState.servicesOperation
@@ -64,5 +69,5 @@ const administrationSlice = createSlice({
     },
 })
 
-export const { logout, clearServicesOperationState } = administrationSlice.actions
+export const { logout, logOutAutomatically, clearServicesOperationState } = administrationSlice.actions
 export default administrationSlice.reducer

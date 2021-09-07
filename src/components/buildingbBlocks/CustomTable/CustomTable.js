@@ -148,6 +148,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                             >
                                                 <TableCell padding="checkbox">
                                                     <Checkbox
+                                                        color="primary"
                                                         checked={isItemSelected}
                                                         inputProps={{ 'aria-labelledby': labelId }}
                                                     />

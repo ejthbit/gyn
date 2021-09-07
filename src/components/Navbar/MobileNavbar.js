@@ -20,8 +20,12 @@ const useStyles = makeStyles((theme) => ({
             textAlign: 'center',
         },
     },
+    root: {
+        boxShadow: 'none',
+        backgroundColor: 'transparent',
+    },
     toolbar: {
-        background: theme.palette.common.white,
+        background: '#f8f8f8',
         paddingTop: theme.spacing(2),
     },
     menuItem: {
@@ -49,7 +53,7 @@ const MobileNavbar = ({ routes }) => {
     const handleToggleDrawer = () => setIsDrawerOpen((prevState) => !prevState)
 
     return (
-        <AppBar position="fixed">
+        <AppBar position="fixed" className={classes.root}>
             <Toolbar className={classes.toolbar}>
                 <Grid container alignItems="center">
                     <Grid item xs={3}></Grid>

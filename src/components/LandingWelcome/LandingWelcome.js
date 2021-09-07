@@ -1,8 +1,10 @@
 import { Box, Button, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
+import { isMobile } from '@utilities/checkDeviceType'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { clearReservation } from 'src/store/reservationProcess/reservationProcessSlice'
 import LandingPageImg from '../../assets/landingImg.jpg'
+import LandingMobileImg from '../../assets/landingMobile.png'
 import LandingPageReservationModal from './LandingPageReservationModal'
 
 const useStyles = makeStyles((theme) => ({
@@ -12,13 +14,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundRepeat: 'no-repeat',
         backgroundSize: '100%',
         height: '70vh',
-        paddingLeft: '10%',
+        paddingLeft: '5%',
         paddingRight: 20,
         paddingTop: 100,
         [theme.breakpoints.down('xs')]: {
+            paddingTop: 20,
+            backgroundImage: `url(${LandingMobileImg})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            fontStyle: 'italic',
             minHeight: 280,
             height: '100vh',
-            backgroundImage: 'none',
         },
         marginTop: -24,
     },
@@ -60,7 +66,7 @@ const LandingWelcome = () => {
                     </Grid>
                 </Hidden>
                 <Grid item xs={12}>
-                    <Typography variant="h4"> Zarezervujte si svůj termín již dnes.</Typography>
+                    <Typography variant={isMobile() ? 'h3' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <Button

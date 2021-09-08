@@ -39,8 +39,8 @@ const OurTeam = () => {
             <Grid item xs={12}>
                 <Typography variant="h2">Náš tým</Typography>
             </Grid>
-            <Typography variant="overline" className={classes.personSectionTypo}>
-                Doktoři
+            <Typography variant="h5" className={classes.personSectionTypo}>
+                Lékaři
             </Typography>
             <Grid container justifyContent="center" spacing={8}>
                 {doctors.map((doctor) => (
@@ -49,7 +49,7 @@ const OurTeam = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Typography variant="overline" className={classes.personSectionTypo}>
+            <Typography variant="h5" className={classes.personSectionTypo}>
                 Zdravotní sestry
             </Typography>
             <Grid container justifyContent="center" spacing={8}>

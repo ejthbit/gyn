@@ -1,5 +1,5 @@
 import { SonographyIcon } from '@assets/SvgIcons'
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Divider, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Service from './Service'
 
@@ -10,7 +10,12 @@ const services = [
         description:
             'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní',
     },
-    { icon: <SonographyIcon />, label: 'Péče o těhotné', description: 'lorem ipsum' },
+    {
+        icon: <SonographyIcon />,
+        label: 'Péče o těhotné',
+        description:
+            'Zajišťujeme péči o budoucí maminky včetně ultrazvuku, krevních testů, pravidelných prohlídek a zprostředkovaně také screening vrozených vývojových vad plodu.',
+    },
     {
         icon: <SonographyIcon />,
         label: 'Poradenství',
@@ -24,21 +29,22 @@ const services = [
     },
     {
         icon: <SonographyIcon />,
-        label: 'Gynefix',
+        label: 'Prevence a diagnostika nádorových onemocnění',
         description:
-            'Nehormonální nitroděložní tělísko bez pevného plastového těla a ramének, které má díky svému inovativnímu designu a způsobu zavádění méně vedlejších nežádoucích účinků než klasická tělíska a je proto vhodné pro většinu žen včetně těch, které ještě nerodily',
+            'Součástí každé preventivní prohlídky je také onkologická cytologie, která pomáhá s včasným záchytem nádorových onemocnění čípku děložního, pochvy, sliznice děložní i zevního genitálu.',
     },
     {
         icon: <SonographyIcon />,
-        label: 'Speciální gynekologické vyšetrení',
-        description: '',
+        label: 'Speciální vyšetrení',
+        description:
+            'Mimo jiné se zabýváme také léčbou sterility, přípravou pacientek do zařazení IVF programů či dětskou gynekologií.',
     },
 ]
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        paddingLeft: '10%',
-        paddingRight: '10%',
+        paddingLeft: '15%',
+        paddingRight: '15%',
         paddingBottom: '10%',
         '& .MuiTypography-h2': {
             marginBottom: theme.spacing(2),
@@ -57,12 +63,12 @@ const Services = () => {
             <Grid item xs={12}>
                 <Typography variant="h2">Naše služby</Typography>
             </Grid>
-
             {services.map(({ icon, label, description }) => (
                 <Grid xs={12} sm={6} item key={label}>
                     <Service icon={icon} label={label} description={description} />
                 </Grid>
             ))}
+            <Divider variant="middle" />
         </Grid>
     )
 }

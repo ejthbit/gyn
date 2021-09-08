@@ -66,6 +66,11 @@ const gynBookingTheme = createTheme({
                 color: '#FFF',
             },
         },
+        MuiDivider: {
+            root: {
+                width: '100%',
+            },
+        },
         MuiFormLabel: {
             asterisk: {
                 color: '#db3131',

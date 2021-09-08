@@ -7,11 +7,13 @@ const useStyles = makeStyles((theme) => ({
         height: 200,
         borderRadius: 6,
         wordBreak: 'break-word',
-        background: '#FFF',
         paddingBottom: theme.spacing(20),
         backgroundClip: 'border-box',
-        boxShadow: '20px 0 60px 45px #96969617',
-        border: '1px solid rgba(71,75,96,.15)!important',
+        boxShadow: 'none',
+        border: 'none',
+        background: 'transparent',
+
+        // border: '1px solid rgba(71,75,96,.15)!important',
         '& .MuiTypography-h5': {
             marginBottom: theme.spacing(1.5),
         },
@@ -19,6 +21,20 @@ const useStyles = makeStyles((theme) => ({
             color: '#8f8f8f',
         },
     },
+    icon: {
+        padding: theme.spacing(1),
+        '& svg': {
+            border: `1px solid ${theme.palette.primary.main}`,
+            borderRadius: 6,
+            '& path': {
+                stroke: '#000',
+            },
+        },
+    },
+    label: {
+        paddingTop: theme.spacing(0.5),
+    },
+    description: {},
 }))
 const Service = ({ icon, label, description }) => {
     const classes = useStyles()
@@ -26,18 +42,18 @@ const Service = ({ icon, label, description }) => {
         <Card className={classes.root}>
             <CardContent>
                 <Grid container>
-                    <Grid item xs={12}>
-                        <Typography variant="h5" component="h2">
-                            {label}
-                        </Typography>
-                    </Grid>
-                    <Grid item container alignItems="center">
-                        {/*   TODO: Adjust for mobile devices */}
-                        <Grid item xs={2}>
+                    <Grid container item xs={12} alignItems="center">
+                        <Grid item xs={2} className={classes.icon}>
                             {icon}
                         </Grid>
+                        <Grid item xs={10} className={classes.label}>
+                            <Typography variant="h5">{label}</Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={12}>
+                        <Grid item xs={2} />
                         <Grid item xs={10}>
-                            <Typography variant="body2" component="p">
+                            <Typography variant="body2" component="p" className={classes.description}>
                                 {description}
                             </Typography>
                         </Grid>

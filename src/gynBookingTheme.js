@@ -23,13 +23,18 @@ const gynBookingTheme = createTheme({
             '@global': {
                 html: {
                     WebkitFontSmoothing: 'auto',
-                    width: '100%',
-                    height: '100%',
                     margin: 0,
                     padding: 0,
                     overflowX: 'hidden',
+                    height: '100vh',
+                    width: '100vw',
+                    boxSizing: 'unset',
                 },
                 body: {
+                    margin: 0,
+                    padding: 0,
+                    height: '100vh',
+                    width: '100vw',
                     backgroundColor: '#f8f8f8',
                 },
             },

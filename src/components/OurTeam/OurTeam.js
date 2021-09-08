@@ -4,6 +4,7 @@ import Person from '@components/OurTeam/Person'
 import Vanek from '../../assets/OurTeam/Img/vanek.png'
 import { vanekText } from '../../assets/OurTeam/Text/vanek'
 import Sebestova from '../../assets/OurTeam/Img/sebestova.png'
+import Vankova from '../../assets/OurTeam/Img/vankova.png'
 import Unknown from '../../assets/OurTeam/Img/no-photo-doctor.png'
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 const doctors = [
     { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
-    { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Unknown },
+    { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Vankova },
     { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Unknown },
     { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Unknown },
 ]
@@ -50,8 +51,8 @@ const OurTeam = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="body1" component="p" align="center">
-                    Naši vysoce vyškolení lékaři, a sestry se věnují ženám všech věkových skupin při zvládání a léčbě
-                    různých stavů, problémů a poruch.
+                    Naši vysoce kvalifikovaní lékaři, a sestry se věnují ženám všech věkových kategorii při zvládání a
+                    léčbě různých stavů, problémů a poruch.
                 </Typography>
             </Grid>
             <Typography variant="h5" className={classes.personSectionTypo}>

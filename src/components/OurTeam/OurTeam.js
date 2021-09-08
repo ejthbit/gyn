@@ -4,16 +4,24 @@ import Person from '@components/OurTeam/Person'
 import Vanek from '../../assets/OurTeam/Img/vanek.png'
 import { vanekText } from '../../assets/OurTeam/Text/vanek'
 import Sebestova from '../../assets/OurTeam/Img/sebestova.png'
-import Unknown from '../../assets/OurTeam/Img/unknown.png'
+import Unknown from '../../assets/OurTeam/Img/no-photo-doctor.png'
 
 const useStyles = makeStyles((theme) => ({
     root: {
         paddingLeft: '10%',
         paddingRight: '10%',
         paddingBottom: '10%',
-        '& .MuiTypography-h2': {
+        '& .MuiTypography-h3': {
             marginBottom: theme.spacing(2),
+            fontWeight: 'bold',
             textAlign: 'center',
+            [theme.breakpoints.down('xs')]: {
+                textAlign: 'left',
+            },
+        },
+        '& .MuiTypography-body1': {
+            color: '#8f8f8f',
+            marginBottom: theme.spacing(2),
         },
     },
     personSectionTypo: {
@@ -37,7 +45,13 @@ const OurTeam = () => {
     return (
         <Grid className={classes.root} container spacing={2} id="personnel">
             <Grid item xs={12}>
-                <Typography variant="h2">Náš tým</Typography>
+                <Typography variant="h3">Náš tým</Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="body1" component="p" align="center">
+                    Naši vysoce vyškolení lékaři, a sestry se věnují ženám všech věkových skupin při zvládání a léčbě
+                    různých stavů, problémů a poruch.
+                </Typography>
             </Grid>
             <Typography variant="h5" className={classes.personSectionTypo}>
                 Lékaři

@@ -28,12 +28,12 @@ const PersonDetail = ({ open, handleClose, title, text }) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent dividers>
-                <Typography font>Vzdělání, kvalifikace:</Typography>
+                <Typography>Vzdělání, kvalifikace:</Typography>
                 <ul className={classes.list}>
                     {text && text.section1.map((value, index) => <li key={index}>{value}</li>)}
                 </ul>
 
-                <Typography font>Členství v profesních organizacích:</Typography>
+                <Typography>Členství v profesních organizacích:</Typography>
                 <ul className={classes.list}>
                     {text && text.section2.map((value, index) => <li key={index}>{value}</li>)}
                 </ul>

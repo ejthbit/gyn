@@ -46,12 +46,16 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '15%',
         paddingRight: '15%',
         paddingBottom: '10%',
-        '& .MuiTypography-h2': {
+        '& .MuiTypography-h3': {
             marginBottom: theme.spacing(2),
+            fontWeight: 'bold',
             textAlign: 'center',
             [theme.breakpoints.down('xs')]: {
                 textAlign: 'left',
             },
+        },
+        '& .MuiTypography-body1': {
+            color: '#8f8f8f',
         },
     },
 }))
@@ -61,7 +65,18 @@ const Services = () => {
     return (
         <Grid className={classes.root} container spacing={2} id="services">
             <Grid item xs={12}>
-                <Typography variant="h2">Naše služby</Typography>
+                <Typography variant="h3">Naše služby</Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="body1" component="p" align="center">
+                    {`Naše ambulance nabízí porodnickou a gynekologickou péči pro ženy ve všech fázích života, od
+                    předpubertálních let po postmenopauzální roky. Svým pacientům také nabízíme různé speciální služby,
+                    včetně poradenství, mateřské fetální medicíny, gynekologické onkologie a dalších,
+                    abychom poskytli co nejkomplexnější péči.`}
+                    <br />
+                    {`Další informace o tom, jak vám můžeme pomoci, naleznete
+                    v níže uvedených službách.`}
+                </Typography>
             </Grid>
             {services.map(({ icon, label, description }) => (
                 <Grid xs={12} sm={6} item key={label}>

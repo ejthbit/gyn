@@ -1,7 +1,11 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
-import ContactForm from './ContactForm'
-import Contact from './Contact'
+import { Divider, Grid, makeStyles, Typography } from '@material-ui/core'
+import {
+    AccessTime as AccessTimeIcon,
+    Contacts as ContactsIcon,
+    LocationOn as LocationOnIcon,
+} from '@material-ui/icons'
 import React from 'react'
+import ContactForm from './ContactForm'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -10,9 +14,13 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: '10%',
         paddingBottom: '10%',
         whiteSpace: 'pre-wrap',
-        '& .MuiTypography-h2': {
+        '& .MuiTypography-h3': {
             marginBottom: theme.spacing(2),
+            fontWeight: 'bold',
             textAlign: 'center',
+            [theme.breakpoints.down('xs')]: {
+                textAlign: 'left',
+            },
         },
     },
 }))
@@ -62,15 +70,20 @@ const Contacts = () => {
     return (
         <Grid className={classes.root} container spacing={2} id="contact" justifyContent="center">
             <Grid item xs={12}>
-                <Typography variant="h2">Kontakty</Typography>
+                <Typography variant="h3">Kontakty</Typography>
                 <Grid container spacing={4}>
-                    {ordinances.map((ordinance) => (
-                        <Grid key={ordinance.name} item xs={12} md={6}>
-                            <Contact {...ordinance} />
-                        </Grid>
-                    ))}
+                    <Grid item md={4}>
+                        <ContactsIcon />
+                    </Grid>
+                    <Grid item md={4}>
+                        <AccessTimeIcon />
+                    </Grid>
+                    <Grid item md={4}>
+                        <LocationOnIcon />
+                    </Grid>
                 </Grid>
             </Grid>
+            <Divider variant="middle" />
             <Grid item xs={4}>
                 <ContactForm />
             </Grid>

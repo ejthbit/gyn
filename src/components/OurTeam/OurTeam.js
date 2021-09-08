@@ -34,6 +34,7 @@ const doctors = [
     { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
     { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Unknown },
     { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Unknown },
+    { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Unknown },
 ]
 const nurses = [
     { fullName: 'Mgr. Kamila Šebestová', image: Sebestova },
@@ -58,7 +59,7 @@ const OurTeam = () => {
             </Typography>
             <Grid container justifyContent="center" spacing={8}>
                 {doctors.map((doctor) => (
-                    <Grid item key={doctor.fullName}>
+                    <Grid item md={3} key={doctor.fullName}>
                         <Person {...doctor} />
                     </Grid>
                 ))}

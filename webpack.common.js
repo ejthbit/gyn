@@ -27,25 +27,16 @@ module.exports = {
     },
     entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
-        publicPath: '/',
-        path: path.resolve(__dirname, 'dist'),
-    },
-    devtool: 'source-map',
-    devServer: {
-        host: '192.168.0.45',
-        contentBase: path.resolve(__dirname, 'dist'),
-        open: true,
-        clientLogLevel: 'silent',
-        port: 9000,
-        historyApiFallback: true,
-        hot: true,
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'build'),
+        clean: true,
     },
     module: {
         rules: [
             {
                 test: /\.(jsx|js)$/,
                 include: path.resolve(__dirname, 'src'),
-                exclude: /node_modules/,
+                exclude: [/node_modules/],
                 use: [
                     {
                         loader: 'babel-loader',

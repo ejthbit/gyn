@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
             fontWeight: 'bold',
             textAlign: 'center',
             [theme.breakpoints.down('xs')]: {
-                textAlign: 'left',
+                textAlign: 'center',
             },
         },
         '& .MuiTypography-body1': {
@@ -38,7 +38,7 @@ const doctors = [
 ]
 const nurses = [
     { fullName: 'Mgr. Kamila Šebestová', image: Sebestova },
-    { fullName: 'Mgr. Šárka Hrtoňová', image: Unknown },
+    { fullName: 'Šárka Hrtoňová', image: Unknown },
 ]
 
 const OurTeam = () => {

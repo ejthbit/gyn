@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
             fontWeight: 'bold',
             textAlign: 'center',
             [theme.breakpoints.down('xs')]: {
-                textAlign: 'left',
+                textAlign: 'center',
             },
         },
         '& .MuiTypography-body1': {
@@ -69,8 +69,8 @@ const Services = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="body1" component="p" align="center">
-                    {`Naše ambulance nabízí porodnickou a gynekologickou péči pro ženy ve všech fázích života, od
-                    předpubertálních let po postmenopauzální roky. Svým pacientům také nabízíme různé speciální služby,
+                    {`Naše ambulance nabízí těhotenskou a gynekologickou péči pro ženy ve všech fázích života, od
+                    předpubertálních let po postmenopauzální roky. Svým pacientkám také nabízíme různé speciální služby,
                     včetně poradenství, mateřské fetální medicíny, gynekologické onkologie a dalších,
                     abychom poskytli co nejkomplexnější péči.`}
                     <br />

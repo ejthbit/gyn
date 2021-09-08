@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 20,
         paddingTop: 100,
         [theme.breakpoints.down('xs')]: {
-            paddingTop: 20,
+            paddingTop: 50,
             backgroundImage: `url(${LandingMobileImg})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',

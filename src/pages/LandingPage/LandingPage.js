@@ -12,8 +12,8 @@ const LandingPage = () => {
             <LandingWelcome />
             <Services />
             <OurTeam />
-            <References />
             <Contacts />
+            <References />
             <Footer />
         </>
     )

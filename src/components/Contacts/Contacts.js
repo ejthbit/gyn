@@ -1,4 +1,4 @@
-import { Box, Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Button, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
 import {
     AccessTime as AccessTimeIcon,
     Contacts as ContactsIcon,
@@ -98,17 +98,20 @@ const Contacts = () => {
         <Grid className={classes.root} container spacing={2} id="contact">
             <Grid container item xs={12} className={classes.ambulanceRow} justifyContent="center">
                 <Box marginBottom={2}>
-                    <Typography variant="h3">Kontakty</Typography>
+                    <Typography variant="h3">Kontakt</Typography>
                 </Box>
                 <Grid container spacing={4} alignItems="center">
-                    {map(
-                        ({ id, component }) => (
-                            <Grid key={id} item md={3} className={classes.sectionIcon}>
-                                {component}
-                            </Grid>
-                        ),
-                        contactSections
-                    )}
+                    <Hidden smDown>
+                        {map(
+                            ({ id, component }) => (
+                                <Grid key={id} item md={3} className={classes.sectionIcon}>
+                                    {component}
+                                </Grid>
+                            ),
+                            contactSections
+                        )}
+                    </Hidden>
+
                     {map(
                         ({ name, contact, openingHours, address }) => (
                             <Grid key={name} container justifyContent="center" className={classes.ambulanceRow}>

@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 
 const useStyles = makeStyles(() => ({
@@ -10,14 +10,14 @@ const useStyles = makeStyles(() => ({
         color: 'white',
     },
 }))
+
 const Footer = () => {
     const classes = useStyles()
     return (
         <Grid className={classes.root} container spacing={2}>
-            Footer
+            <Typography variant="caption">Copyright © 2021 ejthbit. All rights reserved.</Typography>
         </Grid>
     )
 }
-Footer.propTypes = {}
 
 export default Footer

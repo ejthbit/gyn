@@ -18,26 +18,21 @@ const useStyles = makeStyles((theme) => ({
         color: '#fff',
     },
 }))
+
 const Person = ({ image, fullName, specialization, text }) => {
-    const classes = useStyles()
+    const classes = useStyles({ text })
     const [open, setOpen] = useState(false)
 
-    const handleClose = () => {
-        setOpen(false)
-    }
-
-    const handleOpen = () => {
-        setOpen(true)
-    }
+    const handleToggleDetail = () => setOpen((prevState) => !prevState)
 
     return (
         <Box className={classes.root}>
-            {image ? <img src={image} className={classes.image} onClick={handleOpen} /> : null}
+            {image && <img src={image} className={classes.image} onClick={handleToggleDetail} />}
             <Typography variant="h6">{fullName}</Typography>
             <Typography variant="caption" color="textSecondary">
                 {specialization}
             </Typography>
-            <PersonDetail open={open} handleClose={handleClose} title={fullName} text={text} />
+            {text && <PersonDetail open={open} handleClose={handleToggleDetail} title={fullName} text={text} />}
         </Box>
     )
 }

@@ -1,11 +1,13 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Person from '@components/OurTeam/Person'
-import Vanek from '../../assets/OurTeam/Img/vanek.png'
+import Vanek from '../../assets/OurTeam/Img/vanek.jpg'
 import { vanekText } from '../../assets/OurTeam/Text/vanek'
-import Sebestova from '../../assets/OurTeam/Img/sebestova.png'
-import Vankova from '../../assets/OurTeam/Img/vankova.png'
-import Unknown from '../../assets/OurTeam/Img/no-photo-doctor.png'
+import Sebestova from '../../assets/OurTeam/Img/sebestova.jpg'
+import Vankova from '../../assets/OurTeam/Img/vankova.jpg'
+import Hrtonova from '../../assets/OurTeam/Img/hrtonova.jpg'
+import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
+import UnknownMale from '../../assets/OurTeam/Img/unkown-male-doctor.png'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
 const doctors = [
     { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
     { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Vankova },
-    { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Unknown },
-    { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Unknown },
+    { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Medvecka },
+    { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: UnknownMale },
 ]
 const nurses = [
     { fullName: 'Mgr. Kamila Šebestová', image: Sebestova },
-    { fullName: 'Šárka Hrtoňová', image: Unknown },
+    { fullName: 'Šárka Hrtoňová', image: Hrtonova },
 ]
 
 const OurTeam = () => {

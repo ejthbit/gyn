@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '20px',
     },
 }))
+
 const doctors = [
     { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
     { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Vankova },
@@ -80,6 +81,5 @@ const OurTeam = () => {
         </Grid>
     )
 }
-OurTeam.propTypes = {}
 
 export default OurTeam

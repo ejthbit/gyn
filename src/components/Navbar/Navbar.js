@@ -86,7 +86,7 @@ const Navbar = () => {
     const location = useLocation()
     return (
         !location.pathname.match(routingPaths.admin) &&
-        (isMobile() ? (
+        (isMobile ? (
             <MobileNavbar routes={routes} />
         ) : (
             <AppBar className={classes.navbar} position="fixed">

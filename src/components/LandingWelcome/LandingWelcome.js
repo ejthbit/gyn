@@ -66,7 +66,7 @@ const LandingWelcome = () => {
                     </Grid>
                 </Hidden>
                 <Grid item xs={12}>
-                    <Typography variant={isMobile() ? 'h3' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
+                    <Typography variant={isMobile ? 'h3' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <Button

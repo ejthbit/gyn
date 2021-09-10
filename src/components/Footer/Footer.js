@@ -15,7 +15,9 @@ const Footer = () => {
     const classes = useStyles()
     return (
         <Grid className={classes.root} container spacing={2}>
-            <Typography variant="caption">Copyright © 2021 ejthbit. All rights reserved.</Typography>
+            <Typography variant="caption">
+                {`Copyright © ${new Date().getFullYear()} ejthbit. All rights reserved.`}
+            </Typography>
         </Grid>
     )
 }

@@ -1,20 +1,20 @@
 /* eslint-disable react/display-name */
+import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import React from 'react'
+import useMemoizedSelector from '@utilities/useMemoSelector'
 import { reject } from 'ramda'
+import React from 'react'
 import { useSelector } from 'react-redux'
+import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import ReservationContactInputs from './ReservationContactInputs'
+import ReservationDoctorPreference from './ReservationDoctorPreference'
 import ReservationError from './ReservationError'
 import ReservationStepperControls from './ReservationStepperControls'
 import ReservationSuccess from './ReservationSuccess'
 import ReservationSummary from './ReservationSummary'
 import ReservationTermPicker from './ReservationTermPicker'
-import useMemoizedSelector from '@utilities/useMemoSelector'
-import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
-import ReservationDoctorPreference from './ReservationDoctorPreference'
-import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 
 const useStyles = makeStyles((theme) => ({
     root: {

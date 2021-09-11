@@ -20,13 +20,11 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         padding: theme.spacing(1),
         '& svg': {
+            padding: 6,
             width: 65,
             height: 65,
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 6,
-            '& path': {
-                stroke: '#000',
-            },
         },
     },
     label: {

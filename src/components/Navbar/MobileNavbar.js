@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
+    offSet: { minHeight: theme.spacing(18) },
 }))
 
 const MobileNavbar = ({ routes }) => {
@@ -53,43 +54,46 @@ const MobileNavbar = ({ routes }) => {
     const handleToggleDrawer = () => setIsDrawerOpen((prevState) => !prevState)
 
     return (
-        <AppBar position="fixed" className={classes.root}>
-            <Toolbar className={classes.toolbar}>
-                <Grid container alignItems="center">
-                    <Grid item xs={3}></Grid>
-                    <Grid item xs={6}>
-                        <NavLink to={'/'} className={classes.logo}>
+        <>
+            <AppBar position="fixed" className={classes.root}>
+                <Toolbar className={classes.toolbar}>
+                    <Grid container alignItems="center">
+                        <Grid item xs={3}></Grid>
+                        <Grid item xs={6}>
+                            <NavLink to={'/'} className={classes.logo}>
+                                <Logo />
+                            </NavLink>
+                        </Grid>
+                        <Grid item container xs={3} direction="column">
+                            <IconButton onClick={handleToggleDrawer}>
+                                <MenuIcon />
+                                <Box marginLeft={0.5}>
+                                    <Typography>Menu</Typography>
+                                </Box>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                    <Drawer anchor="right" open={isDrawerOpen} onClose={handleToggleDrawer} className={classes.drawer}>
+                        <IconButton onClick={handleToggleDrawer}>
+                            <CloseIcon />
+                        </IconButton>
+                        <NavLink to={'/'} className={classes.logo} onClick={handleToggleDrawer}>
                             <Logo />
                         </NavLink>
-                    </Grid>
-                    <Grid item container xs={3} direction="column">
-                        <IconButton onClick={handleToggleDrawer}>
-                            <MenuIcon />
-                            <Box marginLeft={0.5}>
-                                <Typography>Menu</Typography>
-                            </Box>
-                        </IconButton>
-                    </Grid>
-                </Grid>
-                <Drawer anchor="right" open={isDrawerOpen} onClose={handleToggleDrawer} className={classes.drawer}>
-                    <IconButton onClick={handleToggleDrawer}>
-                        <CloseIcon />
-                    </IconButton>
-                    <NavLink to={'/'} className={classes.logo} onClick={handleToggleDrawer}>
-                        <Logo />
-                    </NavLink>
-                    {routes.map(({ text, link }) => (
-                        <Grid key={link} item onClick={handleToggleDrawer}>
-                            <Typography variant="body1" className={classes.menuItem}>
-                                <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
-                                    {text}
-                                </HashLink>
-                            </Typography>
-                        </Grid>
-                    ))}
-                </Drawer>
-            </Toolbar>
-        </AppBar>
+                        {routes.map(({ text, link }) => (
+                            <Grid key={link} item onClick={handleToggleDrawer}>
+                                <Typography variant="body1" className={classes.menuItem}>
+                                    <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                        {text}
+                                    </HashLink>
+                                </Typography>
+                            </Grid>
+                        ))}
+                    </Drawer>
+                </Toolbar>
+            </AppBar>
+            <Box className={classes.offSet} />
+        </>
     )
 }
 

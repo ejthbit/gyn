@@ -1,23 +1,30 @@
-import { SonographyIcon } from '@assets/SvgIcons'
+import {
+    SonographyIcon,
+    PregnancyCareIcon,
+    RoutineExaminationIcon,
+    DiagnosticIcon,
+    SpecialTreatmentIcon,
+    Advisementicon,
+} from '@assets/SvgIcons'
 import { Divider, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Service from './Service'
 
 const services = [
     {
-        icon: <SonographyIcon />,
+        icon: <RoutineExaminationIcon />,
         label: 'Preventivní prohlídky',
         description:
             'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní',
     },
     {
-        icon: <SonographyIcon />,
+        icon: <PregnancyCareIcon />,
         label: 'Péče o těhotné',
         description:
             'Zajišťujeme péči o budoucí maminky včetně ultrazvuku, krevních testů, pravidelných prohlídek a zprostředkovaně také screening vrozených vývojových vad plodu.',
     },
     {
-        icon: <SonographyIcon />,
+        icon: <Advisementicon />,
         label: 'Poradenství',
         description: 'Nabizíme poradenství v oblastech antikoncepce, přechodu a gynekologických potížích',
     },
@@ -28,13 +35,13 @@ const services = [
             'Sonografické, neboli ultrazvukové vyšetření prsou patří v dnešní době k nejdůležitějším vyšetřovacím praktikám sloužícím k včasnému nálezu rakoviny prsou',
     },
     {
-        icon: <SonographyIcon />,
+        icon: <DiagnosticIcon />,
         label: 'Prevence a diagnostika nádorových onemocnění',
         description:
             'Součástí každé preventivní prohlídky je také onkologická cytologie, která pomáhá s včasným záchytem nádorových onemocnění čípku děložního, pochvy, sliznice děložní i zevního genitálu.',
     },
     {
-        icon: <SonographyIcon />,
+        icon: <SpecialTreatmentIcon />,
         label: 'Speciální vyšetrení',
         description:
             'Mimo jiné se zabýváme také léčbou sterility, přípravou pacientek do zařazení IVF programů či dětskou gynekologií.',

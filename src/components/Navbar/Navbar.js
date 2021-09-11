@@ -1,5 +1,5 @@
 import Logo from '@components/Logo/Logo'
-import { AppBar, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Box, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import { SupervisedUserCircle } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
+    offSet: { minHeight: theme.spacing(18) },
 }))
 
 const Navbar = () => {
@@ -89,30 +90,33 @@ const Navbar = () => {
         (isMobile ? (
             <MobileNavbar routes={routes} />
         ) : (
-            <AppBar className={classes.navbar} position="fixed">
-                <AppBar className={classes.navbarBackground} position="fixed">
-                    <Toolbar>
-                        <Grid container spacing={3} alignItems="center">
-                            <Grid item md={2}>
-                                <NavLink to={'/'} className={classes.logo}>
-                                    <Logo />
-                                </NavLink>
+            <>
+                <AppBar className={classes.navbar} position="fixed">
+                    <AppBar className={classes.navbarBackground} position="fixed">
+                        <Toolbar>
+                            <Grid container spacing={3} alignItems="center">
+                                <Grid item md={2}>
+                                    <NavLink to={'/'} className={classes.logo}>
+                                        <Logo />
+                                    </NavLink>
+                                </Grid>
+                                <Grid container md={10} spacing={2} item alignItems="center" justifyContent="flex-end">
+                                    {routes.map(({ text, link }) => (
+                                        <Grid key={link} item>
+                                            <Typography variant="body1" className={classes.menuItem}>
+                                                <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                                    {text}
+                                                </HashLink>
+                                            </Typography>
+                                        </Grid>
+                                    ))}
+                                </Grid>
                             </Grid>
-                            <Grid container md={10} spacing={2} item alignItems="center" justifyContent="flex-end">
-                                {routes.map(({ text, link }) => (
-                                    <Grid key={link} item>
-                                        <Typography variant="body1" className={classes.menuItem}>
-                                            <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
-                                                {text}
-                                            </HashLink>
-                                        </Typography>
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Grid>
-                    </Toolbar>
+                        </Toolbar>
+                    </AppBar>
                 </AppBar>
-            </AppBar>
+                <Box className={classes.offSet} />
+            </>
         ))
     )
 }

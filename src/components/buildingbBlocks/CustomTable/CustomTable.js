@@ -1,3 +1,4 @@
+import { TextField } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -7,11 +8,12 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
+import { Close, Edit } from '@material-ui/icons'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { always, ascend, descend, equals, ifElse, prop, sortWith } from 'ramda'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { compose } from 'redux'
 import { deleteBookings } from 'src/store/bookings/actions'
@@ -55,17 +57,21 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const [order, setOrder] = React.useState('asc')
-    const [orderBy, setOrderBy] = React.useState(orderedBy)
-    const [selected, setSelected] = React.useState([])
-    const [page, setPage] = React.useState(0)
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [order, setOrder] = useState('asc')
+    const [orderBy, setOrderBy] = useState(orderedBy)
+    const [selected, setSelected] = useState([])
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [currentlyEditingId, setCurrentlyEditingId] = useState(-1)
+    const [editingDate, setEditingData] = useState(undefined)
+    console.log(editingDate)
 
     const handleRequestSort = (e, property) => {
         const isAsc = orderBy === property && order === 'asc'
         setOrder(isAsc ? 'desc' : 'asc')
         setOrderBy(property)
     }
+
     const handleSelectAllClick = (e) => {
         if (e.target.checked) {
             const newSelectedIds = data.map((booking) => booking.id)
@@ -75,7 +81,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         setSelected([])
     }
 
-    const handleClick = (event, id) => {
+    const handleClick = (e, id) => {
         const selectedIndex = selected.indexOf(id)
         let newSelected = []
         if (selectedIndex === -1) newSelected = newSelected.concat(selected, id)
@@ -86,10 +92,10 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         setSelected(newSelected)
     }
 
-    const handleChangePage = (event, newPage) => setPage(newPage)
+    const handleChangePage = (e, newPage) => setPage(newPage)
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
+    const handleChangeRowsPerPage = (e) => {
+        setRowsPerPage(parseInt(e.target.value, 10))
         setPage(0)
     }
 
@@ -139,7 +145,6 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(e) => handleClick(e, row.id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}
@@ -150,15 +155,35 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                     <Checkbox
                                                         color="primary"
                                                         checked={isItemSelected}
+                                                        onClick={(e) => handleClick(e, row.id)}
                                                         inputProps={{ 'aria-labelledby': labelId }}
                                                     />
                                                 </TableCell>
+
                                                 <TableCell id={labelId}>{rowDate}</TableCell>
                                                 <TableCell>{rowTime}</TableCell>
-                                                <TableCell>{row.name}</TableCell>
+                                                <TableCell>
+                                                    {equals(row.id, currentlyEditingId) ? (
+                                                        <TextField value={row.name} onChange={(e) => {}} />
+                                                    ) : (
+                                                        row.name
+                                                    )}
+                                                </TableCell>
                                                 <TableCell>{row.birthdate}</TableCell>
                                                 <TableCell>{row.email || ''}</TableCell>
                                                 <TableCell>{row.phone || ''}</TableCell>
+                                                <TableCell>
+                                                    {equals(row.id, currentlyEditingId) ? (
+                                                        <Close onClick={() => setCurrentlyEditingId(-1)} />
+                                                    ) : (
+                                                        <Edit
+                                                            onClick={() => {
+                                                                setCurrentlyEditingId(row.id)
+                                                                setEditingData(data[index])
+                                                            }}
+                                                        />
+                                                    )}
+                                                </TableCell>
                                             </TableRow>
                                         )
                                     })}

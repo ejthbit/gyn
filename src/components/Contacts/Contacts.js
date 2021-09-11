@@ -1,10 +1,10 @@
 import { Box, Button, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
 import {
     AccessTime as AccessTimeIcon,
-    Contacts as ContactsIcon,
     Home,
     LocationOn as LocationOnIcon,
     Map as MapIcon,
+    Phone as PhoneIcon,
 } from '@material-ui/icons'
 import getGoogleMapsUrl from '@utilities/getGoogleMapsUrl'
 import { map } from 'ramda'
@@ -79,7 +79,7 @@ const contactSections = [
     { id: 0, component: <Home /> },
     { id: 1, component: <LocationOnIcon /> },
     { id: 2, component: <AccessTimeIcon /> },
-    { id: 3, component: <ContactsIcon /> },
+    { id: 3, component: <PhoneIcon /> },
 ]
 const handleOpenNavigation = (location) => window.open(getGoogleMapsUrl(location))
 

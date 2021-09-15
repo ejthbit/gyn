@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import { parseISO } from 'date-fns'
 import { equals, filter, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
@@ -25,10 +26,26 @@ export const makeAvailableTimeslotsWithTimeOnly = () =>
     )
 
 export const makeBookingsSelector = () =>
-    createSelector([getBookings], (bookings) =>
-        map(({ id, contact, name, timeofbooking, birthdate }) => {
-            return { id, timeofbooking, name, birthdate, email: '', phone: '' }
-        }, bookings)
+    createSelector(
+        [getBookings],
+        (bookings) =>
+            map(({ id, contact, name, start, end, birthdate }) => {
+                return { id, start, end, name, birthdate, email: contact?.email ?? '', phone: contact?.phone ?? '' }
+            }, bookings) ?? []
+    )
+export const makeCalendarEventsSelector = () =>
+    createSelector(
+        [getBookings],
+        (bookings) =>
+            map(
+                ({ id, name, start, end, birthdate }) => ({
+                    id,
+                    start: parseISO(start),
+                    end: parseISO(end),
+                    title: `${name} - ${birthdate}`,
+                }),
+                bookings
+            ) ?? []
     )
 
 export const makeDoctorServicesByDoctorId = () =>

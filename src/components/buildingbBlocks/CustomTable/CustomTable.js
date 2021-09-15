@@ -64,7 +64,6 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [currentlyEditingId, setCurrentlyEditingId] = useState(-1)
     const [editingData, setEditingData] = useState(undefined)
-    console.log(editingData)
 
     const handleRequestSort = (e, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -143,9 +142,9 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         const isItemSelected = isSelected(row.id)
-                                        const date = new Date(row.timeofbooking)
+                                        const date = new Date(row.start)
                                         const rowDate = format(date, 'yyyy/MM/dd')
-                                        const rowTime = row.timeofbooking.substr(11, 8)
+                                        const rowTime = row.start.substr(11, 8)
                                         const labelId = `enhanced-table-checkbox-${index}`
                                         return (
                                             <TableRow

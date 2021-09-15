@@ -60,6 +60,10 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|mtl|obj)$/,
                 use: [require.resolve('url-loader')],
             },
+            {
+                test: /.(css|less)$/,
+                use: ['style-loader', 'css-loader'],
+            },
         ],
     },
     plugins: [

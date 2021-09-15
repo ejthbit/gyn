@@ -72,8 +72,8 @@ const BookingsView = () => {
     }, [bookingsViewDate, selectedAmbulanceId])
 
     const headCells = [
-        { id: 'timeofbooking', numeric: false, disablePadding: false, label: 'Datum návštevy' },
-        { id: 'timeofbooking', numeric: false, disablePadding: false, label: 'Čas návštevy' },
+        { id: 'start', numeric: false, disablePadding: false, label: 'Datum návštevy' },
+        { id: 'start', numeric: false, disablePadding: false, label: 'Čas návštevy' },
         { id: 'name', numeric: false, disablePadding: true, label: 'Jméno' },
         { id: 'birthdate', numeric: false, disablePadding: false, label: 'Datum narození' },
         { id: 'email', numeric: true, disablePadding: false, label: 'e-mail' },
@@ -133,7 +133,7 @@ const BookingsView = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <CustomTable title="Objednávky" orderBy="timeofbooking" data={bookings} headCells={headCells} />
+                <CustomTable title="Objednávky" orderBy="start" data={bookings} headCells={headCells} />
             </Grid>
         </Grid>
     )

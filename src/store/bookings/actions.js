@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { addMinutes } from 'date-fns'
 import { forEach } from 'ramda'
 import axiosGynInstance from '../../api/config'
 import {
@@ -38,6 +39,28 @@ export const fetchDoctorServicesForSelectedMonth = createAsyncThunk(
         return res.data
     }
 )
+export const fastBooking = createAsyncThunk(
+    'bookings/fastBooking',
+    async ({ name, start, end }, { getState, rejectWithValue }) => {
+        const state = getState()
+        const selectedAmbulanceId = getSelectedAmbulance(state)
+        const URL = `${ID}/booking`
+        try {
+            const res = await axiosGynInstance.post(URL, {
+                name,
+                birthDate: new Date().toISOString().slice(0, 10),
+                start,
+                end,
+                workplace: selectedAmbulanceId,
+                contact: { email: '', phone: '' },
+            })
+            return res.data
+        } catch (error) {
+            if (!error.response) throw error
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
 
 export const bookAnAppointment = createAsyncThunk(
     'bookings/bookAnAppointment',
@@ -50,12 +73,14 @@ export const bookAnAppointment = createAsyncThunk(
         const selectedTime = getSelectedTime(state)
 
         const URL = `${ID}/booking`
+        const start = `${selectedDate}T${selectedTime}.000Z`
         try {
             const res = await axiosGynInstance.post(URL, {
                 ...((email || phone) && { contact: { email, phone } }),
                 name,
                 birthDate,
-                timeofbooking: `${selectedDate}T${selectedTime}.000Z`,
+                start: `${selectedDate}T${selectedTime}.000Z`,
+                end: addMinutes(new Date(start), 15).toISOString(),
                 workplace: selectedAmbulanceId,
             })
             return res.data

@@ -8,6 +8,7 @@ import {
     fetchDoctorServicesForSelectedMonth,
     deleteBooking,
     patchBooking,
+    fastBooking,
 } from './actions'
 
 /* RTK uses on background Immer library.
@@ -82,6 +83,11 @@ const bookingsSlice = createSlice({
                 state.lastBooking.isLoading = false
                 state.lastBooking.errors = undefined
                 state.lastBooking.orderFinishedOk = true
+            })
+            .addCase(fastBooking.fulfilled, (state, action) => {
+                state.bookings.isLoading = false
+                state.bookings.errors = undefined
+                state.bookings.bookings = [...state.bookings.bookings, action.payload]
             })
             .addCase(fetchBookings.pending, (state) => {
                 state.bookings.isLoading = true

@@ -14,7 +14,7 @@ import {
     Toolbar,
     Typography,
 } from '@material-ui/core'
-import { Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
+import { CalendarToday, Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
 import SM from '@utilities/StorageManager'
 import { map } from 'ramda'
 import React, { useState } from 'react'
@@ -118,6 +118,7 @@ const useStyles = makeStyles((theme) => ({
 const adminToolbarContent = [
     { icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
     { icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
+    { icon: <CalendarToday />, text: 'Kalendař', link: adminPaths.calendar },
 ]
 
 const AdminToolbar = () => {

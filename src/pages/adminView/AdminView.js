@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import AdminToolbar from '@components/adminView/AdminToolbar'
 import BookingsView from '@components/adminView/BookingsView'
+import CalendarView from '@components/adminView/CalendarView'
 import DoctorServicesView from '@components/adminView/DoctorServicesView'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
@@ -26,9 +27,10 @@ const AdminView = () => {
         <>
             <Route path="*" children={<AdminToolbar />} />
             <Box className={classes.root}>
+                <Route path={routingPaths.admin} exact children={<Typography variant="h2">Vítej, admine</Typography>} />
                 <Route path={adminPaths.orders} children={<BookingsView />} />
                 <Route path={adminPaths.doctorServices} children={<DoctorServicesView />} />
-                <Route path={routingPaths.admin} exact children={<Typography variant="h2">Vítej, admine</Typography>} />
+                <Route path={adminPaths.calendar} children={<CalendarView />} />
             </Box>
         </>
     )

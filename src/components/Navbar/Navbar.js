@@ -19,10 +19,6 @@ const routes = [
         link: routingPaths.employees,
     },
     {
-        text: 'Ambulance',
-        link: routingPaths.ambulations,
-    },
-    {
         text: 'Rezervace',
         link: routingPaths.reservation,
     },

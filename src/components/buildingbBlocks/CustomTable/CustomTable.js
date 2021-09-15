@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core'
+import { Box, TextField } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,15 +8,15 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
-import { Close, Edit } from '@material-ui/icons'
+import { Close, Edit, Check } from '@material-ui/icons'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
-import { always, ascend, descend, equals, ifElse, prop, sortWith } from 'ramda'
+import { always, ascend, descend, equals, ifElse, prop, sortWith, indexOf } from 'ramda'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { compose } from 'redux'
-import { deleteBookings } from 'src/store/bookings/actions'
+import { deleteBookings, patchBooking } from 'src/store/bookings/actions'
 import CustomTableHeader from './CustomTableHeader'
 import CustomTableToolbar from './CustomTableToolbar'
 
@@ -63,8 +63,8 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [currentlyEditingId, setCurrentlyEditingId] = useState(-1)
-    const [editingDate, setEditingData] = useState(undefined)
-    console.log(editingDate)
+    const [editingData, setEditingData] = useState(undefined)
+    console.log(editingData)
 
     const handleRequestSort = (e, property) => {
         const isAsc = orderBy === property && order === 'asc'
@@ -79,6 +79,11 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
             return
         }
         setSelected([])
+    }
+
+    const handleUpdateBooking = async () => {
+        await dispatch(patchBooking(editingData))
+        setCurrentlyEditingId(-1)
     }
 
     const handleClick = (e, id) => {
@@ -159,12 +164,19 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                         inputProps={{ 'aria-labelledby': labelId }}
                                                     />
                                                 </TableCell>
-
                                                 <TableCell id={labelId}>{rowDate}</TableCell>
                                                 <TableCell>{rowTime}</TableCell>
                                                 <TableCell>
                                                     {equals(row.id, currentlyEditingId) ? (
-                                                        <TextField value={row.name} onChange={(e) => {}} />
+                                                        <TextField
+                                                            value={editingData?.name}
+                                                            onChange={(e) => {
+                                                                setEditingData((prevData) => ({
+                                                                    ...prevData,
+                                                                    name: e.target.value,
+                                                                }))
+                                                            }}
+                                                        />
                                                     ) : (
                                                         row.name
                                                     )}
@@ -174,12 +186,15 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                 <TableCell>{row.phone || ''}</TableCell>
                                                 <TableCell>
                                                     {equals(row.id, currentlyEditingId) ? (
-                                                        <Close onClick={() => setCurrentlyEditingId(-1)} />
+                                                        <Box display="row">
+                                                            <Check onClick={handleUpdateBooking} />
+                                                            <Close onClick={() => setCurrentlyEditingId(-1)} />
+                                                        </Box>
                                                     ) : (
                                                         <Edit
                                                             onClick={() => {
                                                                 setCurrentlyEditingId(row.id)
-                                                                setEditingData(data[index])
+                                                                setEditingData(data[indexOf(row, data)])
                                                             }}
                                                         />
                                                     )}

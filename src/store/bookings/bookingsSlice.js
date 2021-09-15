@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import { equals, filter } from 'ramda'
+import { equals, filter, map } from 'ramda'
 import {
     fetchAvailableTimeslots,
     bookAnAppointment,
     fetchBookings,
     fetchDoctorServicesForSelectedMonth,
     deleteBooking,
+    patchBooking,
 } from './actions'
 
 /* RTK uses on background Immer library.
@@ -108,6 +109,12 @@ const bookingsSlice = createSlice({
             })
             .addCase(deleteBooking.fulfilled, (state, action) => {
                 state.bookings.bookings = filter(({ id }) => !equals(id, action.meta.arg), state.bookings.bookings)
+            })
+            .addCase(patchBooking.fulfilled, (state, action) => {
+                state.bookings.bookings = map(
+                    (booking) => (equals(booking.id, action.payload.id) ? { ...action.payload } : booking),
+                    state.bookings.bookings
+                )
             })
     },
 })

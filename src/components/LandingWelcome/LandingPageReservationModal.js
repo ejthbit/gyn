@@ -30,24 +30,26 @@ const LandingPageReservationModal = ({ isOpen, onClose }) => {
     const classes = useStyles()
 
     return (
-        <Dialog maxWidth="md" open={isOpen} onClose={onClose} fullWidth>
-            <DialogTitle className={classes.title} disableTypography>
-                <Typography variant="h4">Rezervační formulář</Typography>
-            </DialogTitle>
-            <DialogContent>
-                <ReservationStepper />
-            </DialogContent>
-            <DialogActions className={classes.actions}>
-                <Typography variant="body2">
-                    Povinná pole jsou označena <span> *</span>
-                </Typography>
-                <Button variant="outlined" onClick={onClose} color="primary">
-                    <Typography color="primary" variant="body2">
-                        Zavřít
+        isOpen && (
+            <Dialog maxWidth="md" open={isOpen} onClose={onClose} fullWidth>
+                <DialogTitle className={classes.title} disableTypography>
+                    <Typography variant="h4">Rezervační formulář</Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <ReservationStepper />
+                </DialogContent>
+                <DialogActions className={classes.actions}>
+                    <Typography variant="body2">
+                        Povinná pole jsou označena <span> *</span>
                     </Typography>
-                </Button>
-            </DialogActions>
-        </Dialog>
+                    <Button variant="outlined" onClick={onClose} color="primary">
+                        <Typography color="primary" variant="body2">
+                            Zavřít
+                        </Typography>
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        )
     )
 }
 

@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiTypography-root': {
             fontWeight: 'bold',
         },
-        '& span': {
-            color: theme.palette.primary.main,
-        },
         paddingRight: '68% !important',
     },
     btn: {
@@ -61,9 +58,7 @@ const LandingWelcome = () => {
             <Grid container spacing={2}>
                 <Hidden xsDown>
                     <Grid item xs={12} className={classes.firstHeadline}>
-                        <Typography variant="h3">
-                            Vaše zdraví je u nás vždy na prvním <span>místě</span>
-                        </Typography>
+                        <Typography variant="h3">Vaše zdraví je u nás vždy na prvním místě</Typography>
                     </Grid>
                 </Hidden>
                 <Grid item xs={12}>

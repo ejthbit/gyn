@@ -74,3 +74,10 @@ export const deleteBooking = createAsyncThunk('bookings/deleteBookings', async (
 
 export const deleteBookings = (selectedItems) => (dispatch) =>
     forEach((bookingId) => dispatch(deleteBooking(bookingId)), selectedItems)
+
+export const patchBooking = createAsyncThunk('bookings/patchBooking', async (updatedBooking) => {
+    const { id: bookingId } = updatedBooking
+    const URL = `${ID}/booking/${bookingId}`
+    const res = await axiosGynInstance.put(URL, updatedBooking)
+    return res.data
+})

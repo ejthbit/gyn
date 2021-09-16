@@ -4,7 +4,6 @@
     "main": "index.js",
     "author": "8bit <ejthbit@gmail.com>",
     "license": "MIT",
-    "homepage": "https://vanek-gynekologie.cz/dev/",
     "devDependencies": {
         "@babel/core": "^7.14.3",
         "@babel/plugin-proposal-do-expressions": "^7.14.0",
@@ -60,7 +59,7 @@
     },
     "scripts": {
         "dev": "webpack serve --open --config webpack.dev.js",
-        "build": "webpack --config webpack.prod.js"
+        "build": "NODE_ENV=production webpack --config webpack.prod.js"
     },
     "proxy": "http://localhost:9000"
 }

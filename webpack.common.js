@@ -3,19 +3,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const dotenv = require('dotenv')
 
-const DEFAULT_TARGET_ENV = 'http://localhost:9000'
-const TARGET_ENV = {
-    prod: {
-        API_BASE_URL: 'https://heroku.com',
-        WEB_BASE_URL: 'https://vanek-gynekologie.cz/',
-    },
-    [DEFAULT_TARGET_ENV]: {
-        API_BASE_URL: 'http://localhost:8080/bookings',
-        WEB_BASE_URL: 'http://localhost:9000',
-    },
-}
-
-const TARGET_ENV_CONFIG = TARGET_ENV[process.env.TARGET_ENV || DEFAULT_TARGET_ENV]
+const WEB_BASE_URL = process.env.NODE_ENV !== 'production' ? '/' : process.env.PROD_WEB_BASE_CONTEXT_PATH
 
 module.exports = {
     resolve: {
@@ -29,7 +17,7 @@ module.exports = {
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'build'),
-        clean: true,
+        publicPath: WEB_BASE_URL,
     },
     module: {
         rules: [
@@ -70,13 +58,10 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(dotenv.config().parsed),
         }),
-        new webpack.EnvironmentPlugin({
-            API_BASE_URL: TARGET_ENV_CONFIG.API_BASE_URL,
-            WEB_BASE_URL: TARGET_ENV_CONFIG.WEB_BASE_URL,
-        }),
         new HtmlWebpackPlugin({
             template: './src/index.ejs',
             filename: './index.html',
+            web_base_url: process.env.PROD_WEB_BASE_CONTEXT_PATH,
         }),
     ],
 }

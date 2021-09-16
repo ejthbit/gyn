@@ -1,16 +1,16 @@
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { format, getDay, parse, startOfWeek, endOfWeek } from 'date-fns'
+import { format, getDay, parse, startOfWeek } from 'date-fns'
 import cs from 'date-fns/locale/cs'
 import React, { useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchBookings } from 'src/store/bookings/actions'
-import { setBookingsViewDate } from 'src/store/bookings/bookingsSlice'
 import { getBookingsSelectedDate, makeCalendarEventsSelector } from 'src/store/bookings/selectors'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
+import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
 
 const locales = {
@@ -75,15 +75,21 @@ const CalendarView = () => {
     const handleSetCreationDate = ({ start, end }) =>
         setNewAppointmentDate({ start: start.toISOString(), end: end.toISOString() })
 
+    const calendarFormats = {
+        dayRangeHeaderFormat: ({ start, end }) =>
+            format(new Date(start), 'dd/MM/yyyy') + ' - ' + format(new Date(end), 'dd/MM/yyyy'),
+        dayFormat: (date) => format(date, 'dd/MM/yyyy'),
+        dayHeaderFormat: (date) => format(date, 'dd/MM/yyyy'),
+    }
     // TODO: Move me to custom header
-    useEffect(() => {
-        dispatch(
-            setBookingsViewDate({
-                from: startOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
-                to: endOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
-            })
-        )
-    }, [])
+    // useEffect(() => {
+    //     dispatch(
+    //         setBookingsViewDate({
+    //             from: startOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
+    //             to: endOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
+    //         })
+    //     )
+    // }, [])
 
     useEffect(() => {
         const { from, to } = bookingsViewDate
@@ -94,6 +100,7 @@ const CalendarView = () => {
     return (
         <>
             <Calendar
+                formats={calendarFormats}
                 min={new Date(0, 0, 0, 7, 0, 0)}
                 max={new Date(0, 0, 0, 19, 0, 0)}
                 localizer={localizer}
@@ -108,6 +115,7 @@ const CalendarView = () => {
                 startAccessor="start"
                 selectable="ignoreEvents"
                 onSelectSlot={handleSetCreationDate}
+                components={{ toolbar: CalendarViewCustomToolbar }}
                 step={15}
                 endAccessor="end"
                 onSelecting={() => false}

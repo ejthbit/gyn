@@ -1,5 +1,5 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -25,10 +25,10 @@ const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
 
     return (
         open && (
-            <Dialog open={open} onClose={handleClose} maxWidth="md">
-                <DialogTitle id="form-dialog-title">Vytvořit novou objednávku</DialogTitle>
+            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+                <DialogTitle id="form-dialog-title">Rychlá objednávka</DialogTitle>
                 <DialogContent>
-                    <FormInput control={control} name="title" placeholder="Jméno pacienta" />
+                    <FormInput control={control} name="title" placeholder="Zadejte prosím jméno pacienta" fullWidth />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

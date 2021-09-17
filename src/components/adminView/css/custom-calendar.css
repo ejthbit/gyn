@@ -67,7 +67,8 @@
 .rbc-day-slot .rbc-event {
     background: #2daaa3;
     border: 0.5px solid #ace0e3;
-    cursor: default;
+    pointer-events: 'none';
+    z-index: 1001;
 }
 .rbc-current-time-indicator {
     background-color: crimson;

@@ -1,7 +1,8 @@
 import LoginPageForm from '@components/LoginPageForm/LoginPageForm'
 import Navbar from '@components/Navbar/Navbar'
 import ProtectedRoute from '@components/ProtectedRoute/ProtectedRoute'
-import { Grid, LinearProgress } from '@material-ui/core'
+import { Grid, LinearProgress, Box } from '@material-ui/core'
+import { isMobile } from '@utilities/checkDeviceType'
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import routingPaths from './routingPaths'
@@ -25,7 +26,15 @@ const Routes = () => {
                     <Route path="/" exact children={<LandingPage />} />
                     <ProtectedRoute path={routingPaths.admin} children={<AdminView />} shouldLogin />
                     <Route path={routingPaths.login} exact children={<LoginPageForm />} />
-                    <Route path={routingPaths.reservation} exact children={<Reservation />} />
+                    <Route
+                        path={routingPaths.reservation}
+                        exact
+                        children={
+                            <Box marginLeft={isMobile ? '5%' : '30%'} marginRight={isMobile ? '5%' : '30%'}>
+                                <Reservation />
+                            </Box>
+                        }
+                    />
                 </Switch>
             </Suspense>
         </Router>

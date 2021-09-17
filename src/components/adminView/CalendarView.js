@@ -14,6 +14,9 @@ import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
 import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
+import CustomEventCalendar from './CustomEventCalendar'
+import { equals, find } from 'ramda'
+import dates from 'react-big-calendar/lib/utils/dates'
 
 const locales = {
     cs,
@@ -42,7 +45,7 @@ const customStyleEventPropGetter = () => {
     return {
         className: 'event',
         style: {
-            padding: 0,
+            padding: 8,
             flex: 1,
             minHeight: '8vh',
             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -83,6 +86,7 @@ const calendarFormats = {
     dayHeaderFormat: (date) => format(date, 'dd/MM/yyyy'),
 }
 const SLOT_DURATION = 15 // In minutes
+
 const CalendarView = () => {
     const dispatch = useDispatch()
     const bookingsViewDate = useSelector(getBookingsSelectedDate)
@@ -94,11 +98,16 @@ const CalendarView = () => {
     const handleToggleCreationModal = () => setNewAppointmentDate({})
 
     const onSelectSlot = ({ action, slots }) => {
-        const start = slots[0] // start date/time of the even
-        if (action === 'click') {
-            setNewAppointmentDate({ start: start.toISOString(), end: addMinutes(start, SLOT_DURATION).toISOString() })
-        }
-        return false
+        const timeSlotStart = slots[0] // start date/time of the event
+        const isSlotBooked = !!find(({ start }) => equals(start, timeSlotStart), bookings)
+        if (isSlotBooked) return
+        return (
+            equals(action, 'click') &&
+            setNewAppointmentDate({
+                start: timeSlotStart.toISOString(),
+                end: addMinutes(timeSlotStart, SLOT_DURATION).toISOString(),
+            })
+        )
     }
 
     useEffect(() => {
@@ -127,6 +136,7 @@ const CalendarView = () => {
                 onSelectSlot={onSelectSlot}
                 components={{
                     toolbar: CalendarViewCustomToolbar,
+                    event: CustomEventCalendar,
                     timeSlotWrapper: (props) => <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />,
                 }}
                 step={SLOT_DURATION}

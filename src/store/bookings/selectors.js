@@ -43,6 +43,9 @@ export const makeCalendarEventsSelector = () =>
                     start: parseISO(start),
                     end: parseISO(end),
                     title: `${name} - ${birthdate}`,
+                    resource: {
+                        booked: true,
+                    },
                 }),
                 bookings
             ) ?? []

@@ -2,9 +2,10 @@ import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import { EmailOutlined, PhoneOutlined, Today } from '@material-ui/icons'
 import { DatePicker } from '@material-ui/pickers'
 import debounce from '@utilities/debounce'
-import React, { useCallback, useState } from 'react'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setContactInformation } from 'src/store/reservationProcess/reservationProcessSlice'
+import { setContactInformation, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getContactInformation } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
+//TODO: Use React hook forms
 const ReservationContactInputs = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -35,6 +37,9 @@ const ReservationContactInputs = () => {
         setContactInfo(nextValue)
         debounceChange(nextValue)
     }
+    useEffect(() => {
+        dispatch(setReservationBtnDisabled(isNilOrEmpty(phone)))
+    }, [phone])
 
     return (
         <Grid container alignItems="center" spacing={2}>
@@ -98,6 +103,7 @@ const ReservationContactInputs = () => {
                         ),
                     }}
                     fullWidth
+                    required
                 />
             </Grid>
             <Grid item xs={12} sm={6}>

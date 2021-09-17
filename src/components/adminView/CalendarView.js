@@ -1,8 +1,10 @@
+/* eslint-disable react/display-name */
+import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { format, getDay, parse, startOfWeek } from 'date-fns'
+import { addMinutes, format, getDay, parse, startOfWeek } from 'date-fns'
 import cs from 'date-fns/locale/cs'
-import React, { useEffect, useState } from 'react'
+import React, { Children, cloneElement, useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -62,6 +64,25 @@ const customSlotPropGetter = () => {
     }
 }
 
+const TouchCellWrapper = ({ children, value, onSelectSlot }) => {
+    return cloneElement(Children.only(children), {
+        onTouchEnd: () => onSelectSlot({ action: 'click', slots: [value] }),
+        style: {
+            padding: 0,
+            flex: 1,
+            minHeight: '8vh',
+            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+            className: `${children}`,
+        },
+    })
+}
+const calendarFormats = {
+    dayRangeHeaderFormat: ({ start, end }) =>
+        format(new Date(start), 'dd/MM/yyyy') + ' - ' + format(new Date(end), 'dd/MM/yyyy'),
+    dayFormat: (date) => format(date, 'dd/MM/yyyy'),
+    dayHeaderFormat: (date) => format(date, 'dd/MM/yyyy'),
+}
+const SLOT_DURATION = 15 // In minutes
 const CalendarView = () => {
     const dispatch = useDispatch()
     const bookingsViewDate = useSelector(getBookingsSelectedDate)
@@ -72,24 +93,13 @@ const CalendarView = () => {
 
     const handleToggleCreationModal = () => setNewAppointmentDate({})
 
-    const handleSetCreationDate = ({ start, end }) =>
-        setNewAppointmentDate({ start: start.toISOString(), end: end.toISOString() })
-
-    const calendarFormats = {
-        dayRangeHeaderFormat: ({ start, end }) =>
-            format(new Date(start), 'dd/MM/yyyy') + ' - ' + format(new Date(end), 'dd/MM/yyyy'),
-        dayFormat: (date) => format(date, 'dd/MM/yyyy'),
-        dayHeaderFormat: (date) => format(date, 'dd/MM/yyyy'),
+    const onSelectSlot = ({ action, slots }) => {
+        const start = slots[0] // start date/time of the even
+        if (action === 'click') {
+            setNewAppointmentDate({ start: start.toISOString(), end: addMinutes(start, SLOT_DURATION).toISOString() })
+        }
+        return false
     }
-    // TODO: Move me to custom header
-    // useEffect(() => {
-    //     dispatch(
-    //         setBookingsViewDate({
-    //             from: startOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
-    //             to: endOfWeek(Date.now(), { weekStartsOn: 1 }).toISOString(),
-    //         })
-    //     )
-    // }, [])
 
     useEffect(() => {
         const { from, to } = bookingsViewDate
@@ -106,17 +116,20 @@ const CalendarView = () => {
                 localizer={localizer}
                 events={bookings}
                 views={{ work_week: true, day: true }}
-                defaultView="work_week"
+                defaultView={isMobile ? 'day' : 'work_week'}
                 culture="cs"
                 defaultDate={new Date()}
                 slotPropGetter={customSlotPropGetter}
                 eventPropGetter={customStyleEventPropGetter}
                 dayPropGetter={customStyleDayPropGetter}
                 startAccessor="start"
-                selectable="ignoreEvents"
-                onSelectSlot={handleSetCreationDate}
-                components={{ toolbar: CalendarViewCustomToolbar }}
-                step={15}
+                selectable
+                onSelectSlot={onSelectSlot}
+                components={{
+                    toolbar: CalendarViewCustomToolbar,
+                    timeSlotWrapper: (props) => <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />,
+                }}
+                step={SLOT_DURATION}
                 endAccessor="end"
                 onSelecting={() => false}
                 style={{ height: '80vh', margin: 20 }}

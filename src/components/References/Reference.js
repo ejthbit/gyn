@@ -5,6 +5,7 @@ import FormatQuoteIcon from '@material-ui/icons/FormatQuote'
 
 const useStyles = makeStyles((theme) => ({
     quoteLeft: {
+        height: 42,
         '& svg': {
             fill: 'lightgrey',
             width: '1.1rem',
@@ -40,8 +41,8 @@ const Reference = ({ text, author }) => {
             <Grid item xs={12} className={classes.quoteLeft}>
                 <FormatQuoteIcon />
             </Grid>
-            <Grid item container xs={12} direction="row" className={classes.quote} justifyContent="flex-end">
-                <Typography>{text}</Typography>
+            <Grid item xs={12} className={classes.quote}>
+                <Typography variant="body1">{text}</Typography>
             </Grid>
             <Grid item xs={12} className={classes.quoteRight}>
                 <FormatQuoteIcon />

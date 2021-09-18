@@ -4,6 +4,7 @@ import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
 import { addMinutes, format, getDay, parse, startOfWeek } from 'date-fns'
 import cs from 'date-fns/locale/cs'
+import { equals, find } from 'ramda'
 import React, { Children, cloneElement, useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -15,8 +16,6 @@ import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
 import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
 import CustomEventCalendar from './CustomEventCalendar'
-import { equals, find } from 'ramda'
-import dates from 'react-big-calendar/lib/utils/dates'
 
 const locales = {
     cs,
@@ -142,7 +141,7 @@ const CalendarView = () => {
                 step={SLOT_DURATION}
                 endAccessor="end"
                 onSelecting={() => false}
-                style={{ height: '80vh', margin: 20 }}
+                style={{ height: '75vh', margin: 20 }}
             />
             <CalendarViewCreateEventDialog
                 open={!isNilOrEmpty(newAppointmentDate)}

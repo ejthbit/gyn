@@ -25,19 +25,19 @@ const References = () => {
                 <Grid item container xs={12} md={4}>
                     <Reference
                         text="Je to lékař, který Vám porozumí, žádná nadřazenost, všem doporučuji, děkuji za Vaši péči."
-                        author="Alena Březinová"
+                        author="Alena B."
                     />
                 </Grid>
                 <Grid item container xs={12} md={4}>
                     <Reference
                         text="Byla jsem zde dnes poprvé na prohlídku, jelikož čekám první ditě, a musím říct, že pan doktor je člověk na správném mistě, pěkné jednání, vše vysvětlí, jsem spokojená i sestřička byla ochotná, super."
-                        author="Karin Fischerová"
+                        author="Karin F."
                     />
                 </Grid>
                 <Grid item container xs={12} md={4}>
                     <Reference
                         text="Kež by bylo více takových odborníků se srdcem na správném mistě. Úžasný lékař, vřele doporučuji."
-                        author="Dana Rogulská Jadomková"
+                        author="Dana R. J."
                     />
                 </Grid>
             </Grid>

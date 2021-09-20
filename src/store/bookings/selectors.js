@@ -7,6 +7,7 @@ const stateId = 'bookings'
 const DOCTOR_ID = (_, { doctorId }) => doctorId
 
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
+export const getSonographyDates = path([stateId, 'sonographyDates'])
 export const lastBookingErrors = path([stateId, 'lastBooking', 'errors'])
 export const isSendingBooking = path([stateId, 'lastBooking', 'isLoading'])
 export const getOrderFinishedOk = path([stateId, 'lastBooking', 'orderFinishedOk'])

@@ -40,6 +40,19 @@ const bookingsInitialState = {
         errors: undefined,
         data: [],
     },
+    //TODO:Replace me with real data
+    sonographyDates: [
+        {
+            date: '07/09/2021',
+            from: '12:00',
+            to: '16:00',
+        },
+        {
+            date: '29/09/2021',
+            from: '12:00',
+            to: '16:00',
+        },
+    ],
 }
 const bookingsSlice = createSlice({
     name: 'bookings',

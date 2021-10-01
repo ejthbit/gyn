@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import { Typography } from '@material-ui/core'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -9,6 +10,7 @@ import React, { Children, cloneElement, useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
+import { getUser } from 'src/store/administration/selectors'
 import { fetchBookings } from 'src/store/bookings/actions'
 import { getBookingsSelectedDate, makeCalendarEventsSelector } from 'src/store/bookings/selectors'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
@@ -46,7 +48,7 @@ const customStyleEventPropGetter = () => {
         style: {
             padding: 8,
             flex: 1,
-            minHeight: '8vh',
+            minHeight: '10vh',
             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
             pointerEvents: 'none',
         },
@@ -89,6 +91,8 @@ const SLOT_DURATION = 15 // In minutes
 const CalendarView = () => {
     const dispatch = useDispatch()
     const bookingsViewDate = useSelector(getBookingsSelectedDate)
+    const loggedUser = useSelector(getUser)
+
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
     const bookings = useMemoizedSelector(makeCalendarEventsSelector, {}, [bookingsViewDate])
@@ -111,12 +115,15 @@ const CalendarView = () => {
 
     useEffect(() => {
         const { from, to } = bookingsViewDate
-        if (!isNilOrEmpty(from) && !isNilOrEmpty(to))
+        if (!isNilOrEmpty(from) && !isNilOrEmpty(to) && !isNilOrEmpty(selectedAmbulanceId) && loggedUser)
             dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
     }, [bookingsViewDate, selectedAmbulanceId])
 
     return (
         <>
+            <Typography variant="body1" align="center">
+                Objednávky na tento týden jsou
+            </Typography>
             <Calendar
                 formats={calendarFormats}
                 min={new Date(0, 0, 0, 7, 0, 0)}
@@ -141,7 +148,7 @@ const CalendarView = () => {
                 step={SLOT_DURATION}
                 endAccessor="end"
                 onSelecting={() => false}
-                style={{ height: '75vh', margin: 20 }}
+                style={{ height: '75vh', margin: 8 }}
             />
             <CalendarViewCreateEventDialog
                 open={!isNilOrEmpty(newAppointmentDate)}

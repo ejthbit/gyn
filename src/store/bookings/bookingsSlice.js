@@ -9,6 +9,7 @@ import {
     deleteBooking,
     patchBooking,
     fastBooking,
+    getCurrentMonthSonographyDates,
 } from './actions'
 
 /* RTK uses on background Immer library.
@@ -41,18 +42,7 @@ const bookingsInitialState = {
         data: [],
     },
     //TODO:Replace me with real data
-    sonographyDates: [
-        {
-            date: '07/09/2021',
-            from: '12:00',
-            to: '16:00',
-        },
-        {
-            date: '29/09/2021',
-            from: '12:00',
-            to: '16:00',
-        },
-    ],
+    sonographyDates: [],
 }
 const bookingsSlice = createSlice({
     name: 'bookings',
@@ -134,6 +124,9 @@ const bookingsSlice = createSlice({
                     (booking) => (equals(booking.id, action.payload.id) ? { ...action.payload } : booking),
                     state.bookings.bookings
                 )
+            })
+            .addCase(getCurrentMonthSonographyDates.fulfilled, (state, action) => {
+                state.sonographyDates = action.payload
             })
     },
 })

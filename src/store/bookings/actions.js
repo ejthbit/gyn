@@ -106,3 +106,8 @@ export const patchBooking = createAsyncThunk('bookings/patchBooking', async (upd
     const res = await axiosGynInstance.put(URL, updatedBooking)
     return res.data
 })
+export const getCurrentMonthSonographyDates = createAsyncThunk('bookings/getCurrentmonthSonographyDates', async () => {
+    const URL = `${ID}/getSonographyDates/${new Date().toISOString()}`
+    const res = await axiosGynInstance.get(URL)
+    return res.data
+})

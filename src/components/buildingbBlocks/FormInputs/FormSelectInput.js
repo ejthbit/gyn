@@ -32,6 +32,11 @@ const FormSelectInput = ({ control, name, select, children, disabled, className,
             helperText={error?.message}
             readOnly={disabled}
             inputRef={ref}
+            SelectProps={{
+                MenuProps: {
+                    disableScrollLock: true,
+                },
+            }}
             {...inputProps}
             {...otherTextFieldProps}
         >

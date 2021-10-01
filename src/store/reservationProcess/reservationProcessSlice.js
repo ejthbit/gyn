@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { isNil } from 'ramda'
 import { fetchAmbulances, fetchDoctorsForSelectedAmbulance } from './actions'
 
@@ -21,14 +20,14 @@ const configurationInitialState = {
     },
 }
 const reservationProcessInitialState = {
-    selectedAmbulance: 1,
+    selectedAmbulance: null,
     preferredDoctor: '',
     selectedDate: new Date().toISOString().slice(0, 10),
     selectedTime: '',
     activeStep: 0,
     contactInformation: {
         name: '',
-        email: '',
+        email: null,
         phone: '',
         birthDate: null,
     },
@@ -77,7 +76,6 @@ const reservationProcessSlice = createSlice({
                 const { data } = action.payload
                 state.ambulances.isLoading = false
                 state.ambulances.data = data
-                state.selectedAmbulance = !isNilOrEmpty(data) ? data[0]?.workplace_id : ''
             })
             .addCase(fetchAmbulances.rejected, (state, action) => {
                 state.ambulances.isLoading = false

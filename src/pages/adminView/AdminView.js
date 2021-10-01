@@ -27,7 +27,18 @@ const AdminView = () => {
         <>
             <Route path="*" children={<AdminToolbar />} />
             <Box className={classes.root}>
-                <Route path={routingPaths.admin} exact children={<Typography variant="h2">Vítej, admine</Typography>} />
+                <Route
+                    path={routingPaths.admin}
+                    exact
+                    children={
+                        <>
+                            <Typography variant="h4" align="center">
+                                Vítejte
+                            </Typography>
+                            <CalendarView />
+                        </>
+                    }
+                />
                 <Route path={adminPaths.orders} children={<BookingsView />} />
                 <Route path={adminPaths.doctorServices} children={<DoctorServicesView />} />
                 <Route path={adminPaths.calendar} children={<CalendarView />} />

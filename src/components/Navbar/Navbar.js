@@ -9,7 +9,7 @@ import { HashLink } from 'react-router-hash-link'
 import routingPaths from 'src/routingPaths'
 import MobileNavbar from './MobileNavbar'
 
-const routes = [
+export const routes = [
     {
         text: 'Naše služby',
         link: routingPaths.services,

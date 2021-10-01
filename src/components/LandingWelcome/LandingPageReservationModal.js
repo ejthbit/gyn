@@ -14,8 +14,10 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         paddingRight: theme.spacing(6.5),
         paddingLeft: theme.spacing(6.5),
-        '& span': {
-            color: 'red',
+        '& .MuiTypography-body2': {
+            '& span': {
+                color: 'red',
+            },
         },
         '& .MuiButtonBase-root': {
             width: '30%',
@@ -43,9 +45,7 @@ const LandingPageReservationModal = ({ isOpen, onClose }) => {
                         Povinná pole jsou označena <span> *</span>
                     </Typography>
                     <Button variant="outlined" onClick={onClose} color="primary">
-                        <Typography color="primary" variant="body2">
-                            Zavřít
-                        </Typography>
+                        Zavřít
                     </Button>
                 </DialogActions>
             </Dialog>

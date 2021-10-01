@@ -1,11 +1,11 @@
 import Dropdown from '@components/buildingbBlocks/Dropdown'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAmbulances } from 'src/store/reservationProcess/actions'
 import { setSelectedAmbulance } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getSelectedAmbulance, makeArrayOfValueLabelAmbulances } from 'src/store/reservationProcess/selectors'
-import PropTypes from 'prop-types'
 
 const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
 const AmbulanceSelect = ({ variant = 'standard' }) => {

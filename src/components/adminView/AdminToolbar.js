@@ -15,13 +15,17 @@ import {
     Typography,
 } from '@material-ui/core'
 import { DateRange, Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import SM from '@utilities/StorageManager'
-import { map } from 'ramda'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { equals, map } from 'ramda'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { adminPaths } from 'src/routingPaths'
 import { logout } from 'src/store/administration/administrationSlice'
+import { getUser } from 'src/store/administration/selectors'
+import { setSelectedAmbulance } from 'src/store/reservationProcess/reservationProcessSlice'
+import { getSelectedAmbulance, makeArrayOfValueLabelAmbulances } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         color: '#FFF',
         padding: theme.spacing(2),
-        minHeight: theme.spacing(8),
+        minHeight: theme.spacing(4),
         [theme.breakpoints.down('sm')]: {
             minHeight: theme.spacing(3),
         },
@@ -68,8 +72,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     drawerListItem: {
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        paddingTop: theme.spacing(2),
         '& svg': {
             color: '#FFF',
         },
@@ -116,20 +120,30 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 const adminToolbarContent = [
-    { icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
-    { icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
-    { icon: <DateRange />, text: 'Kalendař', link: adminPaths.calendar },
+    { id: 1, icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
+    { id: 2, icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
+    { id: 3, icon: <DateRange />, text: 'Kalendař', link: adminPaths.calendar },
 ]
 
+const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
 const AdminToolbar = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const loggedUser = useSelector(getUser)
+    const ambulances = useSelector(selectAmbulancesValueLabelPair)
+    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
+
     const [selectedItem, setSelectedItem] = useState('Administrace')
 
     const handleLogout = (e) => {
         SM.clearLSStorage(e)
         dispatch(logout())
     }
+
+    useEffect(() => {
+        if (loggedUser && !isNilOrEmpty(ambulances) && isNilOrEmpty(selectedAmbulanceId))
+            dispatch(setSelectedAmbulance(loggedUser?.default_workplace))
+    }, [loggedUser, ambulances])
 
     return (
         <>
@@ -138,7 +152,7 @@ const AdminToolbar = () => {
                     <Grid container spacing={2} alignItems="center" className={classes.headerContent}>
                         <Grid item md={5}>
                             <Typography variant="h6" className={classes.title}>
-                                {selectedItem}
+                                Administrace
                             </Typography>
                         </Grid>
                         <Grid
@@ -158,7 +172,7 @@ const AdminToolbar = () => {
                             </Grid>
                             <Grid item>
                                 <Box marginRight={3}>
-                                    <Typography>Vítej, Admine</Typography>
+                                    <Typography>{`Vítejte, ${loggedUser?.name}`} </Typography>
                                 </Box>
                             </Grid>
                             <Grid item md={1}>
@@ -187,14 +201,15 @@ const AdminToolbar = () => {
                 <Divider />
                 <List disablePadding>
                     {map(
-                        ({ icon, text, link }) => (
+                        ({ id, icon, text, link }) => (
                             <ListItem
                                 className={classes.drawerListItem}
                                 button
                                 component={Link}
                                 to={link}
-                                key={text}
-                                onClick={() => setSelectedItem(text)}
+                                key={id}
+                                selected={equals(id, selectedItem)}
+                                onClick={() => setSelectedItem(id)}
                             >
                                 <ListItemIcon>{icon}</ListItemIcon>
                                 <ListItemText primary={text} />

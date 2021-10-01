@@ -12,6 +12,10 @@ const administrationInitialState = {
         error: undefined,
         isLoggedIn: JSON.parse(localStorage.getItem('user'))?.success ?? false,
         automaticallyLoggedOut: false,
+        user: {
+            name: JSON.parse(localStorage.getItem('user'))?.user?.name ?? null,
+            default_workplace: JSON.parse(localStorage.getItem('user'))?.user?.default_workplace ?? null,
+        },
     },
     servicesOperation: {
         isLoading: false,
@@ -25,10 +29,12 @@ const administrationSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.adminState.isLoggedIn = false
+            state.adminState.user = null
         },
         logOutAutomatically: (state) => {
             state.adminState.isLoggedIn = false
             state.adminState.automaticallyLoggedOut = !state.adminState.automaticallyLoggedOut
+            state.adminState.user = null
         },
         clearServicesOperationState: (state) => {
             state.servicesOperation = administrationInitialState.servicesOperation
@@ -43,6 +49,7 @@ const administrationSlice = createSlice({
             .addCase(logIntoAdministration.fulfilled, (state, action) => {
                 state.adminState.isLoading = false
                 state.adminState.isLoggedIn = action.payload.success
+                state.adminState.user = action.payload.user
             })
             .addCase(logIntoAdministration.rejected, (state, action) => {
                 state.adminState.isLoading = false

@@ -144,7 +144,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                         const isItemSelected = isSelected(row.id)
                                         const date = new Date(row.start)
                                         const rowDate = format(date, 'yyyy/MM/dd')
-                                        const rowTime = row.start.substr(11, 8)
+                                        const rowTime = row.start.substr(11, 5)
                                         const labelId = `enhanced-table-checkbox-${index}`
                                         return (
                                             <TableRow

@@ -17,3 +17,9 @@ export const fetchDoctorsForSelectedAmbulance = createAsyncThunk(
         return res.data
     }
 )
+
+export const sendContactMessage = createAsyncThunk('reservationProcess/contactForm/sendMessage', async (data) => {
+    const URL = `${ID}/contactForm/sendMessage`
+    const res = await axiosGynInstance.post(URL, data)
+    return res.data
+})

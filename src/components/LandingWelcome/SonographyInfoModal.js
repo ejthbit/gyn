@@ -8,11 +8,14 @@ import {
     makeStyles,
     Typography,
 } from '@material-ui/core'
-import { map } from 'ramda'
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import { format } from 'date-fns'
 import PropTypes from 'prop-types'
-import React from 'react'
+import { map } from 'ramda'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getCurrentMonthSonographyDates } from 'src/store/bookings/actions'
 import { getSonographyDates } from 'src/store/bookings/selectors'
-import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -40,7 +43,12 @@ const useStyles = makeStyles((theme) => ({
 
 const SonographyInfoModal = ({ open, handleClose }) => {
     const classes = useStyles()
+    const dispatch = useDispatch()
     const sonographyDates = useSelector(getSonographyDates)
+
+    useEffect(() => {
+        if (isNilOrEmpty(sonographyDates)) dispatch(getCurrentMonthSonographyDates())
+    }, [])
 
     return (
         <Dialog maxWidth="sm" open={open} onClose={handleClose} fullWidth>
@@ -49,13 +57,19 @@ const SonographyInfoModal = ({ open, handleClose }) => {
             </DialogTitle>
             <DialogContent>
                 <Box margin={2}>
-                    {map(
-                        ({ date, from, to }) => (
-                            <Typography key={date} align="center">
-                                {`${date} (${from}-${to})`}
-                            </Typography>
-                        ),
-                        sonographyDates
+                    {!isNilOrEmpty(sonographyDates) ? (
+                        map(
+                            ({ date, from, to }) => (
+                                <Typography key={date} align="center">
+                                    {`${format(new Date(date), 'dd/MM/yyyy')} (${from}-${to})`}
+                                </Typography>
+                            ),
+                            sonographyDates
+                        )
+                    ) : (
+                        <Typography variant="body1" color="error">
+                            Omlouváme se ale na tento měsíc nejsou vypsány termíny sonografie.
+                        </Typography>
                     )}
                 </Box>
                 <Typography variant="body2">

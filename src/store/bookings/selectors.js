@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { parseISO } from 'date-fns'
+import { parseISO, subHours } from 'date-fns'
 import { equals, filter, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
@@ -41,8 +41,8 @@ export const makeCalendarEventsSelector = () =>
             map(
                 ({ id, name, start, end, birthdate }) => ({
                     id,
-                    start: parseISO(start),
-                    end: parseISO(end),
+                    start: subHours(parseISO(start), 2),
+                    end: subHours(parseISO(end), 2),
                     title: `${name} - ${birthdate}`,
                     resource: {
                         booked: true,

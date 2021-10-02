@@ -1,16 +1,25 @@
-import { Box, Button, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Divider, Grid, Typography } from '@material-ui/core'
 import { ArrowBack, ArrowForward } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import useMemoizedSelector from '@utilities/useMemoSelector'
 import { parse, startOfDay, endOfDay, addWeeks, addDays } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setBookingsViewDate } from 'src/store/bookings/bookingsSlice'
+import { getBookingsSelectedDate, makeCalendarEventsSelector } from 'src/store/bookings/selectors'
 
+const VIEW_TRANSLATIONS = {
+    day: 'den',
+    work_week: 'pracovní týden',
+}
 const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
     const [viewState, setViewState] = useState(isMobile ? 'day' : 'work_week')
+    const bookingsViewDate = useSelector(getBookingsSelectedDate)
+    const bookings = useMemoizedSelector(makeCalendarEventsSelector, {}, [bookingsViewDate])
+
     const dispatch = useDispatch()
 
     const goToDayView = () => {
@@ -56,8 +65,15 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
     return (
         <Box marginBottom={2}>
             <Grid container spacing={1} justifyContent="center" alignItems="center">
-                <Grid item xs={12}>
-                    <Typography align="center">{label}</Typography>
+                <Grid container item xs={12} justifyContent="space-between" spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="body1" align="left">
+                            {`Počet objednaných pacientek na tento ${VIEW_TRANSLATIONS[viewState]}: ${bookings.length} `}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Typography align={isMobile ? 'center' : 'right'}>{`Časové období: ${label}`}</Typography>
+                    </Grid>
                 </Grid>
                 <Grid container item xs={12} md={6} justifyContent="space-between" spacing={1}>
                     <Grid item xs={4} md={4}>

@@ -78,6 +78,7 @@ const BookingsView = () => {
         { id: 'birthdate', numeric: false, disablePadding: false, label: 'Datum narození' },
         { id: 'email', numeric: true, disablePadding: false, label: 'e-mail' },
         { id: 'phone', numeric: true, disablePadding: false, label: 'Telefon' },
+        { id: 'akce', disableSorting: true, disablePadding: false, label: 'Akce' },
     ]
 
     return (

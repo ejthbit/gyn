@@ -3,15 +3,26 @@ import PropTypes from 'prop-types'
 import { AppBar, Box, Drawer, Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import { Menu as MenuIcon, Close as CloseIcon } from '@material-ui/icons'
 import { NavLink } from 'react-router-dom'
-import Logo from '@components/Logo/Logo'
 import { HashLink } from 'react-router-hash-link'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
+import TransparentLogo from '@components/Logo/TransparentLogo'
 
 const useStyles = makeStyles((theme) => ({
     logo: {
         '& svg': {
             padding: theme.spacing(1),
-            height: 125,
+            '& path': {
+                fill: `${theme.palette.common.black} !important`,
+            },
+        },
+    },
+    drawerLogo: {
+        '& svg': {
+            width: '80%',
+            padding: theme.spacing(1),
+            '& path': {
+                fill: `${theme.palette.common.black} !important`,
+            },
         },
     },
     drawer: {
@@ -44,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
-    offSet: { minHeight: theme.spacing(18) },
+    offSet: { minHeight: theme.spacing(12) },
 }))
 
 const MobileNavbar = ({ routes }) => {
@@ -57,11 +68,10 @@ const MobileNavbar = ({ routes }) => {
         <>
             <AppBar position="fixed" className={classes.root}>
                 <Toolbar className={classes.toolbar}>
-                    <Grid container alignItems="center">
-                        <Grid item xs={3}></Grid>
+                    <Grid container alignItems="center" justifyContent="space-between">
                         <Grid item xs={6}>
                             <NavLink to={'/'} className={classes.logo}>
-                                <Logo />
+                                <TransparentLogo />
                             </NavLink>
                         </Grid>
                         <Grid item container xs={3} direction="column">
@@ -77,8 +87,8 @@ const MobileNavbar = ({ routes }) => {
                         <IconButton onClick={handleToggleDrawer}>
                             <CloseIcon />
                         </IconButton>
-                        <NavLink to={'/'} className={classes.logo} onClick={handleToggleDrawer}>
-                            <Logo />
+                        <NavLink to={'/'} className={classes.drawerLogo} onClick={handleToggleDrawer}>
+                            <TransparentLogo />
                         </NavLink>
                         {routes.map(({ text, link }) => (
                             <Grid key={link} item onClick={handleToggleDrawer}>

@@ -26,19 +26,16 @@ const CustomTableHeader = ({
                         inputProps={{ 'aria-label': 'select all items' }}
                     />
                 </TableCell>
-                {headCells.map((headCell, index) => (
-                    <TableCell
-                        key={`${headCell.id}-${index}`}
-                        padding="normal"
-                        sortDirection={orderBy === headCell.id && order}
-                    >
+                {headCells.map(({ id, disableSorting, label }, index) => (
+                    <TableCell key={`${id}-${index}`} padding="normal" sortDirection={orderBy === id && order}>
                         <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
+                            active={orderBy === id}
+                            direction={orderBy === id ? order : 'asc'}
+                            onClick={(e) => (disableSorting ? e.preventDefault() : createSortHandler(id)())}
+                            hideSortIcon={disableSorting}
                         >
-                            {headCell.label}
-                            {orderBy === headCell.id && (
+                            {label}
+                            {orderBy === id && (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </span>

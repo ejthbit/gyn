@@ -1,6 +1,6 @@
-import Logo from '@components/Logo/Logo'
+import TransparentLogo from '@components/Logo/TransparentLogo'
 import { AppBar, Box, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import { SupervisedUserCircle } from '@material-ui/icons'
+import { AccountCircleOutlined } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import React from 'react'
@@ -27,33 +27,26 @@ export const routes = [
         link: routingPaths.contact,
     },
     {
-        text: <SupervisedUserCircle />,
+        text: <AccountCircleOutlined />,
         link: routingPaths.login,
     },
 ]
 
 const useStyles = makeStyles((theme) => ({
-    navbar: {
-        backgroundColor: '#b2dfdf',
-        paddingBottom: 60,
-        paddingTop: 40,
-        marginBottom: 40,
-    },
     navbarBackground: {
         '& .MuiToolbar-root': {
             paddingTop: 20,
         },
-        marginTop: 40,
         height: 80,
         backgroundColor: theme.palette.primary.main,
     },
     logo: {
         '& svg': {
-            height: 125,
-            marginTop: -60,
-            marginBottom: -60,
+            width: '100%',
             '&:hover': {
-                border: '0.25px solid #000',
+                '& path': {
+                    fill: theme.palette.common.black,
+                },
                 cursor: 'pointer',
             },
         },
@@ -75,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
-    offSet: { minHeight: theme.spacing(18) },
+    offSet: { minHeight: theme.spacing(12) },
 }))
 
 const Navbar = () => {
@@ -87,29 +80,27 @@ const Navbar = () => {
             <MobileNavbar routes={routes} />
         ) : (
             <>
-                <AppBar className={classes.navbar} position="fixed">
-                    <AppBar className={classes.navbarBackground} position="fixed">
-                        <Toolbar>
-                            <Grid container spacing={3} alignItems="center">
-                                <Grid item md={2}>
-                                    <NavLink to={'/'} className={classes.logo}>
-                                        <Logo />
-                                    </NavLink>
-                                </Grid>
-                                <Grid container md={10} spacing={2} item alignItems="center" justifyContent="flex-end">
-                                    {routes.map(({ text, link }) => (
-                                        <Grid key={link} item>
-                                            <Typography variant="body1" className={classes.menuItem}>
-                                                <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
-                                                    {text}
-                                                </HashLink>
-                                            </Typography>
-                                        </Grid>
-                                    ))}
-                                </Grid>
+                <AppBar className={classes.navbarBackground} position="fixed">
+                    <Toolbar>
+                        <Grid container spacing={3} alignItems="center">
+                            <Grid item md={2}>
+                                <NavLink to={'/'} className={classes.logo}>
+                                    <TransparentLogo />
+                                </NavLink>
                             </Grid>
-                        </Toolbar>
-                    </AppBar>
+                            <Grid container md={10} spacing={2} item alignItems="center" justifyContent="flex-end">
+                                {routes.map(({ text, link }) => (
+                                    <Grid key={link} item>
+                                        <Typography variant="body1" className={classes.menuItem}>
+                                            <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                                {text}
+                                            </HashLink>
+                                        </Typography>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
                 </AppBar>
                 <Box className={classes.offSet} />
             </>

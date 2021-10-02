@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: '#FFF',
         padding: 20,
-        border: '2px solid lightgray',
-        borderRadius: 10,
+        border: `1px solid ${theme.palette.common.white} `,
+        borderRadius: 6,
         margin: '20px 20px 20px 220px',
         [theme.breakpoints.down('sm')]: {
             marginLeft: 80,

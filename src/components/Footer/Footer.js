@@ -1,5 +1,5 @@
 import ContactForm from '@components/Contacts/ContactForm'
-import Logo from '@components/Logo/Logo'
+import TransparentLogo from '@components/Logo/TransparentLogo'
 import { routes } from '@components/Navbar/Navbar'
 import { Box, Divider, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
@@ -35,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
+    logoContainer: {
+        marginTop: theme.spacing(2),
+        '& svg': {
+            width: '50%',
+        },
+    },
     copyright: {
         textAlign: 'center',
     },
@@ -45,7 +51,7 @@ const Footer = () => {
     return (
         <Grid className={classes.root} container spacing={2} justifyContent="center">
             <Grid item container xs={12} spacing={2} alignContent="center">
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={4}>
                     <Typography variant="body1" color="primary">
                         MUDr. Miroslav Vaněk
                         <br />
@@ -67,12 +73,9 @@ const Footer = () => {
                         <br />
                         +420 605 414 988
                     </Typography>
-                </Grid>
-                <Hidden smDown>
-                    <Divider variant="middle" orientation="vertical" />
-                </Hidden>
-                <Grid item xs={12} md={7}>
-                    <ContactForm />
+                    <Box className={classes.logoContainer}>
+                        <TransparentLogo />
+                    </Box>
                 </Grid>
                 <Grid item xs={12} md={1}>
                     <Typography variant="body1" color="primary" className={classes.menuItemContainer}>
@@ -90,6 +93,12 @@ const Footer = () => {
                                 </Grid>
                             )
                     )}
+                </Grid>
+                <Hidden smDown>
+                    <Divider variant="middle" orientation="vertical" />
+                </Hidden>
+                <Grid item xs={12} md={6}>
+                    <ContactForm />
                 </Grid>
             </Grid>
             <Grid item xs={12} className={classes.copyright}>

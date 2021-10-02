@@ -6,7 +6,7 @@ const gynBookingTheme = createTheme({
     },
     palette: {
         primary: {
-            main: '#2DAAA3',
+            main: '#1f7672',
         },
         secondary: {
             main: '#11cb5f',

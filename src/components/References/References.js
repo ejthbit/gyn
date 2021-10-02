@@ -19,7 +19,9 @@ const References = () => {
     return (
         <Grid className={classes.root} container spacing={2}>
             <Grid item xs={12}>
-                <Typography variant="h2">Naši spokojení pacienti</Typography>
+                <Typography variant="h3" align="center">
+                    Naši spokojení pacienti
+                </Typography>
             </Grid>
             <Grid item container xs={12} spacing={4}>
                 <Grid item container xs={12} md={4}>

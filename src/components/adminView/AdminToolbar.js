@@ -1,4 +1,5 @@
 import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
+import TransparentLogo from '@components/Logo/TransparentLogo'
 import {
     AppBar,
     Box,
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         color: '#000',
         backgroundColor: '#FFF',
+        boxShadow: 'none',
     },
     appBar: {
         marginLeft: 200,
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             width: 60,
         },
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
     },
     drawerHeader: {
         textDecoration: 'none',
@@ -116,6 +118,12 @@ const useStyles = makeStyles((theme) => ({
     headerContent: {
         [theme.breakpoints.down('sm')]: {
             justifyContent: 'center',
+        },
+    },
+    logoContainer: {
+        marginTop: theme.spacing(2),
+        '& svg': {
+            width: '100%',
         },
     },
 }))
@@ -192,7 +200,9 @@ const AdminToolbar = () => {
             >
                 <Box className={classes.drawerHeader} component={Link} to={'/'}>
                     <Hidden smDown>
-                        <Typography> VANEK GYNEKOLOGIE</Typography>
+                        <Box className={classes.logoContainer}>
+                            <TransparentLogo />
+                        </Box>
                     </Hidden>
                     <Hidden mdUp>
                         <Home />

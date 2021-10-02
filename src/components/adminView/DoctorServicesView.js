@@ -50,7 +50,7 @@ const DoctorServicesView = () => {
     const [selectedAction, setSelectedAction] = useState(0)
     const [selectedMonth, setSelectedMonth] = useState(new Date(d.setMonth(d.getMonth() + 1)))
     const [dates, setDates] = useState([])
-    const [serviceExists, setServiceExists] = useState(false)
+    const [serviceExists, setServiceExists] = useState(null)
 
     const handleSetActionWorkflow = (value) => setSelectedAction(value)
 
@@ -68,9 +68,12 @@ const DoctorServicesView = () => {
                 workplace: selectedAmbulanceId,
             })
         )
-        // FIXME:Co kdyz neexistuje sluzba case
         if (equals(selectedAction, 2)) {
-            setDates(payload.days)
+            if (isNilOrEmpty(payload.days)) setServiceExists(false)
+            else {
+                setServiceExists(true)
+                setDates(payload.days)
+            }
         } else if (!payload) {
             const workingDates = getWorkDaysInMonth(getMonth(date), getYear(date))
             setDates(
@@ -90,8 +93,12 @@ const DoctorServicesView = () => {
 
     useEffect(() => {
         if (!equals(selectedAction, 0)) handleGenerateDataForTable(selectedMonth)
-        dispatch(fetchDoctorsForSelectedAmbulance(selectedAmbulanceId))
-    }, [selectedAmbulanceId])
+        if (!isNilOrEmpty(selectedAmbulanceId)) dispatch(fetchDoctorsForSelectedAmbulance(selectedAmbulanceId))
+    }, [selectedAmbulanceId, selectedAction])
+
+    useEffect(() => {
+        if (dates && serviceExists && !equals(selectedAction, 2)) setDates([])
+    }, [serviceExists])
 
     return (
         <Grid container>
@@ -157,10 +164,17 @@ const DoctorServicesView = () => {
                     </Snackbar>
                 </Box>
             }
-            {serviceExists && (
+            {equals(selectedAction, 1) && serviceExists ? (
                 <Typography className={classes.serviceExists} color="error">
                     Na daný měsíc již existuje rozpis.
                 </Typography>
+            ) : (
+                equals(selectedAction, 2) &&
+                !serviceExists && (
+                    <Typography className={classes.serviceExists} color="error">
+                        Pro zadaný měsíc zatím neexistuje rozpis služeb
+                    </Typography>
+                )
             )}
         </Grid>
     )

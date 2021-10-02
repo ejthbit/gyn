@@ -39,10 +39,12 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiTypography-root': {
             fontWeight: 'bold',
         },
-        paddingRight: '68% !important',
+        [theme.breakpoints.up('md')]: {
+            paddingRight: '68% !important',
+        },
     },
     btnsContainer: {
-        maxWidth: '80%',
+        maxWidth: '100%',
         paddingRight: '60% !important',
         [theme.breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -79,13 +81,11 @@ const LandingWelcome = () => {
         <Box className={classes.root}>
             <LandingPageReservationModal isOpen={isReservationModalOpen} onClose={handleToggleReservationModal} />
             <Grid container spacing={2}>
-                <Hidden xsDown>
-                    <Grid item xs={12} className={classes.firstHeadline}>
-                        <Typography variant="h3">Vaše zdraví je u nás vždy na prvním místě</Typography>
-                    </Grid>
-                </Hidden>
+                <Grid item xs={12} className={classes.firstHeadline}>
+                    <Typography variant={isMobile ? 'h4' : 'h3'}>Vaše zdraví je u nás vždy na prvním místě</Typography>
+                </Grid>
                 <Grid item xs={12}>
-                    <Typography variant={isMobile ? 'h3' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
+                    <Typography variant={isMobile ? 'body1' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
                 </Grid>
                 {/* Own component landing action message buttonGroup */}
                 <Grid item container xs={12} spacing={2} className={classes.btnsContainer} justifyContent="center">

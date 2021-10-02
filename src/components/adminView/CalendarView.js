@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
-import { Typography } from '@material-ui/core'
+import { Box, Grid, IconButton, Typography } from '@material-ui/core'
+import { Refresh } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -91,6 +92,7 @@ const SLOT_DURATION = 15 // In minutes
 const CalendarView = () => {
     const dispatch = useDispatch()
     const bookingsViewDate = useSelector(getBookingsSelectedDate)
+    const { from, to } = bookingsViewDate
     const loggedUser = useSelector(getUser)
 
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
@@ -99,6 +101,8 @@ const CalendarView = () => {
     const [newAppointmentDate, setNewAppointmentDate] = useState({})
 
     const handleToggleCreationModal = () => setNewAppointmentDate({})
+    const handleGetBookingsInSelectedTimeRange = () =>
+        dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
 
     const onSelectSlot = ({ action, slots }) => {
         const timeSlotStart = slots[0] // start date/time of the event
@@ -114,48 +118,54 @@ const CalendarView = () => {
     }
 
     useEffect(() => {
-        const { from, to } = bookingsViewDate
         if (!isNilOrEmpty(from) && !isNilOrEmpty(to) && !isNilOrEmpty(selectedAmbulanceId) && loggedUser)
-            dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
+            handleGetBookingsInSelectedTimeRange()
     }, [bookingsViewDate, selectedAmbulanceId])
 
     return (
-        <>
-            <Typography variant="body1" align="center">
-                Objednávky na tento týden jsou
-            </Typography>
-            <Calendar
-                formats={calendarFormats}
-                min={new Date(0, 0, 0, 7, 0, 0)}
-                max={new Date(0, 0, 0, 19, 0, 0)}
-                localizer={localizer}
-                events={bookings}
-                views={{ work_week: true, day: true }}
-                defaultView={isMobile ? 'day' : 'work_week'}
-                culture="cs"
-                defaultDate={new Date()}
-                slotPropGetter={customSlotPropGetter}
-                eventPropGetter={customStyleEventPropGetter}
-                dayPropGetter={customStyleDayPropGetter}
-                startAccessor="start"
-                selectable
-                onSelectSlot={onSelectSlot}
-                components={{
-                    toolbar: CalendarViewCustomToolbar,
-                    event: CustomEventCalendar,
-                    timeSlotWrapper: (props) => <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />,
-                }}
-                step={SLOT_DURATION}
-                endAccessor="end"
-                onSelecting={() => false}
-                style={{ height: '75vh', margin: 8 }}
-            />
-            <CalendarViewCreateEventDialog
-                open={!isNilOrEmpty(newAppointmentDate)}
-                handleClose={handleToggleCreationModal}
-                data={newAppointmentDate}
-            />
-        </>
+        <Grid container>
+            <Grid item container alignItems="center" justifyContent="space-between">
+                <Box marginLeft={2}>
+                    <Typography variant="h6">Kalendař</Typography>
+                </Box>
+                <IconButton onClick={handleGetBookingsInSelectedTimeRange}>
+                    <Refresh />
+                </IconButton>
+            </Grid>
+            <Grid item xs={12}>
+                <Calendar
+                    formats={calendarFormats}
+                    min={new Date(0, 0, 0, 7, 0, 0)}
+                    max={new Date(0, 0, 0, 19, 0, 0)}
+                    localizer={localizer}
+                    events={bookings}
+                    views={{ work_week: true, day: true }}
+                    defaultView={isMobile ? 'day' : 'work_week'}
+                    culture="cs"
+                    defaultDate={new Date()}
+                    slotPropGetter={customSlotPropGetter}
+                    eventPropGetter={customStyleEventPropGetter}
+                    dayPropGetter={customStyleDayPropGetter}
+                    startAccessor="start"
+                    selectable
+                    onSelectSlot={onSelectSlot}
+                    components={{
+                        toolbar: CalendarViewCustomToolbar,
+                        event: CustomEventCalendar,
+                        timeSlotWrapper: (props) => <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />,
+                    }}
+                    step={SLOT_DURATION}
+                    endAccessor="end"
+                    onSelecting={() => false}
+                    style={{ height: '75vh', margin: 8 }}
+                />
+                <CalendarViewCreateEventDialog
+                    open={!isNilOrEmpty(newAppointmentDate)}
+                    handleClose={handleToggleCreationModal}
+                    data={newAppointmentDate}
+                />
+            </Grid>
+        </Grid>
     )
 }
 

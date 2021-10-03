@@ -14,7 +14,7 @@ const CustomEventCalendar = ({ event }) => {
     const classes = useStyles({ booked: resource?.booked })
 
     return (
-        <Box height="100%">
+        <Box height="100%" onClick={() => console.log('clicked event')}>
             <Grid container direction="column" className={classes.root}>
                 <Grid item>
                     <Typography variant="body2">{title}</Typography>

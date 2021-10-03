@@ -75,11 +75,9 @@ const ReservationTermPicker = () => {
         selectedDoctor,
     ])
 
-    const isDoctorServing = !isNilOrEmpty(
-        find(({ date, doctorId }) => {
-            if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
-        }, doctorServicesByDoctorId)
-    )
+    const isDoctorServing = find(({ date, doctorId }) => {
+        if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
+    }, doctorServicesByDoctorId)
 
     useEffect(() => {
         if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
@@ -150,22 +148,25 @@ const ReservationTermPicker = () => {
                 onChange={(date) => dispatch(setSelectedDate(date.toISOString()))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
-                <FormControl className={classes.timepicker}>
-                    <InputLabel id="timePickerLabel" required>
-                        Čas návštevy
-                    </InputLabel>
-                    <Select
-                        value={selectedTime}
-                        onChange={(e) => dispatch(setSelectedTime(e.target.value))}
-                        displayEmpty
-                    >
-                        {availableTimeSlots.map(({ timeSlotStart }) => (
-                            <MenuItem key={timeSlotStart} value={timeSlotStart}>
-                                {timeSlotStart.slice(0, 5)}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <>
+                    <FormControl className={classes.timepicker}>
+                        <InputLabel id="timePickerLabel" required>
+                            Čas návštevy
+                        </InputLabel>
+                        <Select
+                            value={selectedTime}
+                            onChange={(e) => dispatch(setSelectedTime(e.target.value))}
+                            displayEmpty
+                        >
+                            {availableTimeSlots.map(({ timeSlotStart }) => (
+                                <MenuItem key={timeSlotStart} value={timeSlotStart}>
+                                    {timeSlotStart.slice(0, 5)}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    {isDoctorServing?.note && <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>}
+                </>
             ) : (
                 <Typography>Omlouváme se ale tento den {getDoctorById(selectedDoctor).name} neordinuje</Typography>
             )}

@@ -1,5 +1,4 @@
 /* eslint-disable react/display-name */
-import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -8,6 +7,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
+import ReservationAmbulanceSelect from './ReservationAmbulanceSelect'
 import ReservationContactInputs from './ReservationContactInputs'
 import ReservationDoctorPreference from './ReservationDoctorPreference'
 import ReservationError from './ReservationError'
@@ -49,7 +49,7 @@ const getSteps = (error, completedOk = false) => [
 
 const getStepperContent = (step) => {
     const content = {
-        first: <AmbulanceSelect />,
+        first: <ReservationAmbulanceSelect />,
         second: <ReservationDoctorPreference />,
         third: <ReservationTermPicker />,
         forth: <ReservationContactInputs />,

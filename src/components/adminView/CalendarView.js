@@ -4,7 +4,7 @@ import { Refresh } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { addMinutes, format, getDay, parse, startOfWeek } from 'date-fns'
+import { addHours, addMinutes, format, getDay, parse, startOfWeek, subHours } from 'date-fns'
 import cs from 'date-fns/locale/cs'
 import { equals, find } from 'ramda'
 import React, { Children, cloneElement, useEffect, useState } from 'react'
@@ -19,6 +19,7 @@ import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
 import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
 import CustomEventCalendar from './CustomEventCalendar'
+import EventDetailModal from './EventDetailModal'
 
 const locales = {
     cs,
@@ -99,15 +100,16 @@ const CalendarView = () => {
 
     const bookings = useMemoizedSelector(makeCalendarEventsSelector, {}, [bookingsViewDate])
     const [newAppointmentDate, setNewAppointmentDate] = useState({})
-
+    const [openEventDialogEvent, setOpenEventDialogEvent] = useState(null)
     const handleToggleCreationModal = () => setNewAppointmentDate({})
+    const handleOpenEventDialog = (existingEvent) => setOpenEventDialogEvent(existingEvent)
     const handleGetBookingsInSelectedTimeRange = () =>
         dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
 
     const onSelectSlot = ({ action, slots }) => {
-        const timeSlotStart = slots[0] // start date/time of the event
-        const isSlotBooked = !!find(({ start }) => equals(start, timeSlotStart), bookings)
-        if (isSlotBooked) return
+        const timeSlotStart = addHours(slots[0], 2) // start date/time of the event
+        const isSlotBooked = find(({ start }) => equals(start, subHours(timeSlotStart, 2)), bookings)
+        if (isSlotBooked) return handleOpenEventDialog(isSlotBooked)
         return (
             equals(action, 'click') &&
             setNewAppointmentDate({
@@ -163,6 +165,11 @@ const CalendarView = () => {
                     open={!isNilOrEmpty(newAppointmentDate)}
                     handleClose={handleToggleCreationModal}
                     data={newAppointmentDate}
+                />
+                <EventDetailModal
+                    event={openEventDialogEvent}
+                    handleClose={() => setOpenEventDialogEvent(null)}
+                    onSubmit={() => console.log('edited')}
                 />
             </Grid>
         </Grid>

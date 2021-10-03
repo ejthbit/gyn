@@ -1,10 +1,10 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core'
+import { format, subHours } from 'date-fns'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-import { format } from 'date-fns'
 import { fastBooking } from 'src/store/bookings/actions'
 
 const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
@@ -30,10 +30,10 @@ const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
                 <DialogTitle id="form-dialog-title">Rychlá objednávka</DialogTitle>
                 <DialogContent>
                     <Box marginBottom={1}>
-                        <Typography>{`Vybraný termín: ${format(new Date(start), 'dd/MM/yyyy kk:mm:ss')} - ${format(
-                            new Date(end),
-                            'dd/MM/yyyy kk:mm:ss'
-                        )}`}</Typography>
+                        <Typography>{`Vybraný termín: ${format(
+                            subHours(new Date(start), 2),
+                            'dd/MM/yyyy HH:mm:ss'
+                        )} - ${format(subHours(new Date(end), 2), 'dd/MM/yyyy HH:mm:ss')}`}</Typography>
                     </Box>
                     <FormInput control={control} name="title" placeholder="Zadejte prosím jméno pacienta" fullWidth />
                 </DialogContent>

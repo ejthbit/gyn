@@ -68,6 +68,7 @@
     background: #1f7672;
     border: 0.5px solid #ace0e3;
     pointer-events: 'none';
+    cursor: 'pointer';
     z-index: 1001;
 }
 .rbc-current-time-indicator {

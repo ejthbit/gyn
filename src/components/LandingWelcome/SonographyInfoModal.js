@@ -76,7 +76,7 @@ const SonographyInfoModal = ({ open, handleClose }) => {
                     Objednání na sonografii prsou pouze telefonicky na čísle 558 632 133.
                 </Typography>
                 <Typography variant="body2" color="primary">
-                    Objednávat se mohou take i klientky, které nejsou registrované v naší ambulanci.
+                    Objednávat se mohou také klientky, které nejsou registrované v naší ambulanci.
                 </Typography>
             </DialogContent>
             <DialogActions className={classes.actions}>

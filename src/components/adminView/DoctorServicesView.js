@@ -62,15 +62,17 @@ const DoctorServicesView = () => {
 
     const handleGenerateDataForTable = async (date) => {
         setSelectedMonth(date)
-        const { payload } = await dispatch(
+        const { payload, error } = await dispatch(
             fetchDoctorServicesForSelectedMonth({
                 month: format(date, 'yyyy-MM'),
                 workplace: selectedAmbulanceId,
             })
         )
         if (equals(selectedAction, 2)) {
-            if (isNilOrEmpty(payload.days)) setServiceExists(false)
-            else {
+            if (error) {
+                setDates([])
+                setServiceExists(false)
+            } else if (payload) {
                 setServiceExists(true)
                 setDates(payload.days)
             }
@@ -83,6 +85,7 @@ const DoctorServicesView = () => {
                         doctorId: '',
                         start: '',
                         end: '',
+                        note: '',
                     }),
                     workingDates
                 )

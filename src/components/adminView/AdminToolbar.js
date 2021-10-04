@@ -5,6 +5,7 @@ import {
     Box,
     Divider,
     Drawer,
+    Fab,
     Grid,
     Hidden,
     List,
@@ -15,7 +16,7 @@ import {
     Toolbar,
     Typography,
 } from '@material-ui/core'
-import { DateRange, Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
+import { ArrowBack, ArrowForward, DateRange, Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import SM from '@utilities/StorageManager'
 import { equals, map } from 'ramda'
@@ -35,10 +36,19 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#FFF',
         boxShadow: 'none',
     },
+    openDrawerIcon: ({ isDrawerOpen }) => ({
+        position: 'fixed',
+        bottom: theme.spacing(1),
+        left: theme.spacing(1),
+        cursor: 'pointer',
+        '& svg': {
+            color: theme.palette.common.white,
+        },
+    }),
     appBar: {
         marginLeft: 200,
         [theme.breakpoints.down('sm')]: {
-            marginLeft: 60,
+            marginLeft: ({ isDrawerOpen }) => (isDrawerOpen ? 60 : 8),
         },
     },
     title: {
@@ -134,8 +144,8 @@ const adminToolbarContent = [
 ]
 
 const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
-const AdminToolbar = () => {
-    const classes = useStyles()
+const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
+    const classes = useStyles({ isDrawerOpen })
     const dispatch = useDispatch()
     const loggedUser = useSelector(getUser)
     const ambulances = useSelector(selectAmbulancesValueLabelPair)
@@ -190,45 +200,58 @@ const AdminToolbar = () => {
                     </Grid>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                className={classes.drawer}
-                variant="permanent"
-                anchor="left"
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-            >
-                <Box className={classes.drawerHeader} component={Link} to={'/'}>
-                    <Hidden smDown>
-                        <Box className={classes.logoContainer}>
-                            <TransparentLogo />
-                        </Box>
-                    </Hidden>
-                    <Hidden mdUp>
-                        <Home />
-                    </Hidden>
+            {isDrawerOpen ? (
+                <Drawer
+                    className={classes.drawer}
+                    variant="permanent"
+                    anchor="left"
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
+                    <Box className={classes.drawerHeader} component={Link} to={'/'}>
+                        <Hidden smDown>
+                            <Box className={classes.logoContainer}>
+                                <TransparentLogo />
+                            </Box>
+                        </Hidden>
+                        <Hidden mdUp>
+                            <Home />
+                        </Hidden>
+                    </Box>
+                    <Divider />
+                    <List disablePadding>
+                        {map(
+                            ({ id, icon, text, link }) => (
+                                <ListItem
+                                    className={classes.drawerListItem}
+                                    button
+                                    component={Link}
+                                    to={link}
+                                    key={id}
+                                    selected={equals(id, selectedItem)}
+                                    onClick={() => setSelectedItem(id)}
+                                >
+                                    <ListItemIcon>{icon}</ListItemIcon>
+                                    <ListItemText primary={text} />
+                                </ListItem>
+                            ),
+                            adminToolbarContent
+                        )}
+                    </List>
+                    <Box onClick={handleOpenDrawer} role="presentation" className={classes.openDrawerIcon}>
+                        <Fab color="primary" size="small">
+                            <ArrowBack />
+                        </Fab>
+                    </Box>
+                </Drawer>
+            ) : (
+                <Box onClick={handleOpenDrawer} role="presentation" className={classes.openDrawerIcon}>
+                    <Fab color="primary" size="small">
+                        <ArrowForward />
+                    </Fab>
                 </Box>
-                <Divider />
-                <List disablePadding>
-                    {map(
-                        ({ id, icon, text, link }) => (
-                            <ListItem
-                                className={classes.drawerListItem}
-                                button
-                                component={Link}
-                                to={link}
-                                key={id}
-                                selected={equals(id, selectedItem)}
-                                onClick={() => setSelectedItem(id)}
-                            >
-                                <ListItemIcon>{icon}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ),
-                        adminToolbarContent
-                    )}
-                </List>
-            </Drawer>
+            )}
         </>
     )
 }

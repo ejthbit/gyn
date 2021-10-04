@@ -4,28 +4,33 @@ import BookingsView from '@components/adminView/BookingsView'
 import CalendarView from '@components/adminView/CalendarView'
 import DoctorServicesView from '@components/adminView/DoctorServicesView'
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { Route } from 'react-router-dom'
 import routingPaths, { adminPaths } from 'src/routingPaths'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
+    root: ({ isDrawerOpen }) => ({
         backgroundColor: '#FFF',
         padding: 20,
         border: `1px solid ${theme.palette.common.white} `,
         borderRadius: 6,
-        margin: '20px 20px 20px 220px',
+        margin: `20px 20px 20px ${isDrawerOpen ? '220px' : '20px'}`,
         [theme.breakpoints.down('sm')]: {
-            marginLeft: 80,
+            marginLeft: ({ isDrawerOpen }) => (isDrawerOpen ? 80 : theme.spacing(1)),
         },
-    },
+    }),
 }))
 
 const AdminView = () => {
-    const classes = useStyles()
+    const [isDrawerOpen, setIsDrawerOpen] = useState(true)
+    const classes = useStyles({ isDrawerOpen })
+    const handleOpenDrawer = () => setIsDrawerOpen((prevState) => !prevState)
     return (
         <>
-            <Route path="*" children={<AdminToolbar />} />
+            <Route
+                path="*"
+                children={<AdminToolbar isDrawerOpen={isDrawerOpen} handleOpenDrawer={handleOpenDrawer} />}
+            />
             <Box className={classes.root}>
                 <Route
                     path={routingPaths.admin}

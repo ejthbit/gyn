@@ -3,7 +3,6 @@ import React from 'react'
 import Person from '@components/OurTeam/Person'
 import Vanek from '../../assets/OurTeam/Img/vanek.jpg'
 import { vanekText } from '../../assets/OurTeam/Text/vanek'
-import Sebestova from '../../assets/OurTeam/Img/sebestova.jpg'
 import Vankova from '../../assets/OurTeam/Img/vankova.jpg'
 import Hrtonova from '../../assets/OurTeam/Img/hrtonova.jpg'
 import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
@@ -40,10 +39,7 @@ const doctors = [
     { fullName: 'MUDr. Jana Medvecká', specialization: 'Gynekologie a porodnictví', image: Medvecka },
     { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: UnknownMale },
 ]
-const nurses = [
-    { fullName: 'Mgr. Kamila Šebestová', image: Sebestova },
-    { fullName: 'Šárka Hrtoňová', image: Hrtonova },
-]
+const nurses = [{ fullName: 'Šárka Hrtoňová', image: Hrtonova }]
 
 const OurTeam = () => {
     const classes = useStyles()

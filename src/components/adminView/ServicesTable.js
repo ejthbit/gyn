@@ -159,18 +159,12 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                 </TableCell>
                             </TableRow>
                         ),
-
                         data
                     )}
                 </TableBody>
             </Table>
             <Box margin={1}>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleSubmit(onSubmit)}
-                    disabled={formState.submitCount === 1}
-                >
+                <Button color="primary" variant="contained" onClick={handleSubmit(onSubmit)}>
                     Uložit
                 </Button>
             </Box>

@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         '& svg': {
             width: '50%',
+            maxWidth: 280,
         },
     },
     copyright: {

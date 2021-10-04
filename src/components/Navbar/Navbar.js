@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     logo: {
         '& svg': {
             width: '100%',
+            maxWidth: 280,
             '&:hover': {
                 '& path': {
                     fill: theme.palette.common.black,

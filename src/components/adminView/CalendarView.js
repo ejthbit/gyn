@@ -7,7 +7,7 @@ import useMemoizedSelector from '@utilities/useMemoSelector'
 import { addHours, addMinutes, format, getDay, parse, startOfWeek, subHours } from 'date-fns'
 import cs from 'date-fns/locale/cs'
 import { equals, find } from 'ramda'
-import React, { Children, cloneElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,7 +50,7 @@ const customStyleEventPropGetter = () => {
         style: {
             padding: 8,
             flex: 1,
-            minHeight: '10vh',
+            minHeight: isMobile ? '7vh' : '4rem',
             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
             pointerEvents: 'none',
         },
@@ -65,23 +65,11 @@ const customSlotPropGetter = () => {
     return {
         className: 'slot',
         style: {
-            minHeight: '8vh',
+            minHeight: isMobile ? '7vh' : '4rem',
         },
     }
 }
 
-const TouchCellWrapper = ({ children, value, onSelectSlot }) => {
-    return cloneElement(Children.only(children), {
-        onTouchEnd: () => onSelectSlot({ action: 'click', slots: [value] }),
-        style: {
-            padding: 0,
-            flex: 1,
-            minHeight: '8vh',
-            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-            className: `${children}`,
-        },
-    })
-}
 const calendarFormats = {
     dayRangeHeaderFormat: ({ start, end }) =>
         format(new Date(start), 'dd/MM/yyyy') + ' - ' + format(new Date(end), 'dd/MM/yyyy'),
@@ -108,15 +96,18 @@ const CalendarView = () => {
 
     const onSelectSlot = ({ action, slots }) => {
         const timeSlotStart = addHours(slots[0], 2) // start date/time of the event
+        const timeSlotEnd = addHours(slots[slots.length - 1], 2)
         const isSlotBooked = find(({ start }) => equals(start, subHours(timeSlotStart, 2)), bookings)
         if (isSlotBooked) return handleOpenEventDialog(isSlotBooked)
-        return (
-            equals(action, 'click') &&
-            setNewAppointmentDate({
-                start: timeSlotStart.toISOString(),
-                end: addMinutes(timeSlotStart, SLOT_DURATION).toISOString(),
-            })
-        )
+        return equals(action, 'click')
+            ? setNewAppointmentDate({
+                  start: timeSlotStart.toISOString(),
+                  end: addMinutes(timeSlotStart, SLOT_DURATION).toISOString(),
+              })
+            : setNewAppointmentDate({
+                  start: timeSlotStart.toISOString(),
+                  end: timeSlotEnd.toISOString(),
+              })
     }
 
     useEffect(() => {
@@ -154,23 +145,17 @@ const CalendarView = () => {
                     components={{
                         toolbar: CalendarViewCustomToolbar,
                         event: CustomEventCalendar,
-                        timeSlotWrapper: (props) => <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />,
                     }}
                     step={SLOT_DURATION}
                     endAccessor="end"
-                    onSelecting={() => false}
-                    style={{ height: '75vh', margin: 8 }}
+                    style={{ height: isMobile ? '100vh' : '75vh', margin: 8 }}
                 />
                 <CalendarViewCreateEventDialog
                     open={!isNilOrEmpty(newAppointmentDate)}
                     handleClose={handleToggleCreationModal}
                     data={newAppointmentDate}
                 />
-                <EventDetailModal
-                    event={openEventDialogEvent}
-                    handleClose={() => setOpenEventDialogEvent(null)}
-                    onSubmit={() => console.log('edited')}
-                />
+                <EventDetailModal event={openEventDialogEvent} handleClose={() => setOpenEventDialogEvent(null)} />
             </Grid>
         </Grid>
     )

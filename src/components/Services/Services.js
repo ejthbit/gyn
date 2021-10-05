@@ -72,23 +72,21 @@ const Services = () => {
     const classes = useStyles()
     return (
         <Grid className={classes.root} container spacing={2} id="services">
-            <Grid
-                item
-                xs={12}
-                style={isMobile ? { backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 6, color: '#FFF' } : {}}
-            >
-                <Typography variant={isMobile ? 'body1' : 'body2'} align="center">
-                    Gynekologie MUDr. Miroslav Vaněk spustila v úterý 5. řijna 2021 nový web.
-                    <br />
-                    Důvodem byla modernizace objednávacího systému
-                    <br />
-                    a přehledné zobrazení informací také na mobilních zařízeních.
-                    <br />
-                    Do 31. října 2021 bude nový web spuštěn v testovacím režimu a bude možné k němu posílat
-                    <br />
-                    připomínky či dotazy, a to na adresu webmaster@gynekologie-vanek.cz.
-                </Typography>
-            </Grid>
+            {!isMobile && (
+                <Grid item xs={12}>
+                    <Typography variant={'body2'} align="center">
+                        Gynekologie MUDr. Miroslav Vaněk spustila v úterý 5. řijna 2021 nový web.
+                        <br />
+                        Důvodem byla modernizace objednávacího systému
+                        <br />
+                        a přehledné zobrazení informací také na mobilních zařízeních.
+                        <br />
+                        Do 31. října 2021 bude nový web spuštěn v testovacím režimu a bude možné k němu posílat
+                        <br />
+                        připomínky či dotazy, a to na adresu webmaster@gynekologie-vanek.cz.
+                    </Typography>
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <Typography variant="h3">Naše služby</Typography>
             </Grid>

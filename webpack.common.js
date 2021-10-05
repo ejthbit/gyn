@@ -61,6 +61,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.ejs',
             filename: './index.html',
+            favicon: './src/favicon.ico',
             web_base_url: process.env.PROD_WEB_BASE_CONTEXT_PATH,
         }),
     ],

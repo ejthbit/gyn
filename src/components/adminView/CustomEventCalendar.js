@@ -21,9 +21,7 @@ const CustomEventCalendar = ({ event }) => {
                     <Typography variant="body2">{title}</Typography>
                 </Grid>
                 <Hidden smDown>
-                    <Grid item>
-                        {!isNilOrEmpty(resource.booked) && <Typography variant="body2">Obsazeno</Typography>}
-                    </Grid>
+                    <Grid item>{resource.completed && <Typography variant="body2">Dokončeno</Typography>}</Grid>
                 </Hidden>
             </Grid>
         </Box>

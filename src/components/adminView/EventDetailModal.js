@@ -1,5 +1,15 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography } from '@material-ui/core'
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    makeStyles,
+    Typography,
+} from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
 import { DateTimePicker } from '@material-ui/pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
@@ -29,17 +39,22 @@ const useStyles = makeStyles((theme) => ({
             paddingLeft: theme.spacing(2),
         },
     },
+    btnItem: {
+        minHeight: 36,
+    },
 }))
 const EventDetailModal = ({ event, handleClose }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [startValue, setStartValue] = useState(null)
+    const [completedValue, setCompletedValue] = useState(false)
     const { control, handleSubmit, reset, formState, setValue } = useForm({
         defaultValues: {
             start: '',
             end: '',
             name: '',
             birthdate: '',
+            completed: completedValue,
         },
     })
     const { isDirty } = formState
@@ -62,12 +77,14 @@ const EventDetailModal = ({ event, handleClose }) => {
     }
     useEffect(() => {
         if (!isNilOrEmpty(event)) {
-            const { start, title: name } = event
+            const { start, title: name, resource } = event
             setStartValue(start)
+            setCompletedValue(resource?.completed)
             reset({
                 start: addHours(start, 2).toISOString(),
                 name: name.split(' - ')[0],
                 birthdate: name.split(' - ')[1],
+                completed: resource?.completed,
             })
         }
     }, [event])
@@ -99,17 +116,32 @@ const EventDetailModal = ({ event, handleClose }) => {
                 />
                 <FormInput label="Jméno" control={control} name="name" fullWidth />
                 <FormInput label="Datum narození" control={control} name="birthdate" fullWidth />
+                <FormControlLabel
+                    label="Dokončená objednávka"
+                    control={
+                        <Checkbox
+                            color="primary"
+                            name="completed"
+                            checked={completedValue}
+                            onChange={(e) => {
+                                setCompletedValue((prevState) => !prevState)
+                                setValue('completed', e.target.checked, { shouldDirty: true })
+                            }}
+                        />
+                    }
+                />
             </DialogContent>
             <DialogActions className={classes.actions}>
-                <Button variant="outlined" onClick={handleClose} color="primary">
+                <Button className={classes.btnItem} variant="outlined" onClick={handleClose} color="primary">
                     <Typography color="primary" variant="body2">
                         Zavřít
                     </Typography>
                 </Button>
-                <Button variant="contained" onClick={handleDeleteBooking} color="primary">
+                <Button className={classes.btnItem} variant="contained" onClick={handleDeleteBooking} color="primary">
                     <Delete />
                 </Button>
                 <Button
+                    className={classes.btnItem}
                     variant="contained"
                     onClick={handleSubmit(handlePatchBooking)}
                     color="primary"

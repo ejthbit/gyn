@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { parseISO, subHours } from 'date-fns'
 import { equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
@@ -53,13 +54,14 @@ export const makeCalendarEventsSelector = () =>
         [getBookings],
         (bookings) =>
             map(
-                ({ id, name, start, end, birthdate }) => ({
+                ({ id, name, start, end, birthdate, completed }) => ({
                     id,
                     start: subHours(parseISO(start), 2),
                     end: subHours(parseISO(end), 2),
-                    title: `${name} - ${birthdate}`,
+                    title: `${name} ${!isNilOrEmpty(birthdate) ? `- ${birthdate}` : ''}`,
                     resource: {
                         booked: true,
+                        completed,
                     },
                 }),
                 bookings

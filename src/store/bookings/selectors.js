@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 import { parseISO, subHours } from 'date-fns'
-import { equals, filter, map, path } from 'ramda'
+import { equals, filter, map, path, includes } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
 const DOCTOR_ID = (_, { doctorId }) => doctorId
+const BOOKING_IDS = (_, { bookingIds }) => bookingIds
 
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
 export const getSonographyDates = path([stateId, 'sonographyDates'])
@@ -25,13 +26,26 @@ export const makeAvailableTimeslotsWithTimeOnly = () =>
             }
         }, timeSlots)
     )
+export const makeBookingsByIdsSelector = () =>
+    createSelector([getBookings, BOOKING_IDS], (bookings, bookingIds) =>
+        filter(({ id }) => includes(id, bookingIds), bookings)
+    )
 
 export const makeBookingsSelector = () =>
     createSelector(
         [getBookings],
         (bookings) =>
-            map(({ id, contact, name, start, end, birthdate }) => {
-                return { id, start, end, name, birthdate, email: contact?.email ?? '', phone: contact?.phone ?? '' }
+            map(({ id, contact, name, start, end, birthdate, completed }) => {
+                return {
+                    id,
+                    start,
+                    end,
+                    name,
+                    birthdate,
+                    email: contact?.email ?? '',
+                    phone: contact?.phone ?? '',
+                    completed,
+                }
             }, bookings) ?? []
     )
 export const makeCalendarEventsSelector = () =>

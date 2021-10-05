@@ -1,4 +1,4 @@
-import { Box, TextField } from '@material-ui/core'
+import { Box, TextField, IconButton } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,15 +8,15 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
-import { Close, Edit, Check } from '@material-ui/icons'
+import { Check, Close, Edit } from '@material-ui/icons'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
-import { always, ascend, descend, equals, ifElse, prop, sortWith, indexOf } from 'ramda'
+import { always, ascend, descend, equals, ifElse, indexOf, prop, sortWith } from 'ramda'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { compose } from 'redux'
-import { deleteBookings, patchBooking } from 'src/store/bookings/actions'
+import { deleteBookings, patchBooking, setCompletedBookings } from 'src/store/bookings/actions'
 import CustomTableHeader from './CustomTableHeader'
 import CustomTableToolbar from './CustomTableToolbar'
 
@@ -51,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
             width: 250,
         },
     },
+    completedTableRow: {
+        opacity: 0.7,
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    },
 }))
 
 const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
@@ -61,7 +65,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
     const [orderBy, setOrderBy] = useState(orderedBy)
     const [selected, setSelected] = useState([])
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
     const [currentlyEditingId, setCurrentlyEditingId] = useState(-1)
     const [editingData, setEditingData] = useState(undefined)
 
@@ -110,6 +114,10 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
             if (!error) setSelected([])
         }
     }
+    const handleSetCompletedSelectedItems = async () => {
+        const { error } = await dispatch(setCompletedBookings(selected))
+        if (!error) setSelected([])
+    }
 
     const isSelected = (id) => selected.indexOf(id) !== -1
 
@@ -119,7 +127,12 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
         !isNilOrEmpty(data) && (
             <div className={classes.root}>
                 <Paper className={classes.paper}>
-                    <CustomTableToolbar title={title} selectedItems={selected} onDelete={handleDeleteSelectedItems} />
+                    <CustomTableToolbar
+                        title={title}
+                        selectedItems={selected}
+                        onDelete={handleDeleteSelectedItems}
+                        onCompleted={handleSetCompletedSelectedItems}
+                    />
                     <TableContainer>
                         <Table
                             className={classes.table}
@@ -148,6 +161,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                         const labelId = `enhanced-table-checkbox-${index}`
                                         return (
                                             <TableRow
+                                                className={row.completed ? classes.completedTableRow : ''}
                                                 hover
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
@@ -183,6 +197,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                 <TableCell>{row.birthdate}</TableCell>
                                                 <TableCell>{row.email || ''}</TableCell>
                                                 <TableCell>{row.phone || ''}</TableCell>
+                                                <TableCell>{row.completed && <Check />}</TableCell>
                                                 <TableCell>
                                                     {equals(row.id, currentlyEditingId) ? (
                                                         <Box display="row">
@@ -190,12 +205,15 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                             <Close onClick={() => setCurrentlyEditingId(-1)} />
                                                         </Box>
                                                     ) : (
-                                                        <Edit
+                                                        <IconButton
                                                             onClick={() => {
                                                                 setCurrentlyEditingId(row.id)
                                                                 setEditingData(data[indexOf(row, data)])
                                                             }}
-                                                        />
+                                                            disabled={row.completed}
+                                                        >
+                                                            <Edit />
+                                                        </IconButton>
                                                     )}
                                                 </TableCell>
                                             </TableRow>
@@ -210,7 +228,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[5, 10, 25, 50]}
                         labelRowsPerPage="Počet záznamů na stránce"
                         component="div"
                         count={data.length}

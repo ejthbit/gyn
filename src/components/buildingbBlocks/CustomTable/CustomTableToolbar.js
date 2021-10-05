@@ -1,5 +1,5 @@
 import { IconButton, lighten, makeStyles, Toolbar, Tooltip, Typography } from '@material-ui/core'
-import { Delete } from '@material-ui/icons'
+import { Delete, Done } from '@material-ui/icons'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const CustomTableToolbar = ({ selectedItems, onDelete, title }) => {
+const CustomTableToolbar = ({ selectedItems, onDelete, onCompleted, title }) => {
     const classes = useStyles()
     const NUMBER_OF_SELECTED_ITEMS = selectedItems.length
 
@@ -46,11 +46,18 @@ const CustomTableToolbar = ({ selectedItems, onDelete, title }) => {
                 </Typography>
             )}
             {NUMBER_OF_SELECTED_ITEMS > 0 && (
-                <Tooltip title="Delete">
-                    <IconButton aria-label="delete" onClick={onDelete}>
-                        <Delete />
-                    </IconButton>
-                </Tooltip>
+                <>
+                    <Tooltip title="Delete">
+                        <IconButton aria-label="delete" onClick={onDelete}>
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Complete">
+                        <IconButton aria-label="complete" onClick={onCompleted}>
+                            <Done />
+                        </IconButton>
+                    </Tooltip>
+                </>
             )}
         </Toolbar>
     )
@@ -59,6 +66,7 @@ const CustomTableToolbar = ({ selectedItems, onDelete, title }) => {
 CustomTableToolbar.propTypes = {
     selectedItems: PropTypes.array.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onCompleted: PropTypes.func.isRequired,
     title: PropTypes.string,
 }
 

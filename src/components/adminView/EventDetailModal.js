@@ -42,7 +42,7 @@ const EventDetailModal = ({ event, handleClose }) => {
             birthdate: '',
         },
     })
-
+    const { isDirty } = formState
     const handlePatchBooking = async (updatedBooking) => {
         const { error } = await dispatch(
             patchBooking({
@@ -113,7 +113,7 @@ const EventDetailModal = ({ event, handleClose }) => {
                     variant="contained"
                     onClick={handleSubmit(handlePatchBooking)}
                     color="primary"
-                    disabled={!formState.isDirty}
+                    disabled={!isDirty}
                 >
                     <Typography variant="body2">Odeslat</Typography>
                 </Button>
@@ -125,7 +125,6 @@ const EventDetailModal = ({ event, handleClose }) => {
 EventDetailModal.propTypes = {
     event: PropTypes.object,
     handleClose: PropTypes.func,
-    onSubmit: PropTypes.func,
 }
 
 export default EventDetailModal

@@ -1,5 +1,5 @@
 import CustomTable from '@components/buildingbBlocks/CustomTable/CustomTable'
-import { Button, Grid, makeStyles } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
             },
             width: '100%',
         },
+    },
+    count: {
+        minHeight: 52,
+        width: '100%',
     },
 }))
 
@@ -76,15 +80,16 @@ const BookingsView = () => {
         { id: 'start', numeric: false, disablePadding: false, label: 'Čas návštevy' },
         { id: 'name', numeric: false, disablePadding: true, label: 'Jméno' },
         { id: 'birthdate', numeric: false, disablePadding: false, label: 'Datum narození' },
-        { id: 'email', numeric: true, disablePadding: false, label: 'e-mail' },
+        { id: 'email', numeric: true, disablePadding: false, label: 'E-mail' },
         { id: 'phone', numeric: true, disablePadding: false, label: 'Telefon' },
+        { id: 'completed', disableSorting: true, disablePadding: false, label: 'Odbaveno' },
         { id: 'akce', disableSorting: true, disablePadding: false, label: 'Akce' },
     ]
 
     return (
         <Grid container>
             <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
-                <Grid item xs={12} sm={2}>
+                <Grid item xs={12} sm={1}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny od: "
@@ -98,7 +103,7 @@ const BookingsView = () => {
                         onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
                     />
                 </Grid>
-                <Grid item xs={12} sm={2}>
+                <Grid item xs={12} sm={1}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny do: "
@@ -131,6 +136,12 @@ const BookingsView = () => {
                     >
                         Měsíc
                     </Button>
+                </Grid>
+                <Grid item xs={12} sm={2} className={classes.count}>
+                    <Typography
+                        variant="h6"
+                        color="primary"
+                    >{`Počet objednávek na dané období: ${bookings.length}`}</Typography>
                 </Grid>
             </Grid>
             <Grid item xs={12}>

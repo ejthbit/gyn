@@ -15,7 +15,7 @@ const services = [
         icon: <RoutineExaminationIcon />,
         label: 'Preventivní prohlídky',
         description:
-            'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní',
+            'Od svých 15 let má každá žena nárok na bezplatnou preventivní prohlídku u gynekologa, a to jedenkrát za rok (po uplynutí 11 měsíců). Prohlídka je přizpůsobena věku ženy a tomu, zda je sexuálně aktivní.',
     },
     {
         icon: <PregnancyCareIcon />,
@@ -26,13 +26,13 @@ const services = [
     {
         icon: <Advisementicon />,
         label: 'Poradenství',
-        description: 'Nabizíme poradenství v oblastech antikoncepce, přechodu a gynekologických potížích',
+        description: 'Nabizíme poradenství v oblastech antikoncepce, přechodu a gynekologických potížích.',
     },
     {
         icon: <SonographyIcon />,
         label: 'Sonografie prsu',
         description:
-            'Sonografické, neboli ultrazvukové vyšetření prsou patří v dnešní době k nejdůležitějším vyšetřovacím praktikám sloužícím k včasnému nálezu rakoviny prsou',
+            'Sonografické, neboli ultrazvukové vyšetření prsou patří v dnešní době k nejdůležitějším vyšetřovacím praktikám sloužícím k včasnému nálezu rakoviny prsou.',
     },
     {
         icon: <DiagnosticIcon />,
@@ -76,13 +76,14 @@ const Services = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="body1" component="p" align="center">
-                    {`Naše ambulance nabízí těhotenskou a gynekologickou péči pro ženy ve všech fázích života, od
-                    předpubertálních let po postmenopauzální roky. Svým pacientkám také nabízíme různé speciální služby,
-                    včetně poradenství, mateřské fetální medicíny, gynekologické onkologie a dalších,
-                    abychom poskytli co nejkomplexnější péči.`}
+                    {`Naše ambulance nabízí těhotenskou a gynekologickou péči pro ženy ve
+                     všech fázích života, od předpubertálních let po postmenopauzální období.`}
                     <br />
-                    {`Další informace o tom, jak vám můžeme pomoci, naleznete
-                    v níže uvedených službách.`}
+                    {`Svým pacientkám chceme dopřát co nejkomplexnější péči, proto nabízíme
+                    speciální služby včetně mateřské fetální medicíny, gynekologické
+                    onkologie, antikoncepčního poradenství a dalších.`}
+                    <br />
+                    {`Další informace o tom, jak vám můžeme pomoci, naleznete v níže uvedených službách.`}
                 </Typography>
             </Grid>
             {services.map(({ icon, label, description }) => (

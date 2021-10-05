@@ -8,7 +8,8 @@ import {
     getSelectedDate,
     getSelectedTime,
 } from '../reservationProcess/selectors'
-
+import { makeBookingsByIdsSelector } from './selectors'
+const getBookingsByIds = makeBookingsByIdsSelector()
 /**
  * @desc fetches availableTimeSlots between from and to dates.
  * @returns {array} Array of object - which contains availableTimeslots between from and to
@@ -96,9 +97,14 @@ export const deleteBooking = createAsyncThunk('bookings/deleteBookings', async (
     const res = await axiosGynInstance.delete(URL)
     return res.data
 })
-
 export const deleteBookings = (selectedItems) => (dispatch) =>
     forEach((bookingId) => dispatch(deleteBooking(bookingId)), selectedItems)
+
+export const setCompletedBookings = (selectedItems) => (dispatch, getState) => {
+    const state = getState()
+    const selectedBookingItems = getBookingsByIds(state, { bookingIds: selectedItems })
+    return forEach((booking) => dispatch(patchBooking({ ...booking, completed: true })), selectedBookingItems)
+}
 
 export const patchBooking = createAsyncThunk('bookings/patchBooking', async (updatedBooking) => {
     const { id: bookingId } = updatedBooking

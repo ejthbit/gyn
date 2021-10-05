@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 const ambulances = [
     {
         name: 'Frýdek-Místek',
-        contact: { email: 'kamilasebestova@centrum.cz', phone: '558 632 133' },
+        contact: { email: 'frydek@vanek-gynekologie.cz', phone: '558 632 133' },
         openingHours: [
             { day: 'Pondělí', hours: '7:00 - 18:00' },
             { day: 'Úterý', hours: '16:00 - 19:00' },
@@ -65,7 +65,7 @@ const ambulances = [
     },
     {
         name: 'Šenov',
-        contact: { email: 'ordinacesenov@seznam.cz', phone: '605 414 988' },
+        contact: { email: 'senov@vanek-gynekologie.cz', phone: '605 414 988' },
         openingHours: [
             { day: 'Úterý', hours: '7:00 - 17:00' },
             { day: 'Čtvrtek', hours: '12:00 - 16:00' },

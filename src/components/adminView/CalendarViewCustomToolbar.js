@@ -1,10 +1,11 @@
-import { Box, Button, Divider, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Grid, Typography } from '@material-ui/core'
 import { ArrowBack, ArrowForward } from '@material-ui/icons'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { parse, startOfDay, endOfDay, addWeeks, addDays } from 'date-fns'
+import { addDays, addWeeks, endOfDay, parse, startOfDay } from 'date-fns'
 import PropTypes from 'prop-types'
+import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,8 +13,8 @@ import { setBookingsViewDate } from 'src/store/bookings/bookingsSlice'
 import { getBookingsSelectedDate, makeCalendarEventsSelector } from 'src/store/bookings/selectors'
 
 const VIEW_TRANSLATIONS = {
-    day: 'den',
-    work_week: 'pracovní týden',
+    day: 'dnešní den',
+    work_week: 'aktuální pracovní týden',
 }
 const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
     const [viewState, setViewState] = useState(isMobile ? 'day' : 'work_week')
@@ -83,7 +84,7 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                     </Grid>
                     <Grid item xs={4} md={4}>
                         <Button variant="outlined" color="primary" onClick={goToToday} fullWidth>
-                            Dnes
+                            {VIEW_TRANSLATIONS[viewState]}
                         </Button>
                     </Grid>
                     <Grid item xs={4} md={4}>
@@ -94,13 +95,18 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                 </Grid>
                 <Grid container item xs={12} md={6} spacing={1}>
                     <Grid item xs={8} md={6}>
-                        <Button variant="outlined" color="primary" onClick={goToWeekView} fullWidth>
+                        <Button
+                            variant={equals(viewState, 'work_week') ? 'contained' : 'outlined'}
+                            color="primary"
+                            onClick={goToWeekView}
+                            fullWidth
+                        >
                             Pracovní týden
                         </Button>
                     </Grid>
                     <Grid item xs={4} md={6}>
                         <Button
-                            variant="outlined"
+                            variant={equals(viewState, 'day') ? 'contained' : 'outlined'}
                             color="primary"
                             onClick={goToDayView}
                             style={{ height: '100%' }}

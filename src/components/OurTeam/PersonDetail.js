@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const PersonDetail = ({ open, handleClose, title, text }) => {
     const classes = useStyles()
     return (
-        <Dialog onClose={handleClose} open={open}>
+        <Dialog onClose={handleClose} open={open} disableScrollLock>
             <DialogTitle disableTypography onClose={handleClose}>
                 <Typography variant="h6">{title}</Typography>
                 <IconButton className={classes.closeButton} onClick={handleClose} color="primary">
@@ -30,13 +30,18 @@ const PersonDetail = ({ open, handleClose, title, text }) => {
             <DialogContent dividers>
                 <Typography>Vzdělání, kvalifikace:</Typography>
                 <ul className={classes.list}>
-                    {text && text.section1.map((value, index) => <li key={index}>{value}</li>)}
+                    {text.section1 && text.section1.map((value, index) => <li key={index}>{value}</li>)}
                 </ul>
-
-                <Typography>Členství v profesních organizacích:</Typography>
-                <ul className={classes.list}>
-                    {text && text.section2.map((value, index) => <li key={index}>{value}</li>)}
-                </ul>
+                {text.section2 && (
+                    <>
+                        <Typography>Členství v profesních organizacích:</Typography>
+                        <ul className={classes.list}>
+                            {text.section2.map((value, index) => (
+                                <li key={index}>{value}</li>
+                            ))}
+                        </ul>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     )

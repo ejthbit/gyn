@@ -10,11 +10,12 @@ import { fastBooking } from 'src/store/bookings/actions'
 const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
     const { start, end } = data
     const dispatch = useDispatch()
-    const { handleSubmit, control, reset } = useForm({
+    const { handleSubmit, control, reset, formState } = useForm({
         defaultValues: {
             title: '',
         },
     })
+    const { isDirty } = formState
     const onCreate = async (data) => {
         const { title } = data
         const { error } = await dispatch(fastBooking({ name: title, start, end }))
@@ -41,7 +42,7 @@ const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
                     <Button onClick={handleClose} color="primary">
                         Zavřit
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit(onCreate)}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit(onCreate)} disabled={!isDirty}>
                         Vytvořit novou objednávku
                     </Button>
                 </DialogActions>

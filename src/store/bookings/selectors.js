@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { parseISO, subHours } from 'date-fns'
-import { equals, filter, map, path, includes } from 'ramda'
+import { equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'

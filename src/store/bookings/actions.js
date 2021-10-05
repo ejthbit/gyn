@@ -54,6 +54,7 @@ export const fastBooking = createAsyncThunk(
                 end,
                 workplace: selectedAmbulanceId,
                 contact: { email: '', phone: '' },
+                category: 1,
             })
             return res.data
         } catch (error) {
@@ -83,6 +84,7 @@ export const bookAnAppointment = createAsyncThunk(
                 start: `${selectedDate}T${selectedTime}.000Z`,
                 end: addMinutes(new Date(start), 15).toISOString(),
                 workplace: selectedAmbulanceId,
+                category: 1,
             })
             return res.data
         } catch (error) {

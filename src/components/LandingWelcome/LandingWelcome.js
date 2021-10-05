@@ -84,7 +84,9 @@ const LandingWelcome = () => {
                     <Typography variant={isMobile ? 'h4' : 'h3'}>Vaše zdraví je u nás vždy na prvním místě</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant={isMobile ? 'body1' : 'h5'}> Zarezervujte si svůj termín již dnes.</Typography>
+                    <Typography color="textSecondary" variant={isMobile ? 'body1' : 'h5'}>
+                        Zarezervujte si svůj termín již dnes.
+                    </Typography>
                 </Grid>
                 {/* Own component landing action message buttonGroup */}
                 <Grid item container xs={12} spacing={2} className={classes.btnsContainer} justifyContent="flex-start">

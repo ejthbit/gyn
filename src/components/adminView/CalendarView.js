@@ -9,18 +9,20 @@ import cs from 'date-fns/locale/cs'
 import { equals, find } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser } from 'src/store/administration/selectors'
-import { fetchBookings } from 'src/store/bookings/actions'
+import { fetchBookings, patchBooking } from 'src/store/bookings/actions'
 import { getBookingsSelectedDate, makeCalendarEventsSelector } from 'src/store/bookings/selectors'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
 import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 import CustomEventCalendar from './CustomEventCalendar'
 import EventDetailModal from './EventDetailModal'
-
+const DragAndDropCalendar = withDragAndDrop(Calendar)
 const locales = {
     cs,
 }
@@ -37,22 +39,6 @@ const customStyleDayPropGetter = () => {
         className: 'headerDay',
         style: {
             minWidth: '3vh',
-        },
-    }
-}
-
-/**
- * Styling event container
- */
-const customStyleEventPropGetter = () => {
-    return {
-        className: 'event',
-        style: {
-            padding: 8,
-            flex: 1,
-            minHeight: isMobile ? '7vh' : '4rem',
-            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-            pointerEvents: 'none',
         },
     }
 }
@@ -88,17 +74,21 @@ const CalendarView = () => {
 
     const bookings = useMemoizedSelector(makeCalendarEventsSelector, {}, [bookingsViewDate])
     const [newAppointmentDate, setNewAppointmentDate] = useState({})
+    const [draggedEvent, setDraggedEvent] = useState(null)
     const [openEventDialogEvent, setOpenEventDialogEvent] = useState(null)
     const handleToggleCreationModal = () => setNewAppointmentDate({})
     const handleOpenEventDialog = (existingEvent) => setOpenEventDialogEvent(existingEvent)
     const handleGetBookingsInSelectedTimeRange = () =>
         dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
 
+    const onSelectEvent = (event) => {
+        const timeSlotStart = addHours(event.start, 2) // start date/time of the event
+        const isSlotBooked = find(({ start }) => equals(start, subHours(timeSlotStart, 2)), bookings)
+        if (isSlotBooked) return handleOpenEventDialog(event)
+    }
     const onSelectSlot = ({ action, slots }) => {
         const timeSlotStart = addHours(slots[0], 2) // start date/time of the event
         const timeSlotEnd = addHours(slots[slots.length - 1], 2)
-        const isSlotBooked = find(({ start }) => equals(start, subHours(timeSlotStart, 2)), bookings)
-        if (isSlotBooked) return handleOpenEventDialog(isSlotBooked)
         return equals(action, 'click')
             ? setNewAppointmentDate({
                   start: timeSlotStart.toISOString(),
@@ -108,6 +98,25 @@ const CalendarView = () => {
                   start: timeSlotStart.toISOString(),
                   end: timeSlotEnd.toISOString(),
               })
+    }
+
+    const handleDragStart = (event) => setDraggedEvent(event)
+
+    const dragFromOutsideItem = () => draggedEvent
+
+    const moveEvent = ({ event, start, end }) =>
+        dispatch(
+            patchBooking({ id: event.id, start: addHours(start, 2).toISOString(), end: addHours(end, 2).toISOString() })
+        )
+
+    const onDropFromOutside = ({ start, end }) => {
+        const event = {
+            id: draggedEvent.id,
+            start,
+            end,
+        }
+        setDraggedEvent(null)
+        moveEvent({ event, start, end })
     }
 
     useEffect(() => {
@@ -126,8 +135,12 @@ const CalendarView = () => {
                 </IconButton>
             </Grid>
             <Grid item xs={12}>
-                <Calendar
+                <DragAndDropCalendar
                     formats={calendarFormats}
+                    onEventDrop={moveEvent}
+                    dragFromOutsideItem={draggedEvent ? dragFromOutsideItem() : null}
+                    onDropFromOutside={onDropFromOutside}
+                    handleDragStart={handleDragStart}
                     min={new Date(0, 0, 0, 7, 0, 0)}
                     max={new Date(0, 0, 0, 19, 0, 0)}
                     localizer={localizer}
@@ -137,10 +150,11 @@ const CalendarView = () => {
                     culture="cs"
                     defaultDate={new Date()}
                     slotPropGetter={customSlotPropGetter}
-                    eventPropGetter={customStyleEventPropGetter}
                     dayPropGetter={customStyleDayPropGetter}
                     startAccessor="start"
                     selectable
+                    resizable={false}
+                    onSelectEvent={onSelectEvent}
                     onSelectSlot={onSelectSlot}
                     components={{
                         toolbar: CalendarViewCustomToolbar,
@@ -149,6 +163,7 @@ const CalendarView = () => {
                     step={SLOT_DURATION}
                     endAccessor="end"
                     style={{ height: isMobile ? '100vh' : '75vh', margin: 8 }}
+                    longPressThreshold={10}
                 />
                 <CalendarViewCreateEventDialog
                     open={!isNilOrEmpty(newAppointmentDate)}

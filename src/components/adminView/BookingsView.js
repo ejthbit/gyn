@@ -89,7 +89,7 @@ const BookingsView = () => {
     return (
         <Grid container>
             <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
-                <Grid item xs={12} sm={1}>
+                <Grid item xs={12} sm={2}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny od: "
@@ -103,7 +103,7 @@ const BookingsView = () => {
                         onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
                     />
                 </Grid>
-                <Grid item xs={12} sm={1}>
+                <Grid item xs={12} sm={2}>
                     <DatePicker
                         className={classes.item}
                         label="Termíny do: "
@@ -139,7 +139,7 @@ const BookingsView = () => {
                 </Grid>
                 <Grid item xs={12} sm={2} className={classes.count}>
                     <Typography
-                        variant="h6"
+                        variant="body1"
                         color="primary"
                     >{`Počet objednávek na dané období: ${bookings.length}`}</Typography>
                 </Grid>

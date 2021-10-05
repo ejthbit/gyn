@@ -65,7 +65,7 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
 
     return (
         <Box marginBottom={2}>
-            <Grid container spacing={1} justifyContent="center" alignItems="center">
+            <Grid container spacing={1} justifyContent="center" alignItems="stretch">
                 <Grid container item xs={12} justifyContent="space-between" spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Typography variant="body1" align="left">
@@ -78,17 +78,35 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                 </Grid>
                 <Grid container item xs={12} md={6} justifyContent="space-between" spacing={1}>
                     <Grid item xs={4} md={4}>
-                        <Button variant="contained" color="primary" onClick={goToBack} fullWidth>
+                        <Button
+                            style={{ height: '100%' }}
+                            variant="contained"
+                            color="primary"
+                            onClick={goToBack}
+                            fullWidth
+                        >
                             <ArrowBack />
                         </Button>
                     </Grid>
                     <Grid item xs={4} md={4}>
-                        <Button variant="outlined" color="primary" onClick={goToToday} fullWidth>
+                        <Button
+                            style={{ height: '100%' }}
+                            variant="outlined"
+                            color="primary"
+                            onClick={goToToday}
+                            fullWidth
+                        >
                             {VIEW_TRANSLATIONS[viewState]}
                         </Button>
                     </Grid>
                     <Grid item xs={4} md={4}>
-                        <Button variant="contained" color="primary" onClick={goToNext} fullWidth>
+                        <Button
+                            style={{ height: '100%' }}
+                            variant="contained"
+                            color="primary"
+                            onClick={goToNext}
+                            fullWidth
+                        >
                             <ArrowForward />
                         </Button>
                     </Grid>
@@ -96,6 +114,7 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                 <Grid container item xs={12} md={6} spacing={1}>
                     <Grid item xs={8} md={6}>
                         <Button
+                            style={{ height: '100%' }}
                             variant={equals(viewState, 'work_week') ? 'contained' : 'outlined'}
                             color="primary"
                             onClick={goToWeekView}
@@ -106,6 +125,7 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                     </Grid>
                     <Grid item xs={4} md={6}>
                         <Button
+                            style={{ height: '100%' }}
                             variant={equals(viewState, 'day') ? 'contained' : 'outlined'}
                             color="primary"
                             onClick={goToDayView}

@@ -14,9 +14,10 @@ import { DatePicker } from '@material-ui/pickers'
 import getDoctorById from '@utilities/getDoctorById'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
+import { addHours } from 'date-fns'
 import format from 'date-fns/format'
-import { equals, find, isNil } from 'ramda'
-import React, { useEffect } from 'react'
+import { equals, find } from 'ramda'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAvailableTimeslots, fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
@@ -27,6 +28,7 @@ import {
     setSelectedTime,
 } from 'src/store/reservationProcess/reservationProcessSlice'
 import {
+    getActiveStep,
     getDisabledReservationBtn,
     getPreferredDoctor,
     getSelectedAmbulance,
@@ -69,34 +71,39 @@ const ReservationTermPicker = () => {
     const selectedTime = useSelector(getSelectedTime)
     const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
     const selectedDoctor = useSelector(getPreferredDoctor)
-
+    const activeStep = useSelector(getActiveStep)
+    const [isDoctorServing, setIsDoctorServing] = useState(undefined)
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     const doctorServicesByDoctorId = useMemoizedSelector(makeDoctorServicesByDoctorId, { doctorId: selectedDoctor }, [
         selectedDoctor,
+        selectedDate,
     ])
 
-    const isDoctorServing = find(({ date, doctorId }) => {
-        if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
-    }, doctorServicesByDoctorId)
-
     useEffect(() => {
-        if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
-        else if (!isNilOrEmpty(selectedTime)) dispatch(setReservationBtnDisabled(false))
-        if (!isDoctorServing && !isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
-    }, [isDoctorServing, selectedTime])
-
-    // get OpeningHours
-    useEffect(() => {
-        if (!isNil(selectedDate)) {
-            if (isDoctorServing) {
-                const { start: from, end: to } = find(
-                    ({ date }) => equals(date, selectedDate),
-                    doctorServicesByDoctorId
-                )
-                dispatch(fetchAvailableTimeslots({ from, to, workplace: selectedAmbulanceId }))
-            } else dispatch(clearTimeslots())
+        const servesItem = find(({ date, doctorId }) => {
+            if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
+        }, doctorServicesByDoctorId)
+        if (!isNilOrEmpty(servesItem)) {
+            setIsDoctorServing(servesItem)
+            dispatch(
+                fetchAvailableTimeslots({
+                    from: servesItem.start,
+                    to: servesItem.end,
+                    workplace: selectedAmbulanceId,
+                })
+            )
+        } else {
+            dispatch(clearTimeslots())
+            if (!isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
         }
-    }, [selectedDate, selectedAmbulanceId])
+    }, [selectedDate, doctorServicesByDoctorId])
+
+    useEffect(() => {
+        if (equals(activeStep, 2)) {
+            if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
+            else if (!isNilOrEmpty(selectedTime)) dispatch(setReservationBtnDisabled(false))
+        }
+    }, [selectedTime, activeStep])
 
     return (
         <Grid container direction="column">
@@ -145,7 +152,7 @@ const ReservationTermPicker = () => {
                     />
                 )}
                 disablePast
-                onChange={(date) => dispatch(setSelectedDate(date.toISOString()))}
+                onChange={(date) => dispatch(setSelectedDate(addHours(date, 2).toISOString()))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
                 <>

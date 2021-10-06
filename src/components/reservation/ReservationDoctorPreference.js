@@ -9,6 +9,7 @@ import { setPreferredDoctor, setReservationBtnDisabled } from 'src/store/reserva
 import {
     getPreferredDoctor,
     getSelectedAmbulance,
+    getSelectedDate,
     makeArrayOfValueLabelDoctors,
 } from 'src/store/reservationProcess/selectors'
 
@@ -18,6 +19,7 @@ const ReservationDoctorPreference = () => {
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
     const selectedDoctor = useSelector(getPreferredDoctor)
+    const selectedDate = useSelector(getSelectedDate)
     const doctorsForSelectedAmbulance = useMemoizedSelector(makeArrayOfValueLabelDoctors, {}, [selectedAmbulanceId])
 
     const handleChangeDoctor = (e) => dispatch(setPreferredDoctor(e.target.value))
@@ -26,12 +28,12 @@ const ReservationDoctorPreference = () => {
         dispatch(setReservationBtnDisabled(false))
         dispatch(
             fetchDoctorServicesForSelectedMonth({
-                month: format(Date.now(), 'yyyy-MM'),
+                month: format(new Date(selectedDate), 'yyyy-MM'),
                 workplace: selectedAmbulanceId,
             })
         )
         dispatch(fetchDoctorsForSelectedAmbulance(selectedAmbulanceId))
-    }, [selectedAmbulanceId])
+    }, [selectedAmbulanceId, selectedDate])
 
     return (
         <Dropdown

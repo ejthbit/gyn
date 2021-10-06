@@ -3,10 +3,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import { EmailOutlined, PhoneOutlined, Today } from '@material-ui/icons'
 import { DatePicker } from '@material-ui/pickers'
+import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setContactInformation, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
+import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import * as yup from 'yup'
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +38,7 @@ const formValidationSchema = yup.object().shape({
 const ReservationContactInputs = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const activeStep = useSelector(getActiveStep)
     const [birthDate, setBirthDate] = useState(null)
     const { handleSubmit, setValue, control, formState } = useForm({
         mode: 'onChange',
@@ -51,10 +54,12 @@ const ReservationContactInputs = () => {
     }
 
     useEffect(() => {
-        if (isValid && isDirty) {
-            handleSubmit(onSubmit)()
-            dispatch(setReservationBtnDisabled(false))
-        } else dispatch(setReservationBtnDisabled(!isValid))
+        if (equals(activeStep, 3)) {
+            if (isValid && isDirty) {
+                handleSubmit(onSubmit)()
+                dispatch(setReservationBtnDisabled(false))
+            } else dispatch(setReservationBtnDisabled(!isValid))
+        }
     }, [formState])
 
     return (

@@ -1,14 +1,27 @@
 import ReservationStepper from '@components/reservation/ReservationStepper'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, Typography } from '@material-ui/core'
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    makeStyles,
+    Typography,
+} from '@material-ui/core'
+import { Close } from '@material-ui/icons'
+import { isMobile } from '@utilities/checkDeviceType'
 import PropTypes from 'prop-types'
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
     title: {
-        [theme.breakpoints.down('sm')]: {
-            textAlign: 'center',
-        },
         paddingBottom: 0,
+        '& svg': {
+            width: theme.spacing(4),
+            height: theme.spacing(4),
+        },
     },
     actions: {
         justifyContent: 'space-between',
@@ -35,7 +48,14 @@ const LandingPageReservationModal = ({ isOpen, onClose }) => {
         isOpen && (
             <Dialog maxWidth="md" open={isOpen} onClose={onClose} fullWidth>
                 <DialogTitle className={classes.title} disableTypography>
-                    <Typography variant="h4">Rezervační formulář</Typography>
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                        <Box flexGrow={1}>{<Typography variant="h4">Rezervační formulář</Typography>}</Box>
+                        <Box alignSelf="flex-start">
+                            <IconButton onClick={onClose}>
+                                <Close />
+                            </IconButton>
+                        </Box>
+                    </Box>
                 </DialogTitle>
                 <DialogContent>
                     <ReservationStepper />
@@ -44,9 +64,11 @@ const LandingPageReservationModal = ({ isOpen, onClose }) => {
                     <Typography variant="body2">
                         Povinná pole jsou označena <span> *</span>
                     </Typography>
-                    <Button variant="outlined" onClick={onClose} color="primary">
-                        Zavřít
-                    </Button>
+                    {!isMobile && (
+                        <Button variant="outlined" onClick={onClose} color="primary">
+                            Zavřít
+                        </Button>
+                    )}
                 </DialogActions>
             </Dialog>
         )

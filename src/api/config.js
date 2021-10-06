@@ -5,7 +5,6 @@ const axiosGynInstance = axios.create({
     baseURL: process.env.NODE_ENV !== 'production' ? process.env.API_URL : process.env.API_PROD_URL,
     timeout: 10000,
     headers: { 'Content-Type': 'application/json', ...(authHeader() && { Authorization: authHeader() }) },
-    withCredentials: true,
 })
 
 axiosGynInstance.interceptors.request.use(

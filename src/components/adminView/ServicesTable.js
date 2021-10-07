@@ -3,6 +3,7 @@ import FormSelectInput from '@components/buildingbBlocks/FormInputs/FormSelectIn
 import {
     Box,
     Button,
+    Fade,
     makeStyles,
     MenuItem,
     Paper,
@@ -60,7 +61,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
 
     const selectedDoctors = useSelector(getDoctorsForSelectedAmbulance)
 
-    const { handleSubmit, control, formState, setValue, reset } = useForm({
+    const { handleSubmit, control, setValue, reset } = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: { data },
@@ -82,93 +83,105 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
     }, [data])
 
     return (
-        <TableContainer component={Paper} className={classes.paper}>
-            <Table className={classes.table} size="medium">
-                <TableHead>
-                    <TableRow className={classes.tableRow}>
-                        <TableCell width="5%">Den</TableCell>
-                        <TableCell width="15%">Datum</TableCell>
-                        <TableCell width="15%">Doktor</TableCell>
-                        <TableCell width="15%">Od:</TableCell>
-                        <TableCell width="15%">Do:</TableCell>
-                        <TableCell width="35%">Poznámka:</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {addIndex(map)(
-                        ({ date }, index) => (
-                            <TableRow key={date} className={classes.tableRow}>
-                                <TableCell width="5%">
-                                    {new Date(date).toLocaleString('cs-CZ', { weekday: 'long' })}
-                                </TableCell>
-                                <TableCell width="15%">{format(new Date(date), 'dd-MM-yyyy')}</TableCell>
-                                <TableCell width="15%">
-                                    {
+        <Fade in timeout={500}>
+            <TableContainer component={Paper} className={classes.paper}>
+                <Table className={classes.table} size="medium">
+                    <TableHead>
+                        <TableRow className={classes.tableRow}>
+                            <TableCell width="5%">Den</TableCell>
+                            <TableCell width="15%">Datum</TableCell>
+                            <TableCell width="15%">Doktor</TableCell>
+                            <TableCell width="15%">Od:</TableCell>
+                            <TableCell width="15%">Do:</TableCell>
+                            <TableCell width="35%">Poznámka:</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {addIndex(map)(
+                            ({ date }, index) => (
+                                <TableRow key={date} className={classes.tableRow}>
+                                    <TableCell width="5%">
+                                        {new Date(date).toLocaleString('cs-CZ', { weekday: 'long' })}
+                                    </TableCell>
+                                    <TableCell width="15%">{format(new Date(date), 'dd-MM-yyyy')}</TableCell>
+                                    <TableCell width="15%">
+                                        {
+                                            <FormSelectInput
+                                                name={`data.${index}.doctorId`}
+                                                control={control}
+                                                fullWidth
+                                                required
+                                            >
+                                                <MenuItem
+                                                    value=""
+                                                    onClick={() => {
+                                                        setValue(`data.${index}.start`, '')
+                                                        setValue(`data.${index}.end`, '')
+                                                    }}
+                                                >
+                                                    Zavřeno
+                                                </MenuItem>
+                                                {map(
+                                                    ({ doctor_id: value, name }) => (
+                                                        <MenuItem key={value} value={value}>
+                                                            {name}
+                                                        </MenuItem>
+                                                    ),
+                                                    values(selectedDoctors)
+                                                )}
+                                            </FormSelectInput>
+                                        }
+                                    </TableCell>
+                                    <TableCell width="15%">
                                         <FormSelectInput
-                                            name={`data.${index}.doctorId`}
+                                            name={`data.${index}.start`}
                                             control={control}
                                             fullWidth
                                             required
                                         >
-                                            <MenuItem
-                                                value=""
-                                                onClick={() => {
-                                                    setValue(`data.${index}.start`, '')
-                                                    setValue(`data.${index}.end`, '')
-                                                }}
-                                            >
-                                                Zavřeno
-                                            </MenuItem>
                                             {map(
-                                                ({ doctor_id: value, name }) => (
-                                                    <MenuItem key={value} value={value}>
-                                                        {name}
+                                                (entry) => (
+                                                    <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
+                                                        {entry}
                                                     </MenuItem>
                                                 ),
-                                                values(selectedDoctors)
+                                                openingHours
                                             )}
                                         </FormSelectInput>
-                                    }
-                                </TableCell>
-                                <TableCell width="15%">
-                                    <FormSelectInput name={`data.${index}.start`} control={control} fullWidth required>
-                                        {map(
-                                            (entry) => (
-                                                <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
-                                                    {entry}
-                                                </MenuItem>
-                                            ),
-                                            openingHours
-                                        )}
-                                    </FormSelectInput>
-                                </TableCell>
-                                <TableCell width="15%">
-                                    <FormSelectInput name={`data.${index}.end`} control={control} fullWidth required>
-                                        {map(
-                                            (entry) => (
-                                                <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
-                                                    {entry}
-                                                </MenuItem>
-                                            ),
-                                            openingHours
-                                        )}
-                                    </FormSelectInput>
-                                </TableCell>
-                                <TableCell width="35%">
-                                    <FormInput name={`data.${index}.note`} control={control} fullWidth />
-                                </TableCell>
-                            </TableRow>
-                        ),
-                        data
-                    )}
-                </TableBody>
-            </Table>
-            <Box margin={1}>
-                <Button color="primary" variant="contained" onClick={handleSubmit(onSubmit)}>
-                    Uložit
-                </Button>
-            </Box>
-        </TableContainer>
+                                    </TableCell>
+                                    <TableCell width="15%">
+                                        <FormSelectInput
+                                            name={`data.${index}.end`}
+                                            control={control}
+                                            fullWidth
+                                            required
+                                        >
+                                            {map(
+                                                (entry) => (
+                                                    <MenuItem key={entry} value={`${date}T${entry}:00.000Z`}>
+                                                        {entry}
+                                                    </MenuItem>
+                                                ),
+                                                openingHours
+                                            )}
+                                        </FormSelectInput>
+                                    </TableCell>
+                                    <TableCell width="35%">
+                                        <FormInput name={`data.${index}.note`} control={control} fullWidth />
+                                    </TableCell>
+                                </TableRow>
+                            ),
+                            data
+                        )}
+                    </TableBody>
+                </Table>
+                <Box margin={1}>
+                    <Button color="primary" variant="contained" onClick={handleSubmit(onSubmit)}>
+                        Uložit
+                    </Button>
+                </Box>
+            </TableContainer>
+        </Fade>
     )
 }
 

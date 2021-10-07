@@ -1,4 +1,4 @@
-import { Box, TextField, IconButton } from '@material-ui/core'
+import { Box, Fade, IconButton, TextField } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -125,120 +125,124 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
 
     return (
         !isNilOrEmpty(data) && (
-            <div className={classes.root}>
-                <Paper className={classes.paper}>
-                    <CustomTableToolbar
-                        title={title}
-                        selectedItems={selected}
-                        onDelete={handleDeleteSelectedItems}
-                        onCompleted={handleSetCompletedSelectedItems}
-                    />
-                    <TableContainer>
-                        <Table
-                            className={classes.table}
-                            aria-labelledby="tableTitle"
-                            size="medium"
-                            aria-label="enhanced table"
-                        >
-                            <CustomTableHeader
-                                headCells={headCells}
-                                classes={classes}
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
-                                onRequestSort={handleRequestSort}
-                                rowCount={data.length}
-                            />
-                            <TableBody>
-                                {sortByProperty(order, orderBy, data)
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row, index) => {
-                                        const isItemSelected = isSelected(row.id)
-                                        const date = new Date(row.start)
-                                        const rowDate = format(date, 'yyyy/MM/dd')
-                                        const rowTime = row.start.substr(11, 5)
-                                        const labelId = `enhanced-table-checkbox-${index}`
-                                        return (
-                                            <TableRow
-                                                className={row.completed ? classes.completedTableRow : ''}
-                                                hover
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={`${rowDate}-${rowTime}`}
-                                                selected={isItemSelected}
-                                            >
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        color="primary"
-                                                        checked={isItemSelected}
-                                                        onClick={(e) => handleClick(e, row.id)}
-                                                        inputProps={{ 'aria-labelledby': labelId }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell id={labelId}>{rowDate}</TableCell>
-                                                <TableCell>{rowTime}</TableCell>
-                                                <TableCell>
-                                                    {equals(row.id, currentlyEditingId) ? (
-                                                        <TextField
-                                                            value={editingData?.name}
-                                                            onChange={(e) => {
-                                                                setEditingData((prevData) => ({
-                                                                    ...prevData,
-                                                                    name: e.target.value,
-                                                                }))
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        row.name
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>{row.birthdate}</TableCell>
-                                                <TableCell>{row.email || ''}</TableCell>
-                                                <TableCell>{row.phone || ''}</TableCell>
-                                                <TableCell>{row.completed && <Check />}</TableCell>
-                                                <TableCell>
-                                                    {equals(row.id, currentlyEditingId) ? (
-                                                        <Box display="row">
-                                                            <Check onClick={handleUpdateBooking} />
-                                                            <Close onClick={() => setCurrentlyEditingId(-1)} />
-                                                        </Box>
-                                                    ) : (
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                setCurrentlyEditingId(row.id)
-                                                                setEditingData(data[indexOf(row, data)])
-                                                            }}
-                                                            disabled={row.completed}
-                                                        >
-                                                            <Edit />
-                                                        </IconButton>
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        labelRowsPerPage="Počet záznamů na stránce"
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        onPageChange={handleChangePage}
-                    />
-                </Paper>
-            </div>
+            <Fade in timeout={500}>
+                <div className={classes.root}>
+                    <Paper className={classes.paper}>
+                        <CustomTableToolbar
+                            title={title}
+                            selectedItems={selected}
+                            onDelete={handleDeleteSelectedItems}
+                            onCompleted={handleSetCompletedSelectedItems}
+                        />
+                        <TableContainer>
+                            <Table
+                                className={classes.table}
+                                aria-labelledby="tableTitle"
+                                size="medium"
+                                aria-label="enhanced table"
+                            >
+                                <CustomTableHeader
+                                    headCells={headCells}
+                                    classes={classes}
+                                    numSelected={selected.length}
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onSelectAllClick={handleSelectAllClick}
+                                    onRequestSort={handleRequestSort}
+                                    rowCount={data.length}
+                                />
+                                <TableBody>
+                                    {sortByProperty(order, orderBy, data)
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((row, index) => {
+                                            const isItemSelected = isSelected(row.id)
+                                            const date = new Date(row.start)
+                                            const rowDate = format(date, 'yyyy/MM/dd')
+                                            const rowTime = row.start.substr(11, 5)
+                                            const labelId = `enhanced-table-checkbox-${index}`
+                                            return (
+                                                <Fade in timeout={500 * index}>
+                                                    <TableRow
+                                                        className={row.completed ? classes.completedTableRow : ''}
+                                                        hover
+                                                        role="checkbox"
+                                                        aria-checked={isItemSelected}
+                                                        tabIndex={-1}
+                                                        key={`${rowDate}-${rowTime}`}
+                                                        selected={isItemSelected}
+                                                    >
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox
+                                                                color="primary"
+                                                                checked={isItemSelected}
+                                                                onClick={(e) => handleClick(e, row.id)}
+                                                                inputProps={{ 'aria-labelledby': labelId }}
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell id={labelId}>{rowDate}</TableCell>
+                                                        <TableCell>{rowTime}</TableCell>
+                                                        <TableCell>
+                                                            {equals(row.id, currentlyEditingId) ? (
+                                                                <TextField
+                                                                    value={editingData?.name}
+                                                                    onChange={(e) => {
+                                                                        setEditingData((prevData) => ({
+                                                                            ...prevData,
+                                                                            name: e.target.value,
+                                                                        }))
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                row.name
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell>{row.birthdate}</TableCell>
+                                                        <TableCell>{row.email || ''}</TableCell>
+                                                        <TableCell>{row.phone || ''}</TableCell>
+                                                        <TableCell>{row.completed && <Check />}</TableCell>
+                                                        <TableCell>
+                                                            {equals(row.id, currentlyEditingId) ? (
+                                                                <Box display="row">
+                                                                    <Check onClick={handleUpdateBooking} />
+                                                                    <Close onClick={() => setCurrentlyEditingId(-1)} />
+                                                                </Box>
+                                                            ) : (
+                                                                <IconButton
+                                                                    onClick={() => {
+                                                                        setCurrentlyEditingId(row.id)
+                                                                        setEditingData(data[indexOf(row, data)])
+                                                                    }}
+                                                                    disabled={row.completed}
+                                                                >
+                                                                    <Edit />
+                                                                </IconButton>
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </Fade>
+                                            )
+                                        })}
+                                    {emptyRows > 0 && (
+                                        <TableRow style={{ height: 53 * emptyRows }}>
+                                            <TableCell colSpan={6} />
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            labelRowsPerPage="Počet záznamů na stránce"
+                            component="div"
+                            count={data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            onPageChange={handleChangePage}
+                        />
+                    </Paper>
+                </div>
+            </Fade>
         )
     )
 }

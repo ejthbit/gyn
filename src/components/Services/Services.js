@@ -6,7 +6,7 @@ import {
     SpecialTreatmentIcon,
     Advisementicon,
 } from '@assets/SvgIcons'
-import { Divider, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Divider, Fade, Grid, makeStyles, Typography } from '@material-ui/core'
 import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import Service from './Service'
@@ -102,10 +102,12 @@ const Services = () => {
                     {`Další informace o tom, jak vám můžeme pomoci, naleznete v níže uvedených službách.`}
                 </Typography>
             </Grid>
-            {services.map(({ icon, label, description }) => (
-                <Grid xs={12} sm={6} item key={label}>
-                    <Service icon={icon} label={label} description={description} />
-                </Grid>
+            {services.map(({ icon, label, description }, index) => (
+                <Fade key={label} in timeout={3000 * index}>
+                    <Grid xs={12} sm={6} item key={label}>
+                        <Service icon={icon} label={label} description={description} />
+                    </Grid>
+                </Fade>
             ))}
             <Divider variant="middle" />
         </Grid>

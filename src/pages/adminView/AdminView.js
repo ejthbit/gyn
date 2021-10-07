@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             marginLeft: ({ isDrawerOpen }) => (isDrawerOpen ? 80 : theme.spacing(1)),
         },
+        transition: 'all 0.7s ease-in-out',
     }),
 }))
 

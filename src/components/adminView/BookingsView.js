@@ -1,5 +1,5 @@
 import CustomTable from '@components/buildingbBlocks/CustomTable/CustomTable'
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Fade, Grid, makeStyles, Typography } from '@material-ui/core'
 import { DatePicker } from '@material-ui/pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -14,6 +14,7 @@ import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
+        marginBottom: theme.spacing(0.4),
         [theme.breakpoints.up('sm')]: {
             maxHeight: theme.spacing(6.5),
             alignContent: 'center',
@@ -87,67 +88,79 @@ const BookingsView = () => {
     ]
 
     return (
-        <Grid container>
-            <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
-                <Grid item xs={12} sm={2}>
-                    <DatePicker
-                        className={classes.item}
-                        label="Termíny od: "
-                        orientation="landscape"
-                        variant="inline"
-                        format="dd-MM-yyyy"
-                        margin="none"
-                        value={bookingsViewDate.from}
-                        maxDate={bookingsViewDate.to}
-                        autoOk
-                        onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
-                    />
+        <Fade in timeout={500}>
+            <Grid container>
+                <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
+                    <Grid item xs={12} sm={2}>
+                        <DatePicker
+                            className={classes.item}
+                            label="Termíny od: "
+                            orientation="landscape"
+                            variant="inline"
+                            format="dd-MM-yyyy"
+                            margin="none"
+                            value={bookingsViewDate.from}
+                            maxDate={bookingsViewDate.to}
+                            autoOk
+                            onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <DatePicker
+                            className={classes.item}
+                            label="Termíny do: "
+                            orientation="landscape"
+                            variant="inline"
+                            format="dd-MM-yyyy"
+                            margin="none"
+                            minDate={bookingsViewDate.from}
+                            value={isNilOrEmpty(bookingsViewDate.to) ? bookingsViewDate.from : bookingsViewDate.to}
+                            onChange={(date) => handleChangeDate({ to: endOfDay(date).toISOString() })}
+                            autoOk
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <Button
+                            className={classes.item}
+                            variant="outlined"
+                            color="primary"
+                            onClick={handleSetTodayDate}
+                        >
+                            Dnes
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <Button
+                            className={classes.item}
+                            variant="outlined"
+                            color="primary"
+                            onClick={handleSetThisWeekDate}
+                        >
+                            Týden
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <Button
+                            className={classes.item}
+                            variant="outlined"
+                            color="primary"
+                            onClick={handleSetThisMonthDate}
+                        >
+                            Měsíc
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={2} className={classes.count}>
+                        <Typography
+                            variant="body1"
+                            color="primary"
+                        >{`Počet objednávek na dané období: ${bookings.length}`}</Typography>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} sm={2}>
-                    <DatePicker
-                        className={classes.item}
-                        label="Termíny do: "
-                        orientation="landscape"
-                        variant="inline"
-                        format="dd-MM-yyyy"
-                        margin="none"
-                        minDate={bookingsViewDate.from}
-                        value={isNilOrEmpty(bookingsViewDate.to) ? bookingsViewDate.from : bookingsViewDate.to}
-                        onChange={(date) => handleChangeDate({ to: endOfDay(date).toISOString() })}
-                        autoOk
-                    />
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetTodayDate}>
-                        Dnes
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button className={classes.item} variant="outlined" color="primary" onClick={handleSetThisWeekDate}>
-                        Týden
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button
-                        className={classes.item}
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleSetThisMonthDate}
-                    >
-                        Měsíc
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={2} className={classes.count}>
-                    <Typography
-                        variant="body1"
-                        color="primary"
-                    >{`Počet objednávek na dané období: ${bookings.length}`}</Typography>
+                <Grid item xs={12}>
+                    <CustomTable title="Objednávky" orderBy="start" data={bookings} headCells={headCells} />
                 </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <CustomTable title="Objednávky" orderBy="start" data={bookings} headCells={headCells} />
-            </Grid>
-        </Grid>
+        </Fade>
     )
 }
 

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, makeStyles, Snackbar, Typography } from '@material-ui/core'
+import { Box, Button, Grid, makeStyles, Snackbar, Typography, Fade } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 import { DatePicker } from '@material-ui/pickers'
@@ -104,82 +104,84 @@ const DoctorServicesView = () => {
     }, [serviceExists])
 
     return (
-        <Grid container>
-            <Grid container spacing={2} alignContent="flex-end">
-                {includes(selectedAction, [1, 2]) ? (
-                    <>
-                        <Grid item>
-                            <Button variant="contained" color="primary" onClick={handleClearActionsWorkflow}>
-                                <ArrowBack />
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <DatePicker
-                                className={classes.datePicker}
-                                label="Výběr měsíce: "
-                                orientation="landscape"
-                                format="MMMM, yyyy"
-                                margin="none"
-                                value={selectedMonth}
-                                onChange={(date) => handleGenerateDataForTable(date)}
-                                views={['year', 'month']}
-                                autoOk
-                            />
-                        </Grid>
-                    </>
+        <Fade in timeout={500}>
+            <Grid container>
+                <Grid container spacing={2} alignContent="flex-end">
+                    {includes(selectedAction, [1, 2]) ? (
+                        <>
+                            <Grid item>
+                                <Button variant="contained" color="primary" onClick={handleClearActionsWorkflow}>
+                                    <ArrowBack />
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <DatePicker
+                                    className={classes.datePicker}
+                                    label="Výběr měsíce: "
+                                    orientation="landscape"
+                                    format="MMMM, yyyy"
+                                    margin="none"
+                                    value={selectedMonth}
+                                    onChange={(date) => handleGenerateDataForTable(date)}
+                                    views={['year', 'month']}
+                                    autoOk
+                                />
+                            </Grid>
+                        </>
+                    ) : (
+                        <>
+                            <Grid item>
+                                <Button variant="contained" color="primary" onClick={() => handleSetActionWorkflow(1)}>
+                                    Vytvořit nový rozpis
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="outlined" color="primary" onClick={() => handleSetActionWorkflow(2)}>
+                                    Upravit existující rozpis
+                                </Button>
+                            </Grid>
+                        </>
+                    )}
+                </Grid>
+                {!isNilOrEmpty(dates) && (
+                    <Grid item xs={12}>
+                        <ServicesTable
+                            data={dates}
+                            selectedMonth={format(selectedMonth, 'yyyy-MM')}
+                            isEditingServices={equals(selectedAction, 2)}
+                            selectedWorkplaceId={selectedAmbulanceId}
+                        />
+                    </Grid>
+                )}
+                {
+                    <Box>
+                        <Snackbar
+                            open={serviceOperationFinishedOk || serviceOperationError}
+                            autoHideDuration={6000}
+                            onClose={() => dispatch(clearServicesOperationState())}
+                        >
+                            {serviceOperationError ? (
+                                <Alert severity="error">Při ukládání nastala chyba</Alert>
+                            ) : (
+                                <Alert severity="success">Úspěšně uloženo</Alert>
+                            )}
+                        </Snackbar>
+                    </Box>
+                }
+                {equals(selectedAction, 1) && serviceExists ? (
+                    <Typography className={classes.serviceExists} color="error">
+                        Na daný měsíc již existuje rozpis.
+                    </Typography>
                 ) : (
-                    <>
-                        <Grid item>
-                            <Button variant="contained" color="primary" onClick={() => handleSetActionWorkflow(1)}>
-                                Vytvořit nový rozpis
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" color="primary" onClick={() => handleSetActionWorkflow(2)}>
-                                Upravit existující rozpis
-                            </Button>
-                        </Grid>
-                    </>
+                    equals(selectedAction, 2) &&
+                    !serviceExists && (
+                        <Typography className={classes.serviceExists} color="error">
+                            Pro zadaný měsíc zatím neexistuje rozpis služeb
+                        </Typography>
+                    )
                 )}
             </Grid>
-            {!isNilOrEmpty(dates) && (
-                <Grid item xs={12}>
-                    <ServicesTable
-                        data={dates}
-                        selectedMonth={format(selectedMonth, 'yyyy-MM')}
-                        isEditingServices={equals(selectedAction, 2)}
-                        selectedWorkplaceId={selectedAmbulanceId}
-                    />
-                </Grid>
-            )}
-            {
-                <Box>
-                    <Snackbar
-                        open={serviceOperationFinishedOk || serviceOperationError}
-                        autoHideDuration={6000}
-                        onClose={() => dispatch(clearServicesOperationState())}
-                    >
-                        {serviceOperationError ? (
-                            <Alert severity="error">Při ukládání nastala chyba</Alert>
-                        ) : (
-                            <Alert severity="success">Úspěšně uloženo</Alert>
-                        )}
-                    </Snackbar>
-                </Box>
-            }
-            {equals(selectedAction, 1) && serviceExists ? (
-                <Typography className={classes.serviceExists} color="error">
-                    Na daný měsíc již existuje rozpis.
-                </Typography>
-            ) : (
-                equals(selectedAction, 2) &&
-                !serviceExists && (
-                    <Typography className={classes.serviceExists} color="error">
-                        Pro zadaný měsíc zatím neexistuje rozpis služeb
-                    </Typography>
-                )
-            )}
-        </Grid>
+        </Fade>
     )
 }
 

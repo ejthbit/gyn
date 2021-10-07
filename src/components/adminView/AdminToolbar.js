@@ -6,6 +6,7 @@ import {
     Divider,
     Drawer,
     Fab,
+    Fade,
     Grid,
     Hidden,
     List,
@@ -201,50 +202,52 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
                 </Toolbar>
             </AppBar>
             {isDrawerOpen ? (
-                <Drawer
-                    className={classes.drawer}
-                    variant="permanent"
-                    anchor="left"
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
-                >
-                    <Box className={classes.drawerHeader} component={Link} to={'/'}>
-                        <Hidden smDown>
-                            <Box className={classes.logoContainer}>
-                                <TransparentLogo />
-                            </Box>
-                        </Hidden>
-                        <Hidden mdUp>
-                            <Home />
-                        </Hidden>
-                    </Box>
-                    <Divider />
-                    <List disablePadding>
-                        {map(
-                            ({ id, icon, text, link }) => (
-                                <ListItem
-                                    className={classes.drawerListItem}
-                                    button
-                                    component={Link}
-                                    to={link}
-                                    key={id}
-                                    selected={equals(id, selectedItem)}
-                                    onClick={() => setSelectedItem(id)}
-                                >
-                                    <ListItemIcon>{icon}</ListItemIcon>
-                                    <ListItemText primary={text} />
-                                </ListItem>
-                            ),
-                            adminToolbarContent
-                        )}
-                    </List>
-                    <Box onClick={handleOpenDrawer} role="presentation" className={classes.openDrawerIcon}>
-                        <Fab color="primary" size="small">
-                            <ArrowBack />
-                        </Fab>
-                    </Box>
-                </Drawer>
+                <Fade in timeout={1200}>
+                    <Drawer
+                        className={classes.drawer}
+                        variant="permanent"
+                        anchor="left"
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                    >
+                        <Box className={classes.drawerHeader} component={Link} to={'/'}>
+                            <Hidden smDown>
+                                <Box className={classes.logoContainer}>
+                                    <TransparentLogo />
+                                </Box>
+                            </Hidden>
+                            <Hidden mdUp>
+                                <Home />
+                            </Hidden>
+                        </Box>
+                        <Divider />
+                        <List disablePadding>
+                            {map(
+                                ({ id, icon, text, link }) => (
+                                    <ListItem
+                                        className={classes.drawerListItem}
+                                        button
+                                        component={Link}
+                                        to={link}
+                                        key={id}
+                                        selected={equals(id, selectedItem)}
+                                        onClick={() => setSelectedItem(id)}
+                                    >
+                                        <ListItemIcon>{icon}</ListItemIcon>
+                                        <ListItemText primary={text} />
+                                    </ListItem>
+                                ),
+                                adminToolbarContent
+                            )}
+                        </List>
+                        <Box onClick={handleOpenDrawer} role="presentation" className={classes.openDrawerIcon}>
+                            <Fab color="primary" size="small">
+                                <ArrowBack />
+                            </Fab>
+                        </Box>
+                    </Drawer>
+                </Fade>
             ) : (
                 <Box onClick={handleOpenDrawer} role="presentation" className={classes.openDrawerIcon}>
                     <Fab color="primary" size="small">

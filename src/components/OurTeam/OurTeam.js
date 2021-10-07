@@ -1,5 +1,5 @@
 import Person from '@components/OurTeam/Person'
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Fade, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import Hrtonova from '../../assets/OurTeam/Img/hrtonova.jpg'
 import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
@@ -67,20 +67,24 @@ const OurTeam = () => {
                 Lékaři
             </Typography>
             <Grid container justifyContent="center" spacing={8}>
-                {doctors.map((doctor) => (
-                    <Grid item md={3} key={doctor.fullName}>
-                        <Person {...doctor} />
-                    </Grid>
+                {doctors.map((doctor, index) => (
+                    <Fade key={doctor.fullName} in timeout={1000 * index}>
+                        <Grid item md={3}>
+                            <Person {...doctor} />
+                        </Grid>
+                    </Fade>
                 ))}
             </Grid>
             <Typography variant="h5" className={classes.personSectionTypo}>
                 Zdravotní sestry
             </Typography>
             <Grid container justifyContent="center" spacing={8}>
-                {nurses.map((nurse) => (
-                    <Grid item key={nurse.fullName}>
-                        <Person {...nurse} />
-                    </Grid>
+                {nurses.map((nurse, index) => (
+                    <Fade key={nurse.fullName} in timeout={1000 * index}>
+                        <Grid item>
+                            <Person {...nurse} />
+                        </Grid>
+                    </Fade>
                 ))}
             </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Button, ButtonGroup, Grid, makeStyles, Typography, Slide } from '@material-ui/core'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import React, { useEffect, useState } from 'react'
@@ -91,28 +91,30 @@ const LandingWelcome = () => {
                 {/* Own component landing action message buttonGroup */}
                 <Grid item container xs={12} spacing={2} className={classes.btnsContainer} justifyContent="flex-start">
                     <Grid item xs={12} md={6}>
-                        <ButtonGroup variant="contained" orientation={isMobile ? 'vertical' : 'horizontal'}>
-                            <Button
-                                className={classes.btn}
-                                size="large"
-                                color="primary"
-                                variant="contained"
-                                onClick={handleToggleReservationModal}
-                                fullWidth
-                            >
-                                <Typography>Objednat se</Typography>
-                            </Button>
-                            <Button
-                                className={classes.btn}
-                                size="large"
-                                color="primary"
-                                variant="contained"
-                                onClick={handleToggleSonoModal}
-                                fullWidth
-                            >
-                                <Typography>Termíny sonografie prsou</Typography>
-                            </Button>
-                        </ButtonGroup>
+                        <Slide direction="right" in mountOnEnter unmountOnExit timeout={700}>
+                            <ButtonGroup variant="contained" orientation={isMobile ? 'vertical' : 'horizontal'}>
+                                <Button
+                                    className={classes.btn}
+                                    size="large"
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={handleToggleReservationModal}
+                                    fullWidth
+                                >
+                                    <Typography>Objednat se</Typography>
+                                </Button>
+                                <Button
+                                    className={classes.btn}
+                                    size="large"
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={handleToggleSonoModal}
+                                    fullWidth
+                                >
+                                    <Typography>Termíny sonografie prsou</Typography>
+                                </Button>
+                            </ButtonGroup>
+                        </Slide>
                     </Grid>
                 </Grid>
                 {isMobile && (

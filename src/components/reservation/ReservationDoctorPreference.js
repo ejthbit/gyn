@@ -17,9 +17,9 @@ const ReservationDoctorPreference = () => {
     const dispatch = useDispatch()
 
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
-
     const selectedDoctor = useSelector(getPreferredDoctor)
     const selectedDate = useSelector(getSelectedDate)
+
     const doctorsForSelectedAmbulance = useMemoizedSelector(makeArrayOfValueLabelDoctors, {}, [selectedAmbulanceId])
 
     const handleChangeDoctor = (e) => dispatch(setPreferredDoctor(e.target.value))

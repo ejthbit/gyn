@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import { EmailOutlined, PhoneOutlined, Today } from '@material-ui/icons'
 import { DatePicker } from '@material-ui/pickers'
+import VALIDATION_PATTERNS from '@utilities/validationPatterns'
 import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -20,16 +21,13 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }))
-// TODO: Move to validations
-const PATTERNS = {
-    TEL: /^(?:\s*\d){9}$/,
-}
+
 const formValidationSchema = yup.object().shape({
-    birthDate: yup.string().required(),
+    birthDate: yup.string().required('Toto pole je povinné!'),
     name: yup.string().required('Pole jméno nemůže být prázdné'),
     phone: yup
         .string()
-        .matches(PATTERNS.TEL, { message: 'Nesprávný formát telefonního čísla' })
+        .matches(VALIDATION_PATTERNS.TEL, { message: 'Nesprávný formát telefonního čísla' })
         .min(9)
         .required('Toto pole je povinné!'),
     email: yup.string().email().notRequired(),
@@ -38,20 +36,21 @@ const formValidationSchema = yup.object().shape({
 const ReservationContactInputs = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+
     const activeStep = useSelector(getActiveStep)
     const [birthDate, setBirthDate] = useState(null)
+
     const { handleSubmit, setValue, control, formState } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange',
         resolver: yupResolver(formValidationSchema),
         defaultValues: { name: '', birthDate: null, phone: '', email: '' },
     })
+
     const { isDirty, isValid } = formState
 
-    const onSubmit = (data) => {
-        const { name, birthDate, phone, email } = data
+    const onSubmit = ({ name, birthDate, phone, email }) =>
         dispatch(setContactInformation({ name, birthDate, phone, email }))
-    }
 
     useEffect(() => {
         if (equals(activeStep, 3)) {

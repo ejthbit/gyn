@@ -1,4 +1,5 @@
-import { Button, CircularProgress, makeStyles } from '@material-ui/core'
+import { Button, ButtonGroup, CircularProgress, makeStyles } from '@material-ui/core'
+import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bookAnAppointment } from 'src/store/bookings/actions'
@@ -9,7 +10,8 @@ import { getActiveStep, getDisabledReservationBtn } from 'src/store/reservationP
 const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(2),
-        marginRight: theme.spacing(1),
+        minHeight: isMobile ? theme.spacing(7.5) : theme.spacing(4),
+        boxShadow: 'none',
     },
 }))
 
@@ -28,14 +30,14 @@ const ReservationStepperControls = () => {
     }
 
     return (
-        <>
+        <ButtonGroup orientation={isMobile ? 'vertical' : 'horizontal'}>
             {activeStep !== 0 && (
-                <Button variant="outlined" onClick={() => handleChangeStep(-1)} className={classes.button}>
+                <Button variant="contained" onClick={() => handleChangeStep(-1)} className={classes.button}>
                     Vratit se zpět
                 </Button>
             )}
             <Button
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 startIcon={isLoading && <CircularProgress color="primary" />}
                 onClick={() => (activeStep === 4 ? handleConfirmAppointment() : handleChangeStep(1))}
@@ -44,7 +46,7 @@ const ReservationStepperControls = () => {
             >
                 {activeStep === 4 ? 'Odeslat objednávku' : 'Pokračovat dále'}
             </Button>
-        </>
+        </ButtonGroup>
     )
 }
 

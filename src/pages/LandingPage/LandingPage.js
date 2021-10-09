@@ -7,17 +7,15 @@ const Contacts = lazy(() => import('@components/Contacts/Contacts'))
 const References = lazy(() => import('@components/References/References'))
 const Footer = lazy(() => import('@components/Footer/Footer'))
 
-const LandingPage = () => {
-    return (
-        <>
-            <LandingWelcome />
-            <Services />
-            <OurTeam />
-            <Contacts />
-            <References />
-            <Footer />
-        </>
-    )
-}
+const LandingPage = () => (
+    <>
+        <LandingWelcome />
+        <Services />
+        <OurTeam />
+        <Contacts />
+        <References />
+        <Footer />
+    </>
+)
 
 export default LandingPage

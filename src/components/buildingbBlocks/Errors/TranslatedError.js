@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import * as apiTranslations from '@assets/apiTranslations'
 
-const TranslatedError = ({ message }) => <Typography color="error">{apiTranslations[message]}</Typography>
+const TranslatedError = ({ message }) => (
+    <Typography color="error">
+        {apiTranslations[message] ?? 'Při odesílání formuláře nastala chyba, prosím zkuste to později'}
+    </Typography>
+)
 
 TranslatedError.propTypes = {
     message: PropTypes.string,

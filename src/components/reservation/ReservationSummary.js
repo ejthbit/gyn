@@ -13,10 +13,7 @@ const ReservationSummary = () => {
     const appointmentDate = useSelector(getAppointmentDate)
 
     const userInfo = useMemo(
-        () =>
-            map((item) => {
-                return !isNilOrEmpty(item) ? { title: item, value: item } : null
-            }, values(contactInformation)),
+        () => map((item) => (!isNilOrEmpty(item) ? { title: item, value: item } : null), values(contactInformation)),
         [contactInformation]
     )
 

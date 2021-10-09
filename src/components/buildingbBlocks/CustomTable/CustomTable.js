@@ -199,7 +199,13 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                         <TableCell>{row.birthdate}</TableCell>
                                                         <TableCell>{row.email || ''}</TableCell>
                                                         <TableCell>{row.phone || ''}</TableCell>
-                                                        <TableCell>{row.completed && <Check />}</TableCell>
+                                                        <TableCell>
+                                                            {row.completed && (
+                                                                <Fade in timeout={500}>
+                                                                    <Check />
+                                                                </Fade>
+                                                            )}
+                                                        </TableCell>
                                                         <TableCell>
                                                             {equals(row.id, currentlyEditingId) ? (
                                                                 <Box display="row">

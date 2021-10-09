@@ -1,20 +1,14 @@
 /* eslint-disable react/display-name */
 import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
+import getStepperContent from '@utilities/getReservationStepperStepsContent'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import useMemoizedSelector from '@utilities/useMemoSelector'
 import { reject } from 'ramda'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import reservationSteps from 'src/constants/reservationSteps'
 import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/selectors'
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
-import ReservationAmbulanceSelect from './ReservationAmbulanceSelect'
-import ReservationContactInputs from './ReservationContactInputs'
-import ReservationDoctorPreference from './ReservationDoctorPreference'
-import ReservationError from './ReservationError'
 import ReservationStepperControls from './ReservationStepperControls'
-import ReservationSuccess from './ReservationSuccess'
-import ReservationSummary from './ReservationSummary'
-import ReservationTermPicker from './ReservationTermPicker'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,35 +31,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const getSteps = (error, completedOk = false) => [
-    { label: 'Výběr ambulance', step: 'first' },
-    { label: 'Preference lékaře', step: 'second' },
-    { label: 'Vyberte termín své navštevy', step: 'third' },
-    { label: 'Prosím vyplňte své kontaktni údaje', step: 'forth' },
-    { label: 'Shrnutí objednávky', step: 'fifth' },
-    { ...(completedOk && { label: 'Úspěšná objednávka', step: 'success' }) },
-    { ...(error && { label: 'Nastala chyba', step: 'error' }) },
+const getStepsConfiguration = (error, completedOk = false) => [
+    { label: 'Výběr ambulance', step: reservationSteps.FIRST },
+    { label: 'Preference lékaře', step: reservationSteps.SECOND },
+    { label: 'Vyberte termín své navštevy', step: reservationSteps.THIRD },
+    { label: 'Prosím vyplňte své kontaktni údaje', step: reservationSteps.FORTH },
+    { label: 'Shrnutí objednávky', step: reservationSteps.FIFTH },
+    { ...(completedOk && { label: 'Úspěšná objednávka', step: reservationSteps.SUCCESS }) },
+    { ...(error && { label: 'Nastala chyba', step: reservationSteps.ERROR }) },
 ]
-
-const getStepperContent = (step) => {
-    const content = {
-        first: <ReservationAmbulanceSelect />,
-        second: <ReservationDoctorPreference />,
-        third: <ReservationTermPicker />,
-        forth: <ReservationContactInputs />,
-        fifth: <ReservationSummary />,
-        success: <ReservationSuccess />,
-        error: <ReservationError />,
-    }
-    return content[step]
-}
 
 export const ReservationStepper = () => {
     const classes = useStyles()
     const isOrderCompleted = useSelector(getOrderFinishedOk)
-    const orderErrors = useMemoizedSelector(lastBookingErrors)
     const activeStep = useSelector(getActiveStep)
-    const steps = reject(isNilOrEmpty, getSteps(orderErrors, isOrderCompleted))
+    const orderErrors = useSelector(lastBookingErrors)
+
+    const steps = useMemo(
+        () => reject(isNilOrEmpty, getStepsConfiguration(orderErrors, isOrderCompleted)),
+        [orderErrors, isOrderCompleted]
+    )
 
     return (
         <Box className={classes.root}>

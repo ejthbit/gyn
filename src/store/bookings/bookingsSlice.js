@@ -78,7 +78,7 @@ const bookingsSlice = createSlice({
             })
             .addCase(bookAnAppointment.rejected, (state, action) => {
                 state.lastBooking.isLoading = false
-                state.lastBooking.errors = action.payload.errors
+                state.lastBooking.errors = action.payload.errors ?? [{ message: action.error.message }]
             })
 
             .addCase(bookAnAppointment.fulfilled, (state) => {

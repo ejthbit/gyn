@@ -17,7 +17,7 @@ import useMemoizedSelector from '@utilities/useMemoSelector'
 import { addHours } from 'date-fns'
 import format from 'date-fns/format'
 import { equals, find } from 'ramda'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAvailableTimeslots, fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
@@ -69,20 +69,22 @@ const ReservationTermPicker = () => {
 
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
+    const selectedMonth = useMemo(() => selectedDate.slice(0, 7), [selectedDate])
     const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
     const selectedDoctor = useSelector(getPreferredDoctor)
     const activeStep = useSelector(getActiveStep)
     const [isDoctorServing, setIsDoctorServing] = useState(undefined)
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
-    const doctorServicesByDoctorId = useMemoizedSelector(makeDoctorServicesByDoctorId, { doctorId: selectedDoctor }, [
-        selectedDoctor,
-        selectedDate,
-    ])
+    const doctorServicesBySelectedDoctorIdAndMonth = useMemoizedSelector(
+        makeDoctorServicesByDoctorId,
+        { month: selectedMonth, doctorId: selectedDoctor },
+        [selectedDoctor, selectedDate]
+    )
 
     useEffect(() => {
         const servesItem = find(({ date, doctorId }) => {
             if (!isNilOrEmpty(doctorId)) return equals(date, selectedDate)
-        }, doctorServicesByDoctorId)
+        }, doctorServicesBySelectedDoctorIdAndMonth)
         if (!isNilOrEmpty(servesItem)) {
             setIsDoctorServing(servesItem)
             dispatch(
@@ -96,7 +98,7 @@ const ReservationTermPicker = () => {
             dispatch(clearTimeslots())
             if (!isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
         }
-    }, [selectedDate, doctorServicesByDoctorId])
+    }, [selectedDate, doctorServicesBySelectedDoctorIdAndMonth])
 
     useEffect(() => {
         if (equals(activeStep, 2)) {
@@ -112,20 +114,21 @@ const ReservationTermPicker = () => {
                 variant="dialog"
                 format="dd-MM-yyyy"
                 value={selectedDate}
-                onMonthChange={(date) =>
+                onMonthChange={(date) => {
                     dispatch(
                         fetchDoctorServicesForSelectedMonth({
                             month: format(date, 'yyyy-MM'),
                             workplace: selectedAmbulanceId,
                         })
                     )
-                }
+                    dispatch(setSelectedDate(addHours(date, 2).toISOString()))
+                }}
                 renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
                     const isSelected =
                         dayInCurrentMonth &&
                         find(({ date, doctorId }) => {
                             if (!isNilOrEmpty(doctorId)) return equals(date, format(day, 'yyyy-MM-dd'))
-                        }, doctorServicesByDoctorId)
+                        }, doctorServicesBySelectedDoctorIdAndMonth)
 
                     return (
                         <div className={isSelected ? classes.dayWithDotContainer : classes.disabledDayContainer}>

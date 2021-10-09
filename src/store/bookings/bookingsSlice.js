@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import { equals, filter, map } from 'ramda'
+import { equals, filter, map, find, propEq } from 'ramda'
 import {
     fetchAvailableTimeslots,
     bookAnAppointment,
@@ -36,12 +36,11 @@ const bookingsInitialState = {
         errors: undefined,
         orderFinishedOk: false,
     },
-    doctorServicesForSelectedMonth: {
+    doctorServices: {
         isLoading: false,
         errors: undefined,
         data: [],
     },
-    //TODO:Replace me with real data
     sonographyDates: [],
 }
 const bookingsSlice = createSlice({
@@ -105,16 +104,18 @@ const bookingsSlice = createSlice({
                 state.bookings.error = action.error
             })
             .addCase(fetchDoctorServicesForSelectedMonth.pending, (state) => {
-                state.doctorServicesForSelectedMonth.isLoading = true
-                state.doctorServicesForSelectedMonth.error = undefined
+                state.doctorServices.isLoading = true
+                state.doctorServices.error = undefined
             })
             .addCase(fetchDoctorServicesForSelectedMonth.fulfilled, (state, action) => {
-                state.doctorServicesForSelectedMonth.isLoading = false
-                state.doctorServicesForSelectedMonth.data = action.payload
+                state.doctorServices.isLoading = false
+                state.doctorServices.data = find(propEq('month', action.payload?.month), state.doctorServices.data)
+                    ? state.doctorServices.data
+                    : [...state.doctorServices.data, action.payload]
             })
             .addCase(fetchDoctorServicesForSelectedMonth.rejected, (state, action) => {
-                state.doctorServicesForSelectedMonth.isLoading = false
-                state.doctorServicesForSelectedMonth.error = action.error
+                state.doctorServices.isLoading = false
+                state.doctorServices.error = action.error
             })
             .addCase(deleteBooking.fulfilled, (state, action) => {
                 state.bookings.bookings = filter(({ id }) => !equals(id, action.meta.arg), state.bookings.bookings)

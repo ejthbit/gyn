@@ -7,6 +7,7 @@ import { createSelector } from 'reselect'
 const stateId = 'bookings'
 const DOCTOR_ID = (_, { doctorId }) => doctorId
 const BOOKING_IDS = (_, { bookingIds }) => bookingIds
+const MONTH = (_, { month }) => month
 
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
 export const getSonographyDates = path([stateId, 'sonographyDates'])
@@ -15,8 +16,7 @@ export const isSendingBooking = path([stateId, 'lastBooking', 'isLoading'])
 export const getOrderFinishedOk = path([stateId, 'lastBooking', 'orderFinishedOk'])
 export const getBookingsSelectedDate = path([stateId, 'bookings', 'selectedDate'])
 export const getBookings = path([stateId, 'bookings', 'bookings'])
-export const getDoctorServicesForSelectedMonth = path([stateId, 'doctorServicesForSelectedMonth', 'data'])
-export const getDoctorServicesDaysForSelectedMonth = path([stateId, 'doctorServicesForSelectedMonth', 'data', 'days'])
+export const getDoctorServicesForSelectedMonth = path([stateId, 'doctorServices', 'data'])
 
 export const makeAvailableTimeslotsWithTimeOnly = () =>
     createSelector([getAvailableTimeslots], (timeSlots) =>
@@ -68,9 +68,15 @@ export const makeCalendarEventsSelector = () =>
             ) ?? []
     )
 
-export const makeDoctorServicesByDoctorId = () =>
-    createSelector([getDoctorServicesDaysForSelectedMonth, DOCTOR_ID], (days, doctorId) =>
-        equals(doctorId, '')
-            ? days ?? []
-            : filter((day) => equals(day.doctorId.toString(), doctorId.toString()), days ?? [])
+export const makeServicesForSelectedMonth = () =>
+    createSelector(
+        [getDoctorServicesForSelectedMonth, MONTH],
+        (services, month) => filter((service) => equals(service.month, month), services ?? [])[0]
     )
+
+export const makeDoctorServicesByDoctorId = () =>
+    createSelector([makeServicesForSelectedMonth(), DOCTOR_ID], (service, doctorId) => {
+        return equals(doctorId, '')
+            ? service?.days ?? []
+            : filter((day) => equals(day.doctorId.toString(), doctorId.toString()), service?.days ?? [])
+    })

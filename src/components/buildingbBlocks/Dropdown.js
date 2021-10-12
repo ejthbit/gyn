@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@material-ui/core'
+import { MenuItem, Select } from '@mui/material'
 import PropTypes from 'prop-types'
 import { map, propEq, find } from 'ramda'
 import React from 'react'
@@ -8,6 +8,7 @@ const Dropdown = ({ value, options, onChange, className, label, notSelectedLabel
 
     return (
         <Select
+            variant="standard"
             value={isSelectedValuePartOfOptions ? value : ''}
             onChange={onChange}
             displayEmpty

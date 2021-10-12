@@ -1,13 +1,21 @@
-import { CircularProgress, makeStyles, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, CircularProgress, TextField } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles(() => ({
-    formControl: {
+const PREFIX = 'Combobox'
+
+const classes = {
+    formControl: `${PREFIX}-formControl`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(() => ({
+    [`& .${classes.formControl}`]: {
         width: '100%',
     },
 }))
+
 const Combobox = ({
     label,
     placeholder,
@@ -15,13 +23,11 @@ const Combobox = ({
     startAdornmentIcon,
     onChange,
     onInputChange,
-    value,
     defaultValue = '',
     noOptionsText,
     isLoading,
     ...otherTextFieldProps
 }) => {
-    const classes = useStyles()
     return (
         <Autocomplete
             className={classes.formControl}
@@ -45,10 +51,10 @@ const Combobox = ({
                         ...params.InputProps,
                         startAdornment: startAdornmentIcon,
                         endAdornment: (
-                            <>
+                            <Root>
                                 {isLoading ? <CircularProgress size={20} /> : null}
                                 {params.InputProps.endAdornment}
-                            </>
+                            </Root>
                         ),
                     }}
                 />

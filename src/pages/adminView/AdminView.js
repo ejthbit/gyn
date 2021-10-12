@@ -3,31 +3,39 @@ import AdminToolbar from '@components/adminView/AdminToolbar'
 import BookingsView from '@components/adminView/BookingsView'
 import CalendarView from '@components/adminView/CalendarView'
 import DoctorServicesView from '@components/adminView/DoctorServicesView'
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { Route } from 'react-router-dom'
 import routingPaths, { adminPaths } from 'src/routingPaths'
 
-const useStyles = makeStyles((theme) => ({
-    root: ({ isDrawerOpen }) => ({
+const PREFIX = 'AdminView'
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
+    [`& .${classes.root}`]: {
         backgroundColor: '#FFF',
         padding: 20,
         border: `1px solid ${theme.palette.common.white} `,
         borderRadius: 6,
-        margin: `20px 20px 20px ${isDrawerOpen ? '220px' : '20px'}`,
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: ({ isDrawerOpen }) => (isDrawerOpen ? 80 : theme.spacing(1)),
+        margin: `20px 20px 20px ${$isDrawerOpen ? '220px' : '20px'}`,
+        [theme.breakpoints.down('md')]: {
+            marginLeft: $isDrawerOpen ? 80 : theme.spacing(1),
         },
         transition: 'all 0.7s ease-in-out',
-    }),
+    },
 }))
 
 const AdminView = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(true)
-    const classes = useStyles({ isDrawerOpen })
+
     const handleOpenDrawer = () => setIsDrawerOpen((prevState) => !prevState)
     return (
-        <>
+        <Root $isDrawerOpen={isDrawerOpen}>
             <Route
                 path="*"
                 children={<AdminToolbar isDrawerOpen={isDrawerOpen} handleOpenDrawer={handleOpenDrawer} />}
@@ -49,7 +57,7 @@ const AdminView = () => {
                 <Route path={adminPaths.doctorServices} children={<DoctorServicesView />} />
                 <Route path={adminPaths.calendar} children={<CalendarView />} />
             </Box>
-        </>
+        </Root>
     )
 }
 

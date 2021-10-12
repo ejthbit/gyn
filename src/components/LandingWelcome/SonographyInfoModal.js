@@ -1,13 +1,5 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    makeStyles,
-    Typography,
-} from '@material-ui/core'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -17,14 +9,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentMonthSonographyDates } from 'src/store/bookings/actions'
 import { getSonographyDates } from 'src/store/bookings/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        [theme.breakpoints.down('sm')]: {
+const PREFIX = 'SonographyInfoModal'
+
+const classes = {
+    title: `${PREFIX}-title`,
+    actions: `${PREFIX}-actions`,
+}
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    [`& .${classes.title}`]: {
+        [theme.breakpoints.down('md')]: {
             textAlign: 'center',
         },
         paddingBottom: 0,
     },
-    actions: {
+
+    [`& .${classes.actions}`]: {
         justifyContent: 'flex-end',
         paddingRight: theme.spacing(6.5),
         paddingLeft: theme.spacing(6.5),
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiButtonBase-root': {
             width: '30%',
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             paddingRight: theme.spacing(2),
             paddingLeft: theme.spacing(2),
         },
@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const SonographyInfoModal = ({ open, handleClose }) => {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const sonographyDates = useSelector(getSonographyDates)
 
@@ -51,8 +50,8 @@ const SonographyInfoModal = ({ open, handleClose }) => {
     }, [])
 
     return (
-        <Dialog maxWidth="sm" open={open} onClose={handleClose} fullWidth>
-            <DialogTitle className={classes.title} disableTypography>
+        <StyledDialog maxWidth="sm" open={open} onClose={handleClose} fullWidth>
+            <DialogTitle className={classes.title}>
                 <Typography variant="h5">Termíny Sonografie prsou (Frýdek-Místek)</Typography>
             </DialogTitle>
             <DialogContent>
@@ -86,7 +85,7 @@ const SonographyInfoModal = ({ open, handleClose }) => {
                     </Typography>
                 </Button>
             </DialogActions>
-        </Dialog>
+        </StyledDialog>
     )
 }
 

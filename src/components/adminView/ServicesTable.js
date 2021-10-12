@@ -4,7 +4,6 @@ import {
     Box,
     Button,
     Fade,
-    makeStyles,
     MenuItem,
     Paper,
     Table,
@@ -13,7 +12,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-} from '@material-ui/core'
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 import getOpeningHours from '@utilities/getOpeningHours'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -24,19 +24,32 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createDoctorServiceForMonth, updateDoctorServiceForMonth } from 'src/store/administration/actions'
 import { getDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'ServicesTable'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    paper: `${PREFIX}-paper`,
+    table: `${PREFIX}-table`,
+    visuallyHidden: `${PREFIX}-visuallyHidden`,
+    tableRow: `${PREFIX}-tableRow`,
+}
+
+const StyledFade = styled(Fade)(({ theme }) => ({
+    [`& .${classes.root}`]: {
         width: '100%',
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         boxShadow: 'none',
         width: '100%',
         marginBottom: theme.spacing(2),
     },
-    table: {
+
+    [`& .${classes.table}`]: {
         minWidth: 750,
     },
-    visuallyHidden: {
+
+    [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
         height: 1,
@@ -47,7 +60,8 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    tableRow: {
+
+    [`& .${classes.tableRow}`]: {
         '&.MuiTableCell-root': {
             width: 150,
         },
@@ -56,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
 
 const openingHours = getOpeningHours()
 const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkplaceId }) => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const selectedDoctors = useSelector(getDoctorsForSelectedAmbulance)
@@ -83,7 +96,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
     }, [data])
 
     return (
-        <Fade in timeout={500}>
+        <StyledFade in timeout={500}>
             <TableContainer component={Paper} className={classes.paper}>
                 <Table className={classes.table} size="medium">
                     <TableHead>
@@ -181,7 +194,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                     </Button>
                 </Box>
             </TableContainer>
-        </Fade>
+        </StyledFade>
     )
 }
 

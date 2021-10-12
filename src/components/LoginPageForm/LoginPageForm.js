@@ -1,6 +1,7 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Grid, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,9 +10,15 @@ import { logIntoAdministration } from 'src/store/administration/actions'
 import { getAdminStateErrors, isLoggedIn } from 'src/store/administration/selectors'
 import * as yup from 'yup'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        [theme.breakpoints.down('sm')]: {
+const PREFIX = 'LoginPageForm'
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        [theme.breakpoints.down('md')]: {
             padding: theme.spacing(2),
         },
     },
@@ -19,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginPageForm = () => {
     const dispatch = useDispatch()
-    const classes = useStyles()
+
     const history = useHistory()
     const isAdminLoggedIn = useSelector(isLoggedIn)
     const loggingError = useSelector(getAdminStateErrors)
@@ -44,7 +51,7 @@ const LoginPageForm = () => {
     }, [isAdminLoggedIn])
 
     return (
-        <Grid container alignContent="center" direction="column" spacing={2} className={classes.root}>
+        <StyledGrid container alignContent="center" direction="column" spacing={2} className={classes.root}>
             <Typography variant="h4"> Pro pokračování se prosím přihlašte</Typography>
             <Grid item>
                 <FormInput name={'email'} control={control} placeholder="E-mail" label="E-mail" required fullWidth />
@@ -80,7 +87,7 @@ const LoginPageForm = () => {
                     </Typography>
                 </Grid>
             )}
-        </Grid>
+        </StyledGrid>
     )
 }
 

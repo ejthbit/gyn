@@ -1,4 +1,5 @@
-import { Button, ButtonGroup, CircularProgress, makeStyles } from '@material-ui/core'
+import { Button, ButtonGroup, CircularProgress } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,8 +8,14 @@ import { isSendingBooking, lastBookingErrors } from 'src/store/bookings/selector
 import { setActiveStep } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getActiveStep, getDisabledReservationBtn } from 'src/store/reservationProcess/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    button: {
+const PREFIX = 'ReservationStepperControls'
+
+const classes = {
+    button: `${PREFIX}-button`,
+}
+
+const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+    [`& .${classes.button}`]: {
         marginTop: theme.spacing(2),
         minHeight: isMobile ? theme.spacing(7.5) : theme.spacing(4),
         boxShadow: 'none',
@@ -16,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ReservationStepperControls = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const activeStep = useSelector(getActiveStep)
     const isLoading = useSelector(isSendingBooking)
@@ -30,9 +36,14 @@ const ReservationStepperControls = () => {
     }
 
     return (
-        <ButtonGroup orientation={isMobile ? 'vertical' : 'horizontal'}>
+        <StyledButtonGroup orientation={isMobile ? 'vertical' : 'horizontal'}>
             {activeStep !== 0 && (
-                <Button variant="contained" onClick={() => handleChangeStep(-1)} className={classes.button}>
+                <Button
+                    variant="contained"
+                    color="inherit"
+                    onClick={() => handleChangeStep(-1)}
+                    className={classes.button}
+                >
                     Vratit se zpět
                 </Button>
             )}
@@ -46,7 +57,7 @@ const ReservationStepperControls = () => {
             >
                 {activeStep === 4 ? 'Odeslat objednávku' : 'Pokračovat dále'}
             </Button>
-        </ButtonGroup>
+        </StyledButtonGroup>
     )
 }
 

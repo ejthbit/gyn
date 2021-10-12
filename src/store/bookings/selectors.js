@@ -8,6 +8,7 @@ const stateId = 'bookings'
 const DOCTOR_ID = (_, { doctorId }) => doctorId
 const BOOKING_IDS = (_, { bookingIds }) => bookingIds
 const MONTH = (_, { month }) => month
+const SELECTED_WORKPLACE = (_, { selectedWorkplace }) => selectedWorkplace
 
 export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
 export const getSonographyDates = path([stateId, 'sonographyDates'])
@@ -56,8 +57,8 @@ export const makeCalendarEventsSelector = () =>
             map(
                 ({ id, name, start, end, birthdate, completed }) => ({
                     id,
-                    start: subHours(parseISO(start), 2),
-                    end: subHours(parseISO(end), 2),
+                    start: subHours(parseISO(start), 1),
+                    end: subHours(parseISO(end), 1),
                     title: `${name} ${!isNilOrEmpty(birthdate) ? `- ${birthdate}` : ''}`,
                     resource: {
                         booked: true,
@@ -70,8 +71,12 @@ export const makeCalendarEventsSelector = () =>
 
 export const makeServicesForSelectedMonth = () =>
     createSelector(
-        [getDoctorServicesForSelectedMonth, MONTH],
-        (services, month) => filter((service) => equals(service.month, month), services ?? [])[0]
+        [getDoctorServicesForSelectedMonth, MONTH, SELECTED_WORKPLACE],
+        (services, month, selectedWorkplace) =>
+            filter(
+                (service) => equals(service.month, month) && equals(service.workplace, selectedWorkplace),
+                services ?? []
+            )[0]
     )
 
 export const makeDoctorServicesByDoctorId = () =>
@@ -80,3 +85,8 @@ export const makeDoctorServicesByDoctorId = () =>
             ? service?.days ?? []
             : filter((day) => equals(day.doctorId.toString(), doctorId.toString()), service?.days ?? [])
     })
+
+export const makeServicesSelector = () =>
+    createSelector([getDoctorServicesForSelectedMonth], (services) =>
+        map(({ id, workplace, month }) => ({ id, workplace, month }), services)
+    )

@@ -1,16 +1,26 @@
-import { IconButton, lighten, makeStyles, Toolbar, Tooltip, Typography } from '@material-ui/core'
-import { Delete, Done } from '@material-ui/icons'
+import { Delete, Done } from '@mui/icons-material'
+import { IconButton, lighten, Toolbar, Tooltip, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'CustomTableToolbar'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    highlight: `${PREFIX}-highlight`,
+    title: `${PREFIX}-title`,
+}
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(1),
     },
-    highlight:
-        theme.palette.type === 'light'
+
+    [`&.${classes.highlight}`]:
+        theme.palette.mode === 'light'
             ? {
                   color: theme.palette.primary.main,
                   backgroundColor: lighten(theme.palette.primary.main, 0.85),
@@ -21,17 +31,17 @@ const useStyles = makeStyles((theme) => ({
                   color: theme.palette.text.primary,
                   backgroundColor: theme.palette.secondary.dark,
               },
-    title: {
+
+    [`& .${classes.title}`]: {
         flex: '1 1 100%',
     },
 }))
 
 const CustomTableToolbar = ({ selectedItems, onDelete, onCompleted, title }) => {
-    const classes = useStyles()
     const NUMBER_OF_SELECTED_ITEMS = selectedItems.length
 
     return (
-        <Toolbar
+        <StyledToolbar
             className={clsx(classes.root, {
                 [classes.highlight]: NUMBER_OF_SELECTED_ITEMS > 0,
             })}
@@ -48,18 +58,18 @@ const CustomTableToolbar = ({ selectedItems, onDelete, onCompleted, title }) => 
             {NUMBER_OF_SELECTED_ITEMS > 0 && (
                 <>
                     <Tooltip title="Delete">
-                        <IconButton aria-label="delete" onClick={onDelete}>
+                        <IconButton aria-label="delete" onClick={onDelete} size="large">
                             <Delete />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Complete">
-                        <IconButton aria-label="complete" onClick={onCompleted}>
+                        <IconButton aria-label="complete" onClick={onCompleted} size="large">
                             <Done />
                         </IconButton>
                     </Tooltip>
                 </>
             )}
-        </Toolbar>
+        </StyledToolbar>
     )
 }
 

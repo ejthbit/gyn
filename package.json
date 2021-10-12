@@ -16,9 +16,8 @@
         "@babel/preset-react": "^7.13.13",
         "@date-io/core": "^2.10.11",
         "@hookform/resolvers": "^2.8.0",
-        "@material-ui/icons": "^4.11.2",
-        "@material-ui/lab": "^4.0.0-alpha.60",
-        "@material-ui/pickers": "^3.3.10",
+        "@mui/icons-material": "^5.0.3",
+        "@mui/lab": "^5.0.0-alpha.50",
         "babel-loader": "^8.2.2",
         "babel-plugin-module-resolver": "^4.1.0",
         "css-loader": "^6.2.0",
@@ -40,7 +39,9 @@
     },
     "dependencies": {
         "@date-io/date-fns": "1.x",
-        "@material-ui/core": "^4.11.4",
+        "@mui/material": "^5.0.3",
+        "@mui/styled-engine-sc": "^5.0.3",
+        "@mui/styles": "^5.0.1",
         "@reduxjs/toolkit": "^1.5.1",
         "axios": "^0.21.1",
         "core-js": "^3.13.1",
@@ -55,13 +56,20 @@
         "react-router-dom": "^5.2.0",
         "react-router-hash-link": "^2.4.3",
         "regenerator-runtime": "^0.13.7",
+        "styled-components": "^5.3.1",
         "webpack": "^5.38.1",
-        "webpack-cli": "^4.7.0"
+        "webpack-cli": "^4.7.0",
+        "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+    },
+    "resolutions": {
+        "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
     },
     "scripts": {
         "dev": "webpack serve --open --config webpack.dev.js",
         "build": "NODE_ENV=production webpack --config webpack.prod.js",
-        "build-dev": "NODE_ENV=production webpack --config webpack.prod.js"
+        "build-dev": "NODE_ENV=production webpack --config webpack.prod.js",
+        "lint:fix": "eslint \"src/**/*.js\" --fix",
+        "lint": "eslint \"src/**/*.js\""
     },
     "proxy": "http://localhost:9000"
 }

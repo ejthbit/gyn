@@ -1,9 +1,10 @@
 import CustomTable from '@components/buildingbBlocks/CustomTable/CustomTable'
-import { Button, Fade, Grid, makeStyles, Typography } from '@material-ui/core'
-import { DatePicker } from '@material-ui/pickers'
+import { MobileDatePicker } from '@mui/lab'
+import { Button, Fade, Grid, TextField, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfWeek } from 'date-fns'
+import { endOfDay, endOfMonth, endOfWeek, parseISO, startOfDay, startOfWeek } from 'date-fns'
 import startOfMonth from 'date-fns/startOfMonth'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,8 +13,16 @@ import { setBookingsViewDate } from 'src/store/bookings/bookingsSlice'
 import { getBookingsSelectedDate, makeBookingsSelector } from 'src/store/bookings/selectors'
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    toolbar: {
+const PREFIX = 'BookingsView'
+
+const classes = {
+    toolbar: `${PREFIX}-toolbar`,
+    item: `${PREFIX}-item`,
+    count: `${PREFIX}-count`,
+}
+
+const StyledFade = styled(Fade)(({ theme }) => ({
+    [`& .${classes.toolbar}`]: {
         marginBottom: theme.spacing(0.4),
         [theme.breakpoints.up('sm')]: {
             maxHeight: theme.spacing(6.5),
@@ -21,23 +30,24 @@ const useStyles = makeStyles((theme) => ({
             paddingBottom: theme.spacing(1.25),
         },
     },
-    item: {
+
+    [`& .${classes.item}`]: {
         width: '100%',
         '&.MuiButtonBase-root': {
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 width: '100%',
             },
             width: '100%',
         },
     },
-    count: {
+
+    [`& .${classes.count}`]: {
         minHeight: 52,
         width: '100%',
     },
 }))
 
 const BookingsView = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
@@ -88,35 +98,41 @@ const BookingsView = () => {
     ]
 
     return (
-        <Fade in timeout={500}>
+        <StyledFade in timeout={500}>
             <Grid container>
                 <Grid item container className={classes.toolbar} alignItems="flex-end" spacing={2}>
                     <Grid item xs={12} sm={2}>
-                        <DatePicker
+                        <MobileDatePicker
                             className={classes.item}
                             label="Termíny od: "
                             orientation="landscape"
                             variant="inline"
-                            format="dd-MM-yyyy"
+                            inputFormat="dd-MM-yyyy"
+                            mask="__-__-____"
                             margin="none"
                             value={bookingsViewDate.from}
-                            maxDate={bookingsViewDate.to}
-                            autoOk
+                            maxDate={!isNilOrEmpty(bookingsViewDate.to) ? parseISO(bookingsViewDate.to) : undefined}
+                            renderInput={(props) => <TextField variant="standard" {...props} />}
                             onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
+                            okText="Potvrdit"
+                            cancelText="Zavřít"
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>
-                        <DatePicker
+                        <MobileDatePicker
                             className={classes.item}
                             label="Termíny do: "
                             orientation="landscape"
                             variant="inline"
-                            format="dd-MM-yyyy"
+                            inputFormat="dd-MM-yyyy"
+                            mask="__-__-____"
                             margin="none"
-                            minDate={bookingsViewDate.from}
+                            minDate={parseISO(bookingsViewDate.from)}
                             value={isNilOrEmpty(bookingsViewDate.to) ? bookingsViewDate.from : bookingsViewDate.to}
+                            renderInput={(props) => <TextField variant="standard" {...props} />}
                             onChange={(date) => handleChangeDate({ to: endOfDay(date).toISOString() })}
-                            autoOk
+                            okText="Potvrdit"
+                            cancelText="Zavřít"
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>
@@ -160,7 +176,7 @@ const BookingsView = () => {
                     <CustomTable title="Objednávky" orderBy="start" data={bookings} headCells={headCells} />
                 </Grid>
             </Grid>
-        </Fade>
+        </StyledFade>
     )
 }
 

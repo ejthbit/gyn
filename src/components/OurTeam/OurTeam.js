@@ -1,5 +1,6 @@
 import Person from '@components/OurTeam/Person'
-import { Fade, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Fade, Grid, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import React from 'react'
 import Hrtonova from '../../assets/OurTeam/Img/hrtonova.jpg'
 import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
@@ -9,8 +10,15 @@ import Vanek from '../../assets/OurTeam/Img/vanek.jpg'
 import Vankova from '../../assets/OurTeam/Img/vankova.jpg'
 import { medveckaText, vanekText, vankovaText } from '../../assets/OurTeam/Text/vanek'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'OurTeam'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    personSectionTypo: `${PREFIX}-personSectionTypo`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         paddingLeft: '10%',
         paddingRight: '10%',
         paddingBottom: '10%',
@@ -18,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: theme.spacing(2),
             fontWeight: 'bold',
             textAlign: 'center',
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 textAlign: 'center',
             },
         },
@@ -27,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: theme.spacing(2),
         },
     },
-    personSectionTypo: {
+
+    [`& .${classes.personSectionTypo}`]: {
         margin: 'auto',
         marginBottom: '20px',
         marginTop: '20px',
@@ -51,9 +60,8 @@ const nurses = [
 ]
 
 const OurTeam = () => {
-    const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2} id="personnel">
+        <StyledGrid className={classes.root} container spacing={2} id="personnel">
             <Grid item xs={12}>
                 <Typography variant="h3">Náš tým</Typography>
             </Grid>
@@ -87,7 +95,7 @@ const OurTeam = () => {
                     </Fade>
                 ))}
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }
 

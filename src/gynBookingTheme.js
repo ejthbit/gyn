@@ -1,4 +1,4 @@
-import { createTheme, lighten } from '@material-ui/core'
+import { createTheme, lighten } from '@mui/material'
 
 const gynBookingTheme = createTheme({
     typography: {
@@ -18,9 +18,9 @@ const gynBookingTheme = createTheme({
             main: '#FFF',
         },
     },
-    overrides: {
+    components: {
         MuiCssBaseline: {
-            '@global': {
+            styleOverrides: {
                 html: {
                     WebkitFontSmoothing: 'auto',
                     margin: 0,
@@ -40,47 +40,67 @@ const gynBookingTheme = createTheme({
             },
         },
         MuiPickersCalendar: {
-            transitionContainer: {
-                marginBottom: 12,
+            styleOverrides: {
+                transitionContainer: {
+                    marginBottom: 12,
+                },
             },
         },
         MuiPickersSlideTransition: {
-            transitionContainer: {
-                marginBottom: 12,
+            styleOverrides: {
+                transitionContainer: {
+                    marginBottom: 12,
+                },
             },
         },
         MuiPickersModal: {
-            dialogRoot: {
-                '& .MuiDialogActions-root': {
-                    display: `none !important`,
+            styleOverrides: {
+                dialogRoot: {
+                    '& .MuiDialogActions-root': {
+                        display: `none !important`,
+                    },
                 },
             },
         },
         MuiTableRow: {
-            root: {
-                '&$selected': {
-                    backgroundColor: lighten('#2DAAA3', 0.85),
-                    '&:hover': {
-                        backgroundColor: '#0000000a',
+            styleOverrides: {
+                root: {
+                    '&$selected': {
+                        backgroundColor: lighten('#2DAAA3', 0.85),
+                        '&:hover': {
+                            backgroundColor: '#0000000a',
+                        },
                     },
                 },
             },
         },
         MuiButton: {
-            containedPrimary: {
-                color: '#FFF',
+            styleOverrides: {
+                containedPrimary: {
+                    color: '#FFF',
+                },
             },
         },
-        MuiDivider: {
-            root: {
-                width: '100%',
+        MuiMonthPicker: {
+            styleOverrides: {
+                root: {
+                    '& button': {
+                        backgroundColor: '#FFF',
+                        border: 'none',
+                        '&:hover': {
+                            backgroundColor: lighten('#1f7672', 0.7),
+                        },
+                    },
+                },
             },
         },
         MuiFormLabel: {
-            asterisk: {
-                color: '#db3131',
-                '&$error': {
+            styleOverrides: {
+                asterisk: {
                     color: '#db3131',
+                    '&$error': {
+                        color: '#db3131',
+                    },
                 },
             },
         },

@@ -1,4 +1,4 @@
-import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core'
+import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -26,8 +26,8 @@ const CustomTableHeader = ({
                         inputProps={{ 'aria-label': 'select all items' }}
                     />
                 </TableCell>
-                {headCells.map(({ id, disableSorting, label }, index) => (
-                    <TableCell key={`${id}-${index}`} padding="normal" sortDirection={orderBy === id && order}>
+                {headCells.map(({ id, disableSorting, label }) => (
+                    <TableCell key={`${id}-${label}`} padding="normal" sortDirection={orderBy === id && order}>
                         <TableSortLabel
                             active={orderBy === id}
                             direction={orderBy === id ? order : 'asc'}

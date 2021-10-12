@@ -1,15 +1,41 @@
 import {
-    SonographyIcon,
+    Advisementicon,
+    DiagnosticIcon,
     PregnancyCareIcon,
     RoutineExaminationIcon,
-    DiagnosticIcon,
+    SonographyIcon,
     SpecialTreatmentIcon,
-    Advisementicon,
 } from '@assets/SvgIcons'
-import { Divider, Fade, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Divider, Fade, Grid, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import Service from './Service'
+
+const PREFIX = 'Services'
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        paddingLeft: '15%',
+        paddingRight: '15%',
+        paddingBottom: '10%',
+        '& .MuiTypography-h3': {
+            marginBottom: theme.spacing(2),
+            fontWeight: 'bold',
+            textAlign: 'center',
+            [theme.breakpoints.down('sm')]: {
+                textAlign: 'center',
+            },
+        },
+        '& .MuiTypography-body1': {
+            color: '#8f8f8f',
+        },
+    },
+}))
 
 const services = [
     {
@@ -49,29 +75,9 @@ const services = [
     },
 ]
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: '15%',
-        paddingRight: '15%',
-        paddingBottom: '10%',
-        '& .MuiTypography-h3': {
-            marginBottom: theme.spacing(2),
-            fontWeight: 'bold',
-            textAlign: 'center',
-            [theme.breakpoints.down('xs')]: {
-                textAlign: 'center',
-            },
-        },
-        '& .MuiTypography-body1': {
-            color: '#8f8f8f',
-        },
-    },
-}))
-
 const Services = () => {
-    const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2} id="services">
+        <StyledGrid className={classes.root} container spacing={2} id="services">
             {!isMobile && (
                 <Grid item xs={12}>
                     <Typography variant={'body2'} align="center">
@@ -110,7 +116,7 @@ const Services = () => {
                 </Fade>
             ))}
             <Divider variant="middle" />
-        </Grid>
+        </StyledGrid>
     )
 }
 Services.propTypes = {}

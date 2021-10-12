@@ -1,14 +1,25 @@
 import ContactForm from '@components/Contacts/ContactForm'
 import TransparentLogo from '@components/Logo/TransparentLogo'
 import { routes } from '@components/Navbar/Navbar'
-import { Box, Divider, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
+import { Box, Divider, Grid, Hidden, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import { equals } from 'ramda'
 import React from 'react'
 import { HashLink } from 'react-router-hash-link'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'Footer'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    menuItemContainer: `${PREFIX}-menuItemContainer`,
+    menuItem: `${PREFIX}-menuItem`,
+    logoContainer: `${PREFIX}-logoContainer`,
+    copyright: `${PREFIX}-copyright`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         background: '#103c3a',
         color: 'white',
         paddingLeft: theme.spacing(6),
@@ -18,10 +29,12 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: 'grey',
         },
     },
-    menuItemContainer: {
+
+    [`& .${classes.menuItemContainer}`]: {
         marginBottom: theme.spacing(1),
     },
-    menuItem: {
+
+    [`& .${classes.menuItem}`]: {
         '& a': {
             color: theme.palette.common.white,
             textDecoration: 'none',
@@ -35,22 +48,23 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
-    logoContainer: {
+
+    [`& .${classes.logoContainer}`]: {
         marginTop: theme.spacing(2),
         '& svg': {
             width: '50%',
             maxWidth: 280,
         },
     },
-    copyright: {
+
+    [`& .${classes.copyright}`]: {
         textAlign: 'center',
     },
 }))
 
 const Footer = () => {
-    const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2} justifyContent="center">
+        <StyledGrid className={classes.root} container spacing={2} justifyContent="center">
             <Grid item container xs={12} spacing={2} alignContent="center">
                 <Grid item xs={12} md={4}>
                     <Typography variant="body1" color="primary">
@@ -95,7 +109,7 @@ const Footer = () => {
                             )
                     )}
                 </Grid>
-                <Hidden smDown>
+                <Hidden mdDown>
                     <Divider variant="middle" orientation="vertical" />
                 </Hidden>
                 <Grid item xs={12} md={6}>
@@ -107,7 +121,7 @@ const Footer = () => {
                     {`Copyright © ${new Date().getFullYear()} ejthbit. All rights reserved.`}
                 </Typography>
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }
 

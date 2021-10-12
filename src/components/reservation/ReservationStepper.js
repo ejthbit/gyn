@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
-import { Box, makeStyles, Step, StepContent, StepLabel, Stepper } from '@material-ui/core'
+import { Box, Step, StepContent, StepLabel, Stepper } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import getStepperContent from '@utilities/getReservationStepperStepsContent'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { reject } from 'ramda'
@@ -10,22 +11,32 @@ import { getOrderFinishedOk, lastBookingErrors } from 'src/store/bookings/select
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import ReservationStepperControls from './ReservationStepperControls'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'ReservationStepper'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    actionsContainer: `${PREFIX}-actionsContainer`,
+    button: `${PREFIX}-button`,
+}
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         width: '100%',
         '& .MuiPaper-root': {
             backgroundColor: 'transparent',
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             '& .MuiPaper-root': {
                 padding: theme.spacing(1),
             },
         },
     },
-    actionsContainer: {
+
+    [`& .${classes.actionsContainer}`]: {
         marginBottom: theme.spacing(2),
     },
-    button: {
+
+    [`& .${classes.button}`]: {
         marginTop: theme.spacing(2),
         marginRight: theme.spacing(1),
     },
@@ -42,7 +53,6 @@ const getStepsConfiguration = (error, completedOk = false) => [
 ]
 
 export const ReservationStepper = () => {
-    const classes = useStyles()
     const isOrderCompleted = useSelector(getOrderFinishedOk)
     const activeStep = useSelector(getActiveStep)
     const orderErrors = useSelector(lastBookingErrors)
@@ -53,7 +63,7 @@ export const ReservationStepper = () => {
     )
 
     return (
-        <Box className={classes.root}>
+        <StyledBox className={classes.root}>
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map(({ label, step }) => (
                     <Step key={label}>
@@ -69,7 +79,7 @@ export const ReservationStepper = () => {
                     </Step>
                 ))}
             </Stepper>
-        </Box>
+        </StyledBox>
     )
 }
 export default ReservationStepper

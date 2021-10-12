@@ -1,4 +1,4 @@
-import { useScrollTrigger } from '@material-ui/core'
+import { useScrollTrigger } from '@mui/material'
 import PropTypes from 'prop-types'
 import React from 'react'
 

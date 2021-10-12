@@ -75,6 +75,7 @@ const bookingsSlice = createSlice({
             .addCase(bookAnAppointment.pending, (state) => {
                 state.lastBooking.isLoading = true
                 state.lastBooking.errors = undefined
+                state.lastBooking.orderFinishedOk = false
             })
             .addCase(bookAnAppointment.rejected, (state, action) => {
                 state.lastBooking.isLoading = false
@@ -109,9 +110,7 @@ const bookingsSlice = createSlice({
             })
             .addCase(fetchDoctorServicesForSelectedMonth.fulfilled, (state, action) => {
                 state.doctorServices.isLoading = false
-                state.doctorServices.data = find(propEq('month', action.payload?.month), state.doctorServices.data)
-                    ? state.doctorServices.data
-                    : [...state.doctorServices.data, action.payload]
+                state.doctorServices.data = [...state.doctorServices.data, action.payload]
             })
             .addCase(fetchDoctorServicesForSelectedMonth.rejected, (state, action) => {
                 state.doctorServices.isLoading = false

@@ -1,43 +1,59 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
+import { Grid, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 import React from 'react'
-import FormatQuoteIcon from '@material-ui/icons/FormatQuote'
 
-const useStyles = makeStyles((theme) => ({
-    quoteLeft: {
+const PREFIX = 'Reference'
+
+const classes = {
+    quoteLeft: `${PREFIX}-quoteLeft`,
+    quote: `${PREFIX}-quote`,
+    quoteRight: `${PREFIX}-quoteRight`,
+    quoteContainer: `${PREFIX}-quoteContainer`,
+    source: `${PREFIX}-source`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.quoteLeft}`]: {
         height: 42,
         '& svg': {
             fill: 'lightgrey',
             width: '1.1rem',
         },
     },
-    quote: {
+
+    [`& .${classes.quote}`]: {
         paddingLeft: '1.1rem',
         fontSize: '1.1rem',
         fontWeight: 600,
         lineHeight: 1.48,
     },
-    quoteRight: {
+
+    [`& .${classes.quoteRight}`]: {
         textAlign: 'end',
         '& svg': {
             fill: 'lightgrey',
             width: '1.1rem',
         },
     },
-    quoteContainer: {
+
+    [`& .${classes.quoteContainer}`]: {
         maxWidth: 400,
     },
-    source: {
+
+    [`& .${classes.source}`]: {
         textAlign: 'end',
         fontStyle: 'italic',
         lineHeight: '1.3',
         marginTop: theme.spacing(1),
     },
 }))
+
 const Reference = ({ text, author }) => {
-    const classes = useStyles()
     return (
-        <>
+        <Root>
             <Grid item xs={12} className={classes.quoteLeft}>
                 <FormatQuoteIcon />
             </Grid>
@@ -50,7 +66,7 @@ const Reference = ({ text, author }) => {
             <Grid item xs={12}>
                 <Typography className={classes.source}>&mdash; {author}</Typography>
             </Grid>
-        </>
+        </Root>
     )
 }
 

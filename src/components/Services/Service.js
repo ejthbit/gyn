@@ -1,8 +1,17 @@
-import { Card, CardContent, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Card, CardContent, Grid, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 import React from 'react'
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'Service'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    icon: `${PREFIX}-icon`,
+    label: `${PREFIX}-label`,
+}
+
+const StyledCard = styled(Card)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         color: '#000',
         borderRadius: 6,
         wordBreak: 'break-word',
@@ -17,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
             color: '#8f8f8f',
         },
     },
-    icon: {
+
+    [`& .${classes.icon}`]: {
         padding: theme.spacing(1),
         '& svg': {
             padding: 6,
@@ -27,15 +37,16 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: 6,
         },
     },
-    label: {
+
+    [`& .${classes.label}`]: {
         paddingTop: theme.spacing(0.5),
         textAlign: 'center',
     },
 }))
+
 const Service = ({ icon, label, description }) => {
-    const classes = useStyles()
     return (
-        <Card className={classes.root}>
+        <StyledCard className={classes.root}>
             <CardContent>
                 <Grid container direction="column" alignItems="center" justifyContent="center">
                     <Grid item xs={12} className={classes.icon}>
@@ -51,7 +62,7 @@ const Service = ({ icon, label, description }) => {
                     </Grid>
                 </Grid>
             </CardContent>
-        </Card>
+        </StyledCard>
     )
 }
 

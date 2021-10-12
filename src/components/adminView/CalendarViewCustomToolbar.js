@@ -1,5 +1,5 @@
-import { Box, Button, Grid, Typography } from '@material-ui/core'
-import { ArrowBack, ArrowForward } from '@material-ui/icons'
+import { Box, Button, Grid, Typography } from '@mui/material'
+import { ArrowBack, ArrowForward } from '@mui/icons-material'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'

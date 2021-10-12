@@ -1,4 +1,6 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
+import { Delete } from '@mui/icons-material'
+import { TimePicker } from '@mui/lab'
 import {
     Button,
     Checkbox,
@@ -7,11 +9,10 @@ import {
     DialogContent,
     DialogTitle,
     FormControlLabel,
-    makeStyles,
+    TextField,
     Typography,
-} from '@material-ui/core'
-import { Delete } from '@material-ui/icons'
-import { DateTimePicker } from '@material-ui/pickers'
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { addHours, addMinutes } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -20,31 +21,42 @@ import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { deleteBooking, patchBooking } from 'src/store/bookings/actions'
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        [theme.breakpoints.down('sm')]: {
+const PREFIX = 'EventDetailModal'
+
+const classes = {
+    title: `${PREFIX}-title`,
+    actions: `${PREFIX}-actions`,
+    btnItem: `${PREFIX}-btnItem`,
+}
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    [`& .${classes.title}`]: {
+        [theme.breakpoints.down('md')]: {
             textAlign: 'center',
         },
         paddingBottom: 0,
+        marginBottom: theme.spacing(1),
     },
-    actions: {
+
+    [`& .${classes.actions}`]: {
         justifyContent: 'flex-end',
         paddingRight: theme.spacing(6.5),
         paddingLeft: theme.spacing(6.5),
         '& .MuiButtonBase-root': {
             width: '30%',
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             paddingRight: theme.spacing(2),
             paddingLeft: theme.spacing(2),
         },
     },
-    btnItem: {
+
+    [`& .${classes.btnItem}`]: {
         minHeight: 36,
     },
 }))
+
 const EventDetailModal = ({ event, handleClose }) => {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const [startValue, setStartValue] = useState(null)
     const [completedValue, setCompletedValue] = useState(false)
@@ -90,29 +102,28 @@ const EventDetailModal = ({ event, handleClose }) => {
     }, [event])
 
     return (
-        <Dialog className={classes.root} maxWidth="sm" open={!isNilOrEmpty(event)} onClose={handleClose} fullWidth>
-            <DialogTitle className={classes.title} disableTypography>
-                <Typography variant="h5">Detail objednávky</Typography>
-            </DialogTitle>
+        <StyledDialog maxWidth="sm" open={!isNilOrEmpty(event)} onClose={handleClose} disableScrollLock fullWidth>
+            <DialogTitle className={classes.title}>Detail objednávky</DialogTitle>
             <DialogContent>
-                <DateTimePicker
+                <TimePicker
                     id="start"
                     label="Začátek rezervace"
                     variant="dialog"
-                    format="dd-MM-yyyy HH:mm:ss"
-                    margin="normal"
+                    inputFormat="dd-MM-yyyy HH:mm"
+                    views={['hours', 'minutes']}
+                    openTo="hours"
+                    mask="__-__-____ __:__"
                     value={startValue}
                     name="start"
                     onChange={(date) => {
                         setStartValue(date)
                         setValue('start', addHours(date, 2).toISOString(), { shouldDirty: true })
                     }}
+                    renderInput={(params) => <TextField {...params} variant="standard" required />}
                     ampm={false}
-                    allowKeyboardControl
                     minutesStep={15}
-                    autoOk
-                    okLabel="potvrdit"
-                    cancelLabel="zrušit"
+                    okText="potvrdit"
+                    cancelText="zrušit"
                 />
                 <FormInput label="Jméno" control={control} name="name" fullWidth />
                 <FormInput label="Datum narození" control={control} name="birthdate" fullWidth />
@@ -150,7 +161,7 @@ const EventDetailModal = ({ event, handleClose }) => {
                     <Typography variant="body2">Odeslat</Typography>
                 </Button>
             </DialogActions>
-        </Dialog>
+        </StyledDialog>
     )
 }
 

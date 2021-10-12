@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material'
 import React, { forwardRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logOutAutomatically } from 'src/store/administration/administrationSlice'

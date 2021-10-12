@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
-import { Box, Fade, Grid, IconButton, Typography } from '@material-ui/core'
-import { Refresh } from '@material-ui/icons'
+import { Box, Fade, Grid, IconButton, Typography } from '@mui/material'
+import { Refresh } from '@mui/icons-material'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -131,7 +131,7 @@ const CalendarView = () => {
                     <Box marginLeft={2}>
                         <Typography variant="h6">Kalendař</Typography>
                     </Box>
-                    <IconButton onClick={handleGetBookingsInSelectedTimeRange}>
+                    <IconButton onClick={handleGetBookingsInSelectedTimeRange} size="large">
                         <Refresh />
                     </IconButton>
                 </Grid>

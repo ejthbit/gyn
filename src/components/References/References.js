@@ -1,9 +1,16 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import React from 'react'
 import Reference from './Reference'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'References'
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         paddingLeft: '10%',
         paddingRight: '10%',
         paddingBottom: '10%',
@@ -13,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }))
+
 // TODO: get references from DB
 const References = () => {
-    const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2}>
+        <StyledGrid className={classes.root} container spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h3" align="center">
                     Naši spokojení pacienti
@@ -43,7 +50,7 @@ const References = () => {
                     />
                 </Grid>
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }
 References.propTypes = {}

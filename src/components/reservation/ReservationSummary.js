@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import TypographyExists from '@components/buildingbBlocks/TypographyExists'
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { values, map, reject } from 'ramda'
 import React, { useMemo } from 'react'

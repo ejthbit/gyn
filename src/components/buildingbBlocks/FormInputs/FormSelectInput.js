@@ -1,11 +1,18 @@
-import { makeStyles, TextField } from '@material-ui/core'
+import { TextField } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useController } from 'react-hook-form'
 
-const useStyles = makeStyles(() => ({
-    disabled: {
+const PREFIX = 'FormSelectInput'
+
+const classes = {
+    disabled: `${PREFIX}-disabled`,
+}
+
+const StyledTextField = styled(TextField)(() => ({
+    [`& .${classes.disabled}`]: {
         opacity: 0.5,
         pointerEvents: 'none',
         color: 'rgba(0, 0, 0, 0.38)',
@@ -14,7 +21,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const FormSelectInput = ({ control, name, select, children, disabled, className, ...otherTextFieldProps }) => {
-    const classes = useStyles()
     const {
         field: { ref, ...inputProps },
         fieldState: { invalid, error },
@@ -25,8 +31,9 @@ const FormSelectInput = ({ control, name, select, children, disabled, className,
     })
 
     return (
-        <TextField
+        <StyledTextField
             select
+            variant="standard"
             className={disabled ? clsx(className, classes.disabled) : className}
             error={invalid}
             helperText={error?.message}
@@ -41,7 +48,7 @@ const FormSelectInput = ({ control, name, select, children, disabled, className,
             {...otherTextFieldProps}
         >
             {children}
-        </TextField>
+        </StyledTextField>
     )
 }
 

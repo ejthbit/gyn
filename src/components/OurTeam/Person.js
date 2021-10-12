@@ -1,10 +1,20 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import PersonDetail from './PersonDetail'
-const useStyles = makeStyles((theme) => ({
-    root: { textAlign: 'center' },
-    image: {
+const PREFIX = 'Person'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    image: `${PREFIX}-image`,
+    backdrop: `${PREFIX}-backdrop`,
+}
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [`&.${classes.root}`]: { textAlign: 'center' },
+
+    [`& .${classes.image}`]: {
         width: 270,
         height: 270,
         transition: 'border 0.5s ease',
@@ -13,27 +23,27 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '10px',
         '&:hover': { border: '5px solid #70dbd4', cursor: 'pointer' },
     },
-    backdrop: {
+
+    [`& .${classes.backdrop}`]: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
     },
 }))
 
 const Person = ({ image, fullName, specialization, text }) => {
-    const classes = useStyles({ text })
     const [open, setOpen] = useState(false)
 
     const handleToggleDetail = () => setOpen((prevState) => !prevState)
 
     return (
-        <Box className={classes.root}>
+        <StyledBox className={classes.root}>
             {image && <img src={image} className={classes.image} onClick={handleToggleDetail} />}
             <Typography variant="h6">{fullName}</Typography>
             <Typography variant="caption" color="textSecondary">
                 {specialization}
             </Typography>
             {text && <PersonDetail open={open} handleClose={handleToggleDetail} title={fullName} text={text} />}
-        </Box>
+        </StyledBox>
     )
 }
 

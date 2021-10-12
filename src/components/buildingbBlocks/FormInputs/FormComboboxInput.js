@@ -1,12 +1,18 @@
-import { makeStyles } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useController } from 'react-hook-form'
 import Combobox from '../Combobox/Combobox'
 
-const useStyles = makeStyles(() => ({
-    disabled: {
+const PREFIX = 'FormComboboxInput'
+
+const classes = {
+    disabled: `${PREFIX}-disabled`,
+}
+
+const StyledCombobox = styled(Combobox)(() => ({
+    [`& .${classes.disabled}`]: {
         opacity: 0.5,
         pointerEvents: 'none',
         color: 'rgba(0, 0, 0, 0.38)',
@@ -15,7 +21,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const FormComboboxInput = ({ control, name, disabled, className, ...otherTextFieldProps }) => {
-    const classes = useStyles()
     const {
         field: { ref, ...inputProps },
         fieldState: { invalid, error },

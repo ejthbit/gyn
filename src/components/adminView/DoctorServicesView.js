@@ -1,7 +1,7 @@
-import { Box, Button, Grid, makeStyles, Snackbar, Typography, Fade } from '@material-ui/core'
-import { ArrowBack } from '@material-ui/icons'
-import { Alert } from '@material-ui/lab'
-import { DatePicker } from '@material-ui/pickers'
+import { ArrowBack } from '@mui/icons-material'
+import { MobileDatePicker } from '@mui/lab'
+import { Alert, Box, Button, Fade, Grid, Snackbar, TextField, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format, getMonth, getYear } from 'date-fns'
@@ -15,8 +15,16 @@ import { fetchDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/a
 import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import ServicesTable from './ServicesTable'
 
-const useStyles = makeStyles((theme) => ({
-    datePicker: {
+const PREFIX = 'DoctorServicesView'
+
+const classes = {
+    datePicker: `${PREFIX}-datePicker`,
+    item: `${PREFIX}-item`,
+    serviceExists: `${PREFIX}-serviceExists`,
+}
+
+const StyledFade = styled(Fade)(({ theme }) => ({
+    [`& .${classes.datePicker}`]: {
         [theme.breakpoints.up('sm')]: {
             '&.MuiFormControl-root': {
                 top: '-12px',
@@ -24,22 +32,23 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
-    item: {
+
+    [`& .${classes.item}`]: {
         width: '100%',
         '&.MuiButtonBase-root': {
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 width: '100%',
             },
             width: '33%',
         },
     },
-    serviceExists: {
+
+    [`& .${classes.serviceExists}`]: {
         marginTop: theme.spacing(2),
     },
 }))
 
 const DoctorServicesView = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
@@ -104,7 +113,7 @@ const DoctorServicesView = () => {
     }, [serviceExists])
 
     return (
-        <Fade in timeout={500}>
+        <StyledFade in timeout={500}>
             <Grid container>
                 <Grid container spacing={2} alignContent="flex-end">
                     {includes(selectedAction, [1, 2]) ? (
@@ -115,16 +124,19 @@ const DoctorServicesView = () => {
                                 </Button>
                             </Grid>
                             <Grid item>
-                                <DatePicker
+                                <MobileDatePicker
                                     className={classes.datePicker}
                                     label="Výběr měsíce: "
                                     orientation="landscape"
-                                    format="MMMM, yyyy"
+                                    inputFormat="MMMM, yyyy"
+                                    mask="____, ____"
                                     margin="none"
                                     value={selectedMonth}
                                     onChange={(date) => handleGenerateDataForTable(date)}
-                                    views={['year', 'month']}
-                                    autoOk
+                                    views={['month', 'year']}
+                                    renderInput={(props) => <TextField {...props} variant="standard" />}
+                                    okText="Potvrdit"
+                                    cancelText="Zavřít"
                                 />
                             </Grid>
                         </>
@@ -181,7 +193,7 @@ const DoctorServicesView = () => {
                     )
                 )}
             </Grid>
-        </Fade>
+        </StyledFade>
     )
 }
 

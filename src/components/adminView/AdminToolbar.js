@@ -1,5 +1,6 @@
 import AmbulanceSelect from '@components/AmbulanceSelect/AmbulanceSelect'
 import TransparentLogo from '@components/Logo/TransparentLogo'
+import { ArrowBack, ArrowForward, DateRange, Event, ExitToApp, Home, Schedule } from '@mui/icons-material'
 import {
     AppBar,
     Box,
@@ -13,11 +14,10 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    makeStyles,
     Toolbar,
     Typography,
-} from '@material-ui/core'
-import { ArrowBack, ArrowForward, DateRange, Event, ExitToApp, Home, Schedule } from '@material-ui/icons'
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import SM from '@utilities/StorageManager'
 import { equals, map } from 'ramda'
@@ -30,14 +30,33 @@ import { getUser } from 'src/store/administration/selectors'
 import { setSelectedAmbulance } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getSelectedAmbulance, makeArrayOfValueLabelAmbulances } from 'src/store/reservationProcess/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'AdminToolbar'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    openDrawerIcon: `${PREFIX}-openDrawerIcon`,
+    appBar: `${PREFIX}-appBar`,
+    title: `${PREFIX}-title`,
+    drawer: `${PREFIX}-drawer`,
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    drawerHeader: `${PREFIX}-drawerHeader`,
+    drawerListItem: `${PREFIX}-drawerListItem`,
+    logOutIcon: `${PREFIX}-logOutIcon`,
+    ambulanceSelect: `${PREFIX}-ambulanceSelect`,
+    headerContent: `${PREFIX}-headerContent`,
+    logoContainer: `${PREFIX}-logoContainer`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
+    [`& .${classes.root}`]: {
         flexGrow: 1,
         color: '#000',
         backgroundColor: '#FFF',
         boxShadow: 'none',
     },
-    openDrawerIcon: ({ isDrawerOpen }) => ({
+
+    [`& .${classes.openDrawerIcon}`]: {
         position: 'fixed',
         bottom: theme.spacing(1),
         left: theme.spacing(1),
@@ -45,31 +64,35 @@ const useStyles = makeStyles((theme) => ({
         '& svg': {
             color: theme.palette.common.white,
         },
-    }),
-    appBar: {
+    },
+
+    [`& .${classes.appBar}`]: {
         marginLeft: 200,
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: ({ isDrawerOpen }) => (isDrawerOpen ? 60 : 8),
+        [theme.breakpoints.down('md')]: {
+            marginLeft: $isDrawerOpen ? 60 : 8,
         },
     },
-    title: {
+    [`& .${classes.title}`]: {
         flexGrow: 1,
     },
-    drawer: {
+
+    [`& .${classes.drawer}`]: {
         width: 200,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: 60,
         },
         flexShrink: 0,
     },
-    drawerPaper: {
+
+    [`& .${classes.drawerPaper}`]: {
         width: 200,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: 60,
         },
         backgroundColor: theme.palette.primary.dark,
     },
-    drawerHeader: {
+
+    [`& .${classes.drawerHeader}`]: {
         textDecoration: 'none',
         cursor: 'pointer',
         display: 'flex',
@@ -77,27 +100,29 @@ const useStyles = makeStyles((theme) => ({
         color: '#FFF',
         padding: theme.spacing(2),
         minHeight: theme.spacing(4),
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             minHeight: theme.spacing(3),
         },
         '&:hover': {
             color: '#000',
         },
     },
-    drawerListItem: {
+
+    [`& .${classes.drawerListItem}`]: {
         paddingBottom: theme.spacing(2),
         paddingTop: theme.spacing(2),
         '& svg': {
             color: '#FFF',
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             '& .MuiTypography-root': {
                 display: 'none',
             },
         },
         color: '#FFF',
     },
-    logOutIcon: {
+
+    [`& .${classes.logOutIcon}`]: {
         marginTop: theme.spacing(1),
         [theme.breakpoints.up('md')]: {
             marginTop: theme.spacing(1),
@@ -107,10 +132,10 @@ const useStyles = makeStyles((theme) => ({
             color: theme.palette.primary.main,
         },
     },
-    ambulanceSelect: {
+
+    [`& .${classes.ambulanceSelect}`]: {
         flexFlow: 'row',
         '& .MuiInputBase-root': {
-            paddingTop: theme.spacing(1),
             height: theme.spacing(3),
         },
         '& .MuiSelect-selectMenu': {
@@ -119,25 +144,28 @@ const useStyles = makeStyles((theme) => ({
             },
             height: theme.spacing(3),
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexFlow: 'column',
             '& .MuiInputBase-root': {
                 textAlign: 'center',
             },
         },
     },
-    headerContent: {
-        [theme.breakpoints.down('sm')]: {
+
+    [`& .${classes.headerContent}`]: {
+        [theme.breakpoints.down('md')]: {
             justifyContent: 'center',
         },
     },
-    logoContainer: {
+
+    [`& .${classes.logoContainer}`]: {
         marginTop: theme.spacing(2),
         '& svg': {
             width: '100%',
         },
     },
 }))
+
 const adminToolbarContent = [
     { id: 1, icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
     { id: 2, icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
@@ -146,7 +174,6 @@ const adminToolbarContent = [
 
 const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
 const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
-    const classes = useStyles({ isDrawerOpen })
     const dispatch = useDispatch()
     const loggedUser = useSelector(getUser)
     const ambulances = useSelector(selectAmbulancesValueLabelPair)
@@ -165,7 +192,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
     }, [loggedUser, ambulances])
 
     return (
-        <>
+        <Root $isDrawerOpen={isDrawerOpen}>
             <AppBar position="static" className={classes.root} color="primary">
                 <Toolbar className={classes.appBar}>
                     <Grid container spacing={2} alignItems="center" className={classes.headerContent}>
@@ -212,7 +239,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
                         }}
                     >
                         <Box className={classes.drawerHeader} component={Link} to={'/'}>
-                            <Hidden smDown>
+                            <Hidden mdDown>
                                 <Box className={classes.logoContainer}>
                                     <TransparentLogo />
                                 </Box>
@@ -255,7 +282,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
                     </Fab>
                 </Box>
             )}
-        </>
+        </Root>
     )
 }
 

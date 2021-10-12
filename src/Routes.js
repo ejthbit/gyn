@@ -1,7 +1,7 @@
 import LoginPageForm from '@components/LoginPageForm/LoginPageForm'
 import Navbar from '@components/Navbar/Navbar'
 import ProtectedRoute from '@components/ProtectedRoute/ProtectedRoute'
-import { Grid, LinearProgress, Box } from '@material-ui/core'
+import { Grid, LinearProgress, Box } from '@mui/material'
 import { isMobile } from '@utilities/checkDeviceType'
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'

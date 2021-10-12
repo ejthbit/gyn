@@ -1,5 +1,5 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import { format, subHours } from 'date-fns'
 import PropTypes from 'prop-types'
 import React from 'react'

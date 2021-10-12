@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
+import TransparentLogo from '@components/Logo/TransparentLogo'
+import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
+import { AppBar, Box, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import PropTypes from 'prop-types'
-import { AppBar, Box, Drawer, Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import { Menu as MenuIcon, Close as CloseIcon } from '@material-ui/icons'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
-import TransparentLogo from '@components/Logo/TransparentLogo'
 
-const useStyles = makeStyles((theme) => ({
-    logo: {
+const PREFIX = 'MobileNavbar'
+
+const classes = {
+    logo: `${PREFIX}-logo`,
+    drawerLogo: `${PREFIX}-drawerLogo`,
+    drawer: `${PREFIX}-drawer`,
+    root: `${PREFIX}-root`,
+    toolbar: `${PREFIX}-toolbar`,
+    menuItem: `${PREFIX}-menuItem`,
+    offSet: `${PREFIX}-offSet`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.logo}`]: {
         '& svg': {
             padding: theme.spacing(1),
             '& path': {
@@ -16,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
-    drawerLogo: {
+
+    [`& .${classes.drawerLogo}`]: {
         '& svg': {
             width: '80%',
             padding: theme.spacing(1),
@@ -25,21 +40,25 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
-    drawer: {
+
+    [`& .${classes.drawer}`]: {
         '& .MuiDrawer-paper': {
             width: '85%',
             textAlign: 'center',
         },
     },
-    root: {
+
+    [`& .${classes.root}`]: {
         boxShadow: 'none',
         backgroundColor: 'transparent',
     },
-    toolbar: {
+
+    [`& .${classes.toolbar}`]: {
         background: '#f8f8f8',
         paddingTop: theme.spacing(2),
     },
-    menuItem: {
+
+    [`& .${classes.menuItem}`]: {
         padding: theme.spacing(1.5),
         '& a': {
             fontSize: 20,
@@ -55,17 +74,17 @@ const useStyles = makeStyles((theme) => ({
             height: 27,
         },
     },
-    offSet: { minHeight: theme.spacing(12) },
+
+    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
 }))
 
 const MobileNavbar = ({ routes }) => {
-    const classes = useStyles()
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const handleToggleDrawer = () => setIsDrawerOpen((prevState) => !prevState)
 
     return (
-        <>
+        <Root>
             <AppBar position="fixed" className={classes.root}>
                 <Toolbar className={classes.toolbar}>
                     <Grid container alignItems="center" justifyContent="space-between">
@@ -75,7 +94,7 @@ const MobileNavbar = ({ routes }) => {
                             </NavLink>
                         </Grid>
                         <Grid item container xs={3} direction="column">
-                            <IconButton onClick={handleToggleDrawer}>
+                            <IconButton onClick={handleToggleDrawer} size="large">
                                 <MenuIcon />
                                 <Box marginLeft={0.5}>
                                     <Typography>Menu</Typography>
@@ -84,7 +103,7 @@ const MobileNavbar = ({ routes }) => {
                         </Grid>
                     </Grid>
                     <Drawer anchor="right" open={isDrawerOpen} onClose={handleToggleDrawer} className={classes.drawer}>
-                        <IconButton onClick={handleToggleDrawer}>
+                        <IconButton onClick={handleToggleDrawer} size="large">
                             <CloseIcon />
                         </IconButton>
                         <NavLink to={'/'} className={classes.drawerLogo} onClick={handleToggleDrawer}>
@@ -103,7 +122,7 @@ const MobileNavbar = ({ routes }) => {
                 </Toolbar>
             </AppBar>
             <Box className={classes.offSet} />
-        </>
+        </Root>
     )
 }
 

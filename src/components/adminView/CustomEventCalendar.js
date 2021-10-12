@@ -1,33 +1,40 @@
-import React from 'react'
+import { Box, Grid, Hidden, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
-import { Box, Grid, makeStyles, Typography, Hidden } from '@material-ui/core'
-import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import React from 'react'
 
-const useStyles = makeStyles(() => ({
-    root: ({ booked }) => ({
+const PREFIX = 'CustomEventCalendar'
+
+const classes = {
+    root: `${PREFIX}-root`,
+}
+
+const StyledBox = styled(Box)(() => ({
+    [`& .${classes.root}`]: {
         pointerEvents: 'none',
         zIndex: '999',
         cursor: 'pointer',
-    }),
+    },
 }))
-const CustomEventCalendar = ({ event }) => {
-    const { start, end, title, resource } = event
-    const classes = useStyles({ booked: resource?.booked })
 
+const CustomEventCalendar = ({ event }) => {
+    const { title, resource } = event
     return (
-        <Box height="100%">
+        <StyledBox height="100%">
             <Grid container direction="column" className={classes.root}>
                 <Grid item>
                     <Typography variant="body2">{title}</Typography>
                 </Grid>
-                <Hidden smDown>
+                <Hidden mdDown>
                     <Grid item>{resource.completed && <Typography variant="body2">Dokončeno</Typography>}</Grid>
                 </Hidden>
             </Grid>
-        </Box>
+        </StyledBox>
     )
 }
 
-CustomEventCalendar.propTypes = {}
+CustomEventCalendar.propTypes = {
+    event: PropTypes.object,
+}
 
 export default CustomEventCalendar

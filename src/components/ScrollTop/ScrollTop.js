@@ -1,21 +1,8 @@
+import { KeyboardArrowUp } from '@mui/icons-material'
+import { Box, Fab, useScrollTrigger, Zoom } from '@mui/material'
 import React from 'react'
-import { Box, Fab, makeStyles, useScrollTrigger, Zoom } from '@material-ui/core'
-import { KeyboardArrowUp } from '@material-ui/icons'
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        position: 'fixed',
-        bottom: theme.spacing(2),
-        right: theme.spacing(2),
-        '& svg': {
-            color: theme.palette.common.white,
-        },
-    },
-}))
 
 const ScrollTop = () => {
-    const classes = useStyles()
-
     const trigger = useScrollTrigger({
         disableHysteresis: true,
         threshold: 100,
@@ -25,9 +12,9 @@ const ScrollTop = () => {
 
     return (
         <Zoom in={trigger}>
-            <Box onClick={handleClick} role="presentation" className={classes.root}>
+            <Box onClick={handleClick} role="presentation" sx={{ position: 'fixed', bottom: 16, right: 16 }}>
                 <Fab color="primary" size="small" aria-label="scroll back to top">
-                    <KeyboardArrowUp />
+                    <KeyboardArrowUp color="inherit" />
                 </Fab>
             </Box>
         </Zoom>

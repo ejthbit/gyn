@@ -1,6 +1,7 @@
 import TransparentLogo from '@components/Logo/TransparentLogo'
-import { AppBar, Box, Grid, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import { AccountCircleOutlined } from '@material-ui/icons'
+import { AccountCircleOutlined } from '@mui/icons-material'
+import { AppBar, Box, Grid, Toolbar, Typography } from '@mui/material'
+import { styled } from '@mui/system'
 import { isMobile } from '@utilities/checkDeviceType'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import React from 'react'
@@ -8,6 +9,59 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
 import routingPaths from 'src/routingPaths'
 import MobileNavbar from './MobileNavbar'
+
+const PREFIX = 'Navbar'
+
+const classes = {
+    navbarBackground: `${PREFIX}-navbarBackground`,
+    logo: `${PREFIX}-logo`,
+    menuItem: `${PREFIX}-menuItem`,
+    offSet: `${PREFIX}-offSet`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.navbarBackground}`]: {
+        '& .MuiToolbar-root': {
+            paddingTop: 20,
+        },
+        height: 80,
+        backgroundColor: theme.palette.primary.main,
+    },
+
+    [`& .${classes.logo}`]: {
+        '& svg': {
+            width: '100%',
+            maxWidth: 280,
+            '&:hover': {
+                '& path': {
+                    fill: theme.palette.common.black,
+                },
+                cursor: 'pointer',
+            },
+        },
+    },
+
+    [`& .${classes.menuItem}`]: {
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        '& a': {
+            fontSize: 20,
+            color: theme.palette.common.white,
+            textDecoration: 'none',
+            '&:hover': {
+                color: '#000',
+                borderBottom: '1px solid black',
+            },
+        },
+        '& svg': {
+            paddingTop: theme.spacing(0.5),
+            height: 27,
+        },
+    },
+
+    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
+}))
 
 export const routes = [
     {
@@ -32,55 +86,14 @@ export const routes = [
     },
 ]
 
-const useStyles = makeStyles((theme) => ({
-    navbarBackground: {
-        '& .MuiToolbar-root': {
-            paddingTop: 20,
-        },
-        height: 80,
-        backgroundColor: theme.palette.primary.main,
-    },
-    logo: {
-        '& svg': {
-            width: '100%',
-            maxWidth: 280,
-            '&:hover': {
-                '& path': {
-                    fill: theme.palette.common.black,
-                },
-                cursor: 'pointer',
-            },
-        },
-    },
-    menuItem: {
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        '& a': {
-            fontSize: 20,
-            color: theme.palette.common.white,
-            textDecoration: 'none',
-            '&:hover': {
-                color: '#000',
-                borderBottom: '1px solid black',
-            },
-        },
-        '& svg': {
-            paddingTop: theme.spacing(0.5),
-            height: 27,
-        },
-    },
-    offSet: { minHeight: theme.spacing(12) },
-}))
-
 const Navbar = () => {
-    const classes = useStyles()
     const location = useLocation()
     return (
         !location.pathname.match(routingPaths.admin) &&
         (isMobile ? (
             <MobileNavbar routes={routes} />
         ) : (
-            <>
+            <Root>
                 <AppBar className={classes.navbarBackground} position="fixed">
                     <Toolbar>
                         <Grid container spacing={3} alignItems="center">
@@ -104,7 +117,7 @@ const Navbar = () => {
                     </Toolbar>
                 </AppBar>
                 <Box className={classes.offSet} />
-            </>
+            </Root>
         ))
     )
 }

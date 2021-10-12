@@ -1,27 +1,32 @@
+import { Today } from '@mui/icons-material'
+import { MobileDatePicker, PickersDay } from '@mui/lab'
 import {
+    Badge,
     FormControl,
     Grid,
     InputAdornment,
     InputLabel,
-    makeStyles,
     MenuItem,
     Select,
     TextField,
     Typography,
-} from '@material-ui/core'
-import { Today } from '@material-ui/icons'
-import { DatePicker } from '@material-ui/pickers'
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 import getDoctorById from '@utilities/getDoctorById'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { addHours } from 'date-fns'
+import { addHours, parseISO, startOfToday } from 'date-fns'
 import format from 'date-fns/format'
 import { equals, find } from 'ramda'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAvailableTimeslots, fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
-import { makeAvailableTimeslotsWithTimeOnly, makeDoctorServicesByDoctorId } from 'src/store/bookings/selectors'
+import {
+    makeAvailableTimeslotsWithTimeOnly,
+    makeDoctorServicesByDoctorId,
+    makeServicesSelector,
+} from 'src/store/bookings/selectors'
 import {
     setReservationBtnDisabled,
     setSelectedDate,
@@ -36,17 +41,28 @@ import {
     getSelectedTime,
 } from 'src/store/reservationProcess/selectors'
 
-const useStyles = makeStyles((theme) => ({
-    dayWithDotContainer: {
+const PREFIX = 'ReservationTermPicker'
+
+const classes = {
+    dayWithDotContainer: `${PREFIX}-dayWithDotContainer`,
+    disabledDayContainer: `${PREFIX}-disabledDayContainer`,
+    dayWithDot: `${PREFIX}-dayWithDot`,
+    timepicker: `${PREFIX}-timepicker`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`& .${classes.dayWithDotContainer}`]: {
         position: 'relative',
     },
-    disabledDayContainer: {
+
+    [`& .${classes.disabledDayContainer}`]: {
         pointerEvents: 'none',
         '& .MuiPickersDay-day': {
             opacity: 0.25,
         },
     },
-    dayWithDot: {
+
+    [`& .${classes.dayWithDot}`]: {
         position: 'absolute',
         height: 0,
         width: 0,
@@ -57,13 +73,13 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translateX(1px)',
         top: '10%',
     },
-    timepicker: {
+
+    [`& .${classes.timepicker}`]: {
         marginTop: theme.spacing(1),
     },
 }))
 
 const ReservationTermPicker = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
@@ -77,9 +93,14 @@ const ReservationTermPicker = () => {
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     const doctorServicesBySelectedDoctorIdAndMonth = useMemoizedSelector(
         makeDoctorServicesByDoctorId,
-        { month: selectedMonth, doctorId: selectedDoctor },
-        [selectedDoctor, selectedDate]
+        { month: selectedMonth, doctorId: selectedDoctor, selectedWorkplace: selectedAmbulanceId },
+        [selectedDoctor, selectedDate, selectedAmbulanceId]
     )
+    const doctorServices = useMemoizedSelector(makeServicesSelector, {}, [
+        selectedDoctor,
+        selectedDate,
+        selectedAmbulanceId,
+    ])
 
     useEffect(() => {
         const servesItem = find(({ date, doctorId }) => {
@@ -95,6 +116,7 @@ const ReservationTermPicker = () => {
                 })
             )
         } else {
+            setIsDoctorServing(undefined)
             dispatch(clearTimeslots())
             if (!isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
         }
@@ -108,43 +130,49 @@ const ReservationTermPicker = () => {
     }, [selectedTime, activeStep])
 
     return (
-        <Grid container direction="column">
-            <DatePicker
+        <StyledGrid container direction="column">
+            <MobileDatePicker
                 label="Datum návštevy"
                 variant="dialog"
-                format="dd-MM-yyyy"
+                inputFormat="dd-MM-yyyy"
+                mask="__-__-____"
                 value={selectedDate}
                 onMonthChange={(date) => {
-                    dispatch(
-                        fetchDoctorServicesForSelectedMonth({
-                            month: format(date, 'yyyy-MM'),
-                            workplace: selectedAmbulanceId,
-                        })
+                    const currentMonth = format(date, 'yyyy-MM')
+                    const serviceItemExists = find(
+                        ({ month, workplace }) => equals(month, currentMonth) && equals(workplace, selectedAmbulanceId),
+                        doctorServices
                     )
+                    if (isNilOrEmpty(serviceItemExists))
+                        dispatch(
+                            fetchDoctorServicesForSelectedMonth({
+                                month: currentMonth,
+                                workplace: selectedAmbulanceId,
+                            })
+                        )
                     dispatch(setSelectedDate(addHours(date, 2).toISOString()))
                 }}
-                renderDay={(day, selectedDate, dayInCurrentMonth, dayComponent) => {
+                renderDay={(day, _value, DayComponentProps) => {
                     const isSelected =
-                        dayInCurrentMonth &&
+                        !DayComponentProps.outsideCurrentMonth &&
                         find(({ date, doctorId }) => {
-                            if (!isNilOrEmpty(doctorId)) return equals(date, format(day, 'yyyy-MM-dd'))
+                            if (!isNilOrEmpty(doctorId))
+                                return equals(date, format(day, 'yyyy-MM-dd')) && day >= startOfToday()
                         }, doctorServicesBySelectedDoctorIdAndMonth)
-
                     return (
-                        <div className={isSelected ? classes.dayWithDotContainer : classes.disabledDayContainer}>
-                            {dayComponent}
-                            {isSelected && <div className={classes.dayWithDot}></div>}
-                        </div>
+                        <Badge key={day.toString()} overlap="circular" badgeContent={isSelected ? '🌚' : undefined}>
+                            <PickersDay {...DayComponentProps} disabled={isNilOrEmpty(isSelected)} />
+                        </Badge>
                     )
                 }}
-                autoOk
-                views={['year', 'month', 'date']}
-                TextFieldComponent={({ value, onClick, onChange, inputRef }) => (
+                okText="Potvrdit"
+                cancelText="Zavřít"
+                views={['year', 'month', 'day']}
+                renderInput={(props) => (
                     <TextField
-                        inputRef={inputRef}
-                        onClick={onClick}
-                        value={value}
-                        onChange={onChange}
+                        {...props}
+                        variant="standard"
+                        required
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -159,11 +187,13 @@ const ReservationTermPicker = () => {
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
                 <>
-                    <FormControl className={classes.timepicker}>
+                    <FormControl variant="standard" sx={{ mt: 0.5, minWidth: 120 }}>
                         <InputLabel id="timePickerLabel" required>
                             Čas návštevy
                         </InputLabel>
                         <Select
+                            label="Čas návštevy"
+                            variant="standard"
                             value={selectedTime}
                             onChange={(e) => dispatch(setSelectedTime(e.target.value))}
                             displayEmpty
@@ -177,10 +207,12 @@ const ReservationTermPicker = () => {
                     </FormControl>
                     {isDoctorServing?.note && <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>}
                 </>
+            ) : !isNilOrEmpty(isDoctorServing) ? (
+                <Typography>Omlouváme se ale na tento den již nejsou volné termíny</Typography>
             ) : (
                 <Typography>Omlouváme se ale tento den {getDoctorById(selectedDoctor).name} neordinuje</Typography>
             )}
-        </Grid>
+        </StyledGrid>
     )
 }
 

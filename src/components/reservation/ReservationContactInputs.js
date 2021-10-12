@@ -1,8 +1,9 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
-import { EmailOutlined, PhoneOutlined, Today } from '@material-ui/icons'
-import { DatePicker } from '@material-ui/pickers'
+import { EmailOutlined, PhoneOutlined, Today } from '@mui/icons-material'
+import { MobileDatePicker } from '@mui/lab'
+import { Grid, InputAdornment, TextField } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import VALIDATION_PATTERNS from '@utilities/validationPatterns'
 import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
@@ -12,10 +13,17 @@ import { setContactInformation, setReservationBtnDisabled } from 'src/store/rese
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import * as yup from 'yup'
 
-const useStyles = makeStyles((theme) => ({
-    input: {
+const PREFIX = 'ReservationContactInputs'
+
+const classes = {
+    input: `${PREFIX}-input`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`& .${classes.input}`]: {
         marginTop: theme.spacing(0),
         marginBottom: theme.spacing(0),
+        minHeight: theme.spacing(4),
         '& .MuiInput-root': {
             cursor: 'pointer',
         },
@@ -34,7 +42,6 @@ const formValidationSchema = yup.object().shape({
 })
 
 const ReservationContactInputs = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const activeStep = useSelector(getActiveStep)
@@ -62,7 +69,7 @@ const ReservationContactInputs = () => {
     }, [formState])
 
     return (
-        <Grid container alignItems="center" spacing={2}>
+        <StyledGrid container alignItems="center" spacing={2}>
             <Grid item xs={12} sm={6}>
                 <FormInput
                     name="name"
@@ -74,28 +81,29 @@ const ReservationContactInputs = () => {
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
-                <DatePicker
+                <MobileDatePicker
                     id="bday"
-                    format="dd-MM-yyyy"
+                    inputFormat="dd-MM-yyyy"
+                    mask="__-__-____"
                     margin="normal"
                     value={birthDate}
                     name="birthDate"
-                    views={['year', 'month', 'date']}
+                    views={['year', 'month', 'day']}
                     openTo="year"
                     disableFuture
                     onChange={(date) => {
                         setBirthDate(date)
                         setValue('birthDate', date.toISOString())
                     }}
-                    TextFieldComponent={({ value, onClick, onChange, inputRef }) => (
+                    renderInput={(props) => (
                         <TextField
+                            {...props}
+                            variant="standard"
                             className={classes.input}
                             label="Datum narození"
                             placeholder="Zadejte prosím své datum narození"
-                            inputRef={inputRef}
-                            onClick={onClick}
-                            value={value}
-                            onChange={onChange}
+                            fullWidth
+                            required
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -103,13 +111,10 @@ const ReservationContactInputs = () => {
                                     </InputAdornment>
                                 ),
                             }}
-                            fullWidth
-                            required
                         />
                     )}
-                    autoOk
-                    okLabel="potvrdit"
-                    cancelLabel="zrušit"
+                    okText="Potvrdit"
+                    cancelText="Zrušit"
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -146,7 +151,7 @@ const ReservationContactInputs = () => {
                     fullWidth
                 />
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }
 

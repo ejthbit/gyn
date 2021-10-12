@@ -1,7 +1,8 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import FormSelectInput from '@components/buildingbBlocks/FormInputs/FormSelectInput'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Grid, makeStyles, MenuItem, Typography } from '@material-ui/core'
+import { Button, Grid, MenuItem, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { map } from 'ramda'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,17 +11,20 @@ import { sendContactMessage } from 'src/store/reservationProcess/actions'
 import { getAmbulances } from 'src/store/reservationProcess/selectors'
 import * as yup from 'yup'
 
-const formValidationSchema = yup.object().shape({
-    workplaceId: yup.string().required(),
-    name: yup.string().required(),
-    from: yup.string().required(),
-})
+const PREFIX = 'ContactForm'
 
-const useStyles = makeStyles((theme) => ({
-    title: {
+const classes = {
+    title: `${PREFIX}-title`,
+    input: `${PREFIX}-input`,
+    btn: `${PREFIX}-btn`,
+}
+
+const Root = styled('form')(({ theme }) => ({
+    [`& .${classes.title}`]: {
         paddingBottom: theme.spacing(1),
     },
-    input: {
+
+    [`& .${classes.input}`]: {
         '& .MuiInputLabel-formControl': {
             color: `${theme.palette.common.white} !important`,
             paddingBottom: theme.spacing(0.5),
@@ -30,14 +34,21 @@ const useStyles = makeStyles((theme) => ({
         },
         marginBottom: theme.spacing(1),
     },
-    btn: {
+
+    [`& .${classes.btn}`]: {
         marginTop: theme.spacing(2),
     },
 }))
 
+const formValidationSchema = yup.object().shape({
+    workplaceId: yup.string().required(),
+    name: yup.string().required(),
+    from: yup.string().required(),
+})
+
 const ContactForm = () => {
     const ambulances = useSelector(getAmbulances)
-    const classes = useStyles()
+
     const dispatch = useDispatch()
 
     const { control, handleSubmit, formState } = useForm({
@@ -51,7 +62,7 @@ const ContactForm = () => {
     }
 
     return (
-        <form>
+        <Root>
             <Grid container className={classes.root}>
                 <Typography variant="body1" color="primary" className={classes.title}>
                     Kontaktujte nás
@@ -125,7 +136,7 @@ const ContactForm = () => {
                     )}
                 </Grid>
             </Grid>
-        </form>
+        </Root>
     )
 }
 

@@ -1,4 +1,5 @@
-import { Box, Button, ButtonGroup, Grid, makeStyles, Typography, Slide } from '@material-ui/core'
+import { Box, Button, ButtonGroup, Grid, Slide, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { isMobile } from '@utilities/checkDeviceType'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import React, { useEffect, useState } from 'react'
@@ -11,8 +12,17 @@ import LandingMobileImg from '../../assets/landingMobile.png'
 import LandingPageReservationModal from './LandingPageReservationModal'
 import SonographyInfoModal from './SonographyInfoModal'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'LandingWelcome'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    firstHeadline: `${PREFIX}-firstHeadline`,
+    btnsContainer: `${PREFIX}-btnsContainer`,
+    btn: `${PREFIX}-btn`,
+}
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         minHeight: 430,
         backgroundImage: `url(${LandingPageImg})`,
         backgroundRepeat: 'no-repeat',
@@ -21,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '5%',
         paddingRight: 20,
         paddingTop: 100,
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: 'center',
             paddingLeft: '5% !important',
             paddingRight: '5% !important',
@@ -35,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
         },
         marginTop: -24,
     },
-    firstHeadline: {
+
+    [`& .${classes.firstHeadline}`]: {
         '& .MuiTypography-root': {
             fontWeight: 'bold',
         },
@@ -43,14 +54,16 @@ const useStyles = makeStyles((theme) => ({
             paddingRight: '68% !important',
         },
     },
-    btnsContainer: {
+
+    [`& .${classes.btnsContainer}`]: {
         maxWidth: '100%',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             maxWidth: '100%',
-            padding: `${theme.spacing(1)}px !important`,
+            padding: `${theme.spacing(1)} !important`,
         },
     },
-    btn: {
+
+    [`& .${classes.btn}`]: {
         '& .MuiButton-label': {
             color: '#FFF',
         },
@@ -59,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
 
 const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
 const LandingWelcome = () => {
-    const classes = useStyles()
     const dispatch = useDispatch()
     const ambulances = useSelector(selectAmbulancesValueLabelPair)
 
@@ -77,7 +89,7 @@ const LandingWelcome = () => {
     const handleToggleSonoModal = () => setIsSonographyInfoOpen((prevState) => !prevState)
 
     return (
-        <Box className={classes.root}>
+        <StyledBox className={classes.root}>
             <LandingPageReservationModal isOpen={isReservationModalOpen} onClose={handleToggleReservationModal} />
             <Grid container spacing={2}>
                 <Grid item xs={12} className={classes.firstHeadline}>
@@ -138,7 +150,7 @@ const LandingWelcome = () => {
                 )}
                 <SonographyInfoModal open={isSonographyInfoOpen} handleClose={handleToggleSonoModal} />
             </Grid>
-        </Box>
+        </StyledBox>
     )
 }
 

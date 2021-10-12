@@ -1,16 +1,27 @@
-import React from 'react'
-import { Dialog, DialogTitle, Typography, DialogContent, IconButton, makeStyles } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@mui/icons-material/Close'
+import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
+import React from 'react'
 
-const useStyles = makeStyles((theme) => ({
-    root: { textAlign: 'center' },
-    closeButton: {
+const PREFIX = 'PersonDetail'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    closeButton: `${PREFIX}-closeButton`,
+    list: `${PREFIX}-list`,
+}
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    [`& .${classes.root}`]: { textAlign: 'center' },
+
+    [`& .${classes.closeButton}`]: {
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
     },
-    list: {
+
+    [`& .${classes.list}`]: {
         '& ::marker': {
             color: theme.palette.primary.main,
         },
@@ -18,12 +29,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const PersonDetail = ({ open, handleClose, title, text }) => {
-    const classes = useStyles()
     return (
-        <Dialog onClose={handleClose} open={open} disableScrollLock>
-            <DialogTitle disableTypography onClose={handleClose}>
+        <StyledDialog onClose={handleClose} open={open} disableScrollLock>
+            <DialogTitle onClose={handleClose}>
                 <Typography variant="h6">{title}</Typography>
-                <IconButton className={classes.closeButton} onClick={handleClose} color="primary">
+                <IconButton className={classes.closeButton} onClick={handleClose} color="primary" size="large">
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -43,7 +53,7 @@ const PersonDetail = ({ open, handleClose, title, text }) => {
                     </>
                 )}
             </DialogContent>
-        </Dialog>
+        </StyledDialog>
     )
 }
 

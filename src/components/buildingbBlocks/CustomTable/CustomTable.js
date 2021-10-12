@@ -1,14 +1,14 @@
-import { Box, Fade, IconButton, TextField } from '@material-ui/core'
-import Checkbox from '@material-ui/core/Checkbox'
-import Paper from '@material-ui/core/Paper'
-import { makeStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-import { Check, Close, Edit } from '@material-ui/icons'
+import { Check, Close, Edit } from '@mui/icons-material'
+import { Box, Fade, IconButton, TextField } from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
+import Paper from '@mui/material/Paper'
+import { styled } from '@mui/material/styles'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TablePagination from '@mui/material/TablePagination'
+import TableRow from '@mui/material/TableRow'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
@@ -20,22 +20,33 @@ import { deleteBookings, patchBooking, setCompletedBookings } from 'src/store/bo
 import CustomTableHeader from './CustomTableHeader'
 import CustomTableToolbar from './CustomTableToolbar'
 
-const sortDirection = ifElse(equals('desc'), always(descend), always(ascend))
-const sortByProperty = (order, orderBy, data) => sortWith([compose(sortDirection(order), prop)(orderBy)], data)
+const PREFIX = 'CustomTable'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const classes = {
+    root: `${PREFIX}-root`,
+    paper: `${PREFIX}-paper`,
+    table: `${PREFIX}-table`,
+    visuallyHidden: `${PREFIX}-visuallyHidden`,
+    tableRow: `${PREFIX}-tableRow`,
+    completedTableRow: `${PREFIX}-completedTableRow`,
+}
+
+const StyledFade = styled(Fade)(({ theme }) => ({
+    [`& .${classes.root}`]: {
         width: '100%',
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         boxShadow: 'none',
         width: '100%',
         marginBottom: theme.spacing(2),
     },
-    table: {
+
+    [`& .${classes.table}`]: {
         minWidth: 750,
     },
-    visuallyHidden: {
+
+    [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
         height: 1,
@@ -46,19 +57,23 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    tableRow: {
+
+    [`& .${classes.tableRow}`]: {
         '&.MuiTableCell-root': {
             width: 250,
         },
     },
-    completedTableRow: {
+
+    [`& .${classes.completedTableRow}`]: {
         opacity: 0.7,
         backgroundColor: 'rgba(0, 0, 0, 0.04)',
     },
 }))
 
+const sortDirection = ifElse(equals('desc'), always(descend), always(ascend))
+const sortByProperty = (order, orderBy, data) => sortWith([compose(sortDirection(order), prop)(orderBy)], data)
+
 const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
-    const classes = useStyles()
     const dispatch = useDispatch()
 
     const [order, setOrder] = useState('asc')
@@ -125,7 +140,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
 
     return (
         !isNilOrEmpty(data) && (
-            <Fade in timeout={500}>
+            <StyledFade in timeout={500}>
                 <div className={classes.root}>
                     <Paper className={classes.paper}>
                         <CustomTableToolbar
@@ -161,14 +176,13 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                             const rowTime = row.start.substr(11, 5)
                                             const labelId = `enhanced-table-checkbox-${index}`
                                             return (
-                                                <Fade in timeout={500 * index}>
+                                                <Fade key={`${rowDate}-${rowTime}`} in timeout={500 * index}>
                                                     <TableRow
                                                         className={row.completed ? classes.completedTableRow : ''}
                                                         hover
                                                         role="checkbox"
                                                         aria-checked={isItemSelected}
                                                         tabIndex={-1}
-                                                        key={`${rowDate}-${rowTime}`}
                                                         selected={isItemSelected}
                                                     >
                                                         <TableCell padding="checkbox">
@@ -219,6 +233,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                                                                         setEditingData(data[indexOf(row, data)])
                                                                     }}
                                                                     disabled={row.completed}
+                                                                    size="large"
                                                                 >
                                                                     <Edit />
                                                                 </IconButton>
@@ -248,7 +263,7 @@ const CustomTable = ({ title, data, orderBy: orderedBy, headCells }) => {
                         />
                     </Paper>
                 </div>
-            </Fade>
+            </StyledFade>
         )
     )
 }

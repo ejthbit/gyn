@@ -1,17 +1,27 @@
-import { Box, Button, Grid, Hidden, makeStyles, Typography } from '@material-ui/core'
 import {
     AccessTime as AccessTimeIcon,
     Home,
     LocationOn as LocationOnIcon,
     Map as MapIcon,
     Phone as PhoneIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
+import { Box, Button, Grid, Hidden, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import getGoogleMapsUrl from '@utilities/getGoogleMapsUrl'
 import { map } from 'ramda'
 import React from 'react'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'Contacts'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    sectionIcon: `${PREFIX}-sectionIcon`,
+    sectionContent: `${PREFIX}-sectionContent`,
+    ambulanceRow: `${PREFIX}-ambulanceRow`,
+}
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {
         // display: 'block',
         paddingLeft: '15%',
         paddingRight: '15%',
@@ -21,12 +31,13 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: theme.spacing(3),
             fontWeight: 'bold',
             textAlign: 'center',
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 textAlign: 'left',
             },
         },
     },
-    sectionIcon: {
+
+    [`& .${classes.sectionIcon}`]: {
         textAlign: 'center',
 
         '& svg': {
@@ -34,10 +45,12 @@ const useStyles = makeStyles((theme) => ({
             fill: theme.palette.primary.main,
         },
     },
-    sectionContent: {
+
+    [`& .${classes.sectionContent}`]: {
         textAlign: 'center',
     },
-    ambulanceRow: {
+
+    [`& .${classes.ambulanceRow}`]: {
         '&:last-child': {
             borderTop: '1px solid #0000001f',
             paddingTop: theme.spacing(3),
@@ -45,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(3),
     },
 }))
-
+// TODO: Get from DB
 const ambulances = [
     {
         name: 'Frýdek-Místek',
@@ -84,15 +97,14 @@ const contactSections = [
 const handleOpenNavigation = (location) => window.open(getGoogleMapsUrl(location))
 
 const Contacts = () => {
-    const classes = useStyles()
     return (
-        <Grid className={classes.root} container spacing={2} id="contact">
+        <StyledGrid className={classes.root} container spacing={2} id="contact">
             <Grid container item xs={12} className={classes.ambulanceRow} justifyContent="center">
                 <Box marginBottom={2}>
                     <Typography variant="h3">Kontakt</Typography>
                 </Box>
                 <Grid container spacing={4} alignItems="center">
-                    <Hidden smDown>
+                    <Hidden mdDown>
                         {map(
                             ({ id, component }) => (
                                 <Grid key={id} item md={3} className={classes.sectionIcon}>
@@ -143,7 +155,7 @@ const Contacts = () => {
                     )}
                 </Grid>
             </Grid>
-        </Grid>
+        </StyledGrid>
     )
 }
 Contacts.propTypes = {}

@@ -5,7 +5,7 @@ import ReservationError from '@components/reservation/ReservationError'
 import ReservationSuccess from '@components/reservation/ReservationSuccess'
 import ReservationSummary from '@components/reservation/ReservationSummary'
 import ReservationTermPicker from '@components/reservation/ReservationTermPicker'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
 import React from 'react'
 
 const getStepperContent = (step) => {

@@ -129,7 +129,6 @@ const CalendarViewCustomToolbar = ({ label, date, onNavigate, onView }) => {
                             variant={equals(viewState, 'day') ? 'contained' : 'outlined'}
                             color="primary"
                             onClick={goToDayView}
-                            style={{ height: '100%' }}
                             fullWidth
                         >
                             Den

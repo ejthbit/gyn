@@ -29,7 +29,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
         backgroundSize: '100%',
         height: '60vh',
         paddingLeft: '5%',
-        paddingRight: 20,
+        paddingRight: '5%',
         paddingTop: 100,
         [theme.breakpoints.down('sm')]: {
             textAlign: 'center',
@@ -91,7 +91,7 @@ const LandingWelcome = () => {
     return (
         <StyledBox className={classes.root}>
             <LandingPageReservationModal isOpen={isReservationModalOpen} onClose={handleToggleReservationModal} />
-            <Grid container spacing={2}>
+            <Grid container>
                 <Grid item xs={12} className={classes.firstHeadline}>
                     <Typography variant={isMobile ? 'h4' : 'h3'}>Vaše zdraví je u nás vždy na prvním místě</Typography>
                 </Grid>

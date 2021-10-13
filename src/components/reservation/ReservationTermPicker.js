@@ -13,9 +13,10 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import getDoctorById from '@utilities/getDoctorById'
+import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { addHours, parseISO, startOfToday } from 'date-fns'
+import { addHours, startOfToday } from 'date-fns'
 import format from 'date-fns/format'
 import { equals, find } from 'ramda'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -150,7 +151,7 @@ const ReservationTermPicker = () => {
                                 workplace: selectedAmbulanceId,
                             })
                         )
-                    dispatch(setSelectedDate(addHours(date, 2).toISOString()))
+                    dispatch(setSelectedDate(addHours(date, 1).toISOString()))
                 }}
                 renderDay={(day, _value, DayComponentProps) => {
                     const isSelected =
@@ -183,7 +184,7 @@ const ReservationTermPicker = () => {
                     />
                 )}
                 disablePast
-                onChange={(date) => dispatch(setSelectedDate(addHours(date, 2).toISOString()))}
+                onChange={(date) => dispatch(setSelectedDate(getISODateStringWithCorrectOffset(date)))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
                 <>

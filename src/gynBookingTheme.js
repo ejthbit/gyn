@@ -104,6 +104,11 @@ const gynBookingTheme = createTheme({
                 },
             },
         },
+        MuiLink: {
+            defaultProps: {
+                underline: 'hover',
+            },
+        },
     },
 })
 export default gynBookingTheme

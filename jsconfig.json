@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "src",
         "paths": {
             //Assuming your components/utilities live in ./src
             //Update this path as necessary

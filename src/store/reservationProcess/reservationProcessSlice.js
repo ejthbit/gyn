@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
+import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import { addHours } from 'date-fns'
 import { isNil } from 'ramda'
 import { fetchAmbulances, fetchDoctorsForSelectedAmbulance } from './actions'
@@ -23,7 +24,7 @@ const configurationInitialState = {
 const reservationProcessInitialState = {
     selectedAmbulance: null,
     preferredDoctor: '',
-    selectedDate: addHours(new Date(), 2).toISOString().slice(0, 10),
+    selectedDate: getISODateStringWithCorrectOffset(new Date()).slice(0, 10),
     selectedTime: '',
     activeStep: 0,
     contactInformation: {

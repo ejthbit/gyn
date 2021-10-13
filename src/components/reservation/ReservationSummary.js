@@ -5,7 +5,7 @@ import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { values, map, reject } from 'ramda'
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { getContactInformation, makeAppointmentDate } from '/src/store/reservationProcess/selectors'
+import { getContactInformation, makeAppointmentDate } from 'src/store/reservationProcess/selectors'
 
 const getAppointmentDate = makeAppointmentDate()
 const ReservationSummary = () => {

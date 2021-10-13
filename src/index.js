@@ -1,6 +1,7 @@
 import { LocalizationProvider } from '@mui/lab'
 import DateAdapter from '@mui/lab/AdapterDateFns'
-import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material'
+import { CssBaseline, StyledEngineProvider } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
 import { cs } from 'date-fns/locale'
 import React from 'react'
 import ReactDOM from 'react-dom'

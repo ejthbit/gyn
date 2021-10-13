@@ -1,14 +1,18 @@
 /* eslint-disable react/display-name */
-import { Box, Fade, Grid, IconButton, Typography } from '@mui/material'
 import { Refresh } from '@mui/icons-material'
+import { Box, Fade, Grid, IconButton, Typography } from '@mui/material'
 import { isMobile } from '@utilities/checkDeviceType'
+import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { addHours, addMinutes, format, getDay, parse, startOfWeek, subHours } from 'date-fns'
+import { addMinutes, format, getDay, parse, startOfWeek } from 'date-fns'
 import cs from 'date-fns/locale/cs'
 import { equals, find } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser } from 'src/store/administration/selectors'
 import { fetchBookings, patchBooking } from 'src/store/bookings/actions'
@@ -17,9 +21,6 @@ import { getSelectedAmbulance } from 'src/store/reservationProcess/selectors'
 import CalendarViewCreateEventDialog from './CalendarViewCreateEventDialog'
 import CalendarViewCustomToolbar from './CalendarViewCustomToolbar'
 import './css/custom-calendar.css'
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 import CustomEventCalendar from './CustomEventCalendar'
 import EventDetailModal from './EventDetailModal'
 const DragAndDropCalendar = withDragAndDrop(Calendar)
@@ -73,6 +74,7 @@ const CalendarView = () => {
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
 
     const bookings = useMemoizedSelector(makeCalendarEventsSelector, {}, [bookingsViewDate])
+
     const [newAppointmentDate, setNewAppointmentDate] = useState({})
     const [draggedEvent, setDraggedEvent] = useState(null)
     const [openEventDialogEvent, setOpenEventDialogEvent] = useState(null)
@@ -82,21 +84,21 @@ const CalendarView = () => {
         dispatch(fetchBookings({ from, to, workplace: selectedAmbulanceId }))
 
     const onSelectEvent = (event) => {
-        const timeSlotStart = addHours(event.start, 2) // start date/time of the event
-        const isSlotBooked = find(({ start }) => equals(start, subHours(timeSlotStart, 2)), bookings)
+        const timeSlotStart = event.start // start date/time of the event
+        const isSlotBooked = find(({ start }) => equals(start, timeSlotStart), bookings)
         if (isSlotBooked) return handleOpenEventDialog(event)
     }
     const onSelectSlot = ({ action, slots }) => {
-        const timeSlotStart = addHours(slots[0], 2) // start date/time of the event
-        const timeSlotEnd = addHours(slots[slots.length - 1], 2)
+        const timeSlotStart = slots[0] // start date/time of the event
+        const timeSlotEnd = slots[slots.length - 1]
         return equals(action, 'click')
             ? setNewAppointmentDate({
-                  start: timeSlotStart.toISOString(),
-                  end: addMinutes(timeSlotStart, SLOT_DURATION).toISOString(),
+                  start: getISODateStringWithCorrectOffset(timeSlotStart),
+                  end: getISODateStringWithCorrectOffset(addMinutes(timeSlotStart, SLOT_DURATION)),
               })
             : setNewAppointmentDate({
-                  start: timeSlotStart.toISOString(),
-                  end: timeSlotEnd.toISOString(),
+                  start: getISODateStringWithCorrectOffset(timeSlotStart),
+                  end: getISODateStringWithCorrectOffset(timeSlotEnd),
               })
     }
 
@@ -106,7 +108,11 @@ const CalendarView = () => {
 
     const moveEvent = ({ event, start, end }) =>
         dispatch(
-            patchBooking({ id: event.id, start: addHours(start, 2).toISOString(), end: addHours(end, 2).toISOString() })
+            patchBooking({
+                id: event.id,
+                start: getISODateStringWithCorrectOffset(start),
+                end: getISODateStringWithCorrectOffset(end),
+            })
         )
 
     const onDropFromOutside = ({ start, end }) => {

@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
+import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { parseISO, subHours } from 'date-fns'
+import { parseISO, format } from 'date-fns'
 import { equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
@@ -54,19 +55,18 @@ export const makeCalendarEventsSelector = () =>
     createSelector(
         [getBookings],
         (bookings) =>
-            map(
-                ({ id, name, start, end, birthdate, completed }) => ({
+            map(({ id, name, start, end, birthdate, completed }) => {
+                return {
                     id,
-                    start: subHours(parseISO(start), 1),
-                    end: subHours(parseISO(end), 1),
+                    start: getDateWithCorrectOffset(start),
+                    end: getDateWithCorrectOffset(end),
                     title: `${name} ${!isNilOrEmpty(birthdate) ? `- ${birthdate}` : ''}`,
                     resource: {
                         booked: true,
                         completed,
                     },
-                }),
-                bookings
-            ) ?? []
+                }
+            }, bookings) ?? []
     )
 
 export const makeServicesForSelectedMonth = () =>

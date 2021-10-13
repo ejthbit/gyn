@@ -1,6 +1,7 @@
 import TransparentLogo from '@components/Logo/TransparentLogo'
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
 import { AppBar, Box, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material'
+import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
 import PropTypes from 'prop-types'
@@ -13,14 +14,13 @@ const PREFIX = 'MobileNavbar'
 const classes = {
     logo: `${PREFIX}-logo`,
     drawerLogo: `${PREFIX}-drawerLogo`,
-    drawer: `${PREFIX}-drawer`,
+    drawerRoot: `${PREFIX}-drawer`,
     root: `${PREFIX}-root`,
     toolbar: `${PREFIX}-toolbar`,
     menuItem: `${PREFIX}-menuItem`,
     offSet: `${PREFIX}-offSet`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')(({ theme }) => ({
     [`& .${classes.logo}`]: {
         '& svg': {
@@ -30,24 +30,6 @@ const Root = styled('div')(({ theme }) => ({
             },
         },
     },
-
-    [`& .${classes.drawerLogo}`]: {
-        '& svg': {
-            width: '80%',
-            padding: theme.spacing(1),
-            '& path': {
-                fill: `${theme.palette.common.black} !important`,
-            },
-        },
-    },
-
-    [`& .${classes.drawer}`]: {
-        '& .MuiDrawer-paper': {
-            width: '85%',
-            textAlign: 'center',
-        },
-    },
-
     [`& .${classes.root}`]: {
         boxShadow: 'none',
         backgroundColor: 'transparent',
@@ -58,6 +40,23 @@ const Root = styled('div')(({ theme }) => ({
         paddingTop: theme.spacing(2),
     },
 
+    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
+}))
+
+const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
+    '& .MuiDrawer-paper': {
+        width: '100%',
+        textAlign: 'center',
+        '& a': {
+            '& svg': {
+                width: '80%',
+                padding: theme.spacing(1),
+                '& path': {
+                    fill: `${theme.palette.common.black} !important`,
+                },
+            },
+        },
+    },
     [`& .${classes.menuItem}`]: {
         padding: theme.spacing(1.5),
         '& a': {
@@ -69,13 +68,11 @@ const Root = styled('div')(({ theme }) => ({
                 borderBottom: '1px solid black',
             },
         },
-        '& svg': {
-            paddingTop: theme.spacing(0.5),
+        '& .MuiSvgIcon-root': {
             height: 27,
+            padding: theme.spacing(0.5, 0, 0, 0),
         },
     },
-
-    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
 }))
 
 const MobileNavbar = ({ routes }) => {
@@ -102,7 +99,12 @@ const MobileNavbar = ({ routes }) => {
                             </IconButton>
                         </Grid>
                     </Grid>
-                    <Drawer anchor="right" open={isDrawerOpen} onClose={handleToggleDrawer} className={classes.drawer}>
+                    <StyledDrawer
+                        anchor="right"
+                        open={isDrawerOpen}
+                        onClose={handleToggleDrawer}
+                        className={classes.drawerRoot}
+                    >
                         <IconButton onClick={handleToggleDrawer} size="large">
                             <CloseIcon />
                         </IconButton>
@@ -118,7 +120,7 @@ const MobileNavbar = ({ routes }) => {
                                 </Typography>
                             </Grid>
                         ))}
-                    </Drawer>
+                    </StyledDrawer>
                 </Toolbar>
             </AppBar>
             <Box className={classes.offSet} />

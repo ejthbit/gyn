@@ -20,7 +20,7 @@ const StyledTextField = styled(TextField)(() => ({
     },
 }))
 
-const FormSelectInput = ({ control, name, select, children, disabled, className, ...otherTextFieldProps }) => {
+const FormSelectInput = ({ control, name, children, disabled, className, ...otherTextFieldProps }) => {
     const {
         field: { ref, ...inputProps },
         fieldState: { invalid, error },

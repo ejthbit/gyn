@@ -1,15 +1,15 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
-import { equals, filter, map, find, propEq } from 'ramda'
+import { equals, filter, map } from 'ramda'
 import {
-    fetchAvailableTimeslots,
     bookAnAppointment,
+    deleteBooking,
+    fastBooking,
+    fetchAvailableTimeslots,
     fetchBookings,
     fetchDoctorServicesForSelectedMonth,
-    deleteBooking,
-    patchBooking,
-    fastBooking,
     getCurrentMonthSonographyDates,
+    patchBooking,
 } from './actions'
 
 /* RTK uses on background Immer library.

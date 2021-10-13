@@ -13,8 +13,9 @@ import {
     Typography,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { addHours, addMinutes } from 'date-fns'
+import { addMinutes, format } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -71,6 +72,7 @@ const EventDetailModal = ({ event, handleClose }) => {
     })
     const { isDirty } = formState
     const handlePatchBooking = async (updatedBooking) => {
+        console.log(updatedBooking?.start)
         const { error } = await dispatch(
             patchBooking({
                 id: event.id,
@@ -93,14 +95,13 @@ const EventDetailModal = ({ event, handleClose }) => {
             setStartValue(start)
             setCompletedValue(resource?.completed)
             reset({
-                start: addHours(start, 2).toISOString(),
+                start: start.toISOString(),
                 name: name.split(' - ')[0],
                 birthdate: name.split(' - ')[1],
                 completed: resource?.completed,
             })
         }
-    }, [event])
-
+    }, [event, reset])
     return (
         <StyledDialog maxWidth="sm" open={!isNilOrEmpty(event)} onClose={handleClose} disableScrollLock fullWidth>
             <DialogTitle className={classes.title}>Detail objednávky</DialogTitle>
@@ -117,7 +118,9 @@ const EventDetailModal = ({ event, handleClose }) => {
                     name="start"
                     onChange={(date) => {
                         setStartValue(date)
-                        setValue('start', addHours(date, 2).toISOString(), { shouldDirty: true })
+                        setValue('start', getISODateStringWithCorrectOffset(date), {
+                            shouldDirty: true,
+                        })
                     }}
                     renderInput={(params) => <TextField {...params} variant="standard" required />}
                     ampm={false}

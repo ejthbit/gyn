@@ -1,6 +1,7 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
-import { format, subHours } from 'date-fns'
+import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
+import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -32,9 +33,9 @@ const CalendarViewCreateEventDialog = ({ open = false, data, handleClose }) => {
                 <DialogContent>
                     <Box marginBottom={1}>
                         <Typography>{`Vybraný termín: ${format(
-                            subHours(new Date(start), 2),
+                            getDateWithCorrectOffset(start),
                             'dd/MM/yyyy HH:mm:ss'
-                        )} - ${format(subHours(new Date(end), 2), 'dd/MM/yyyy HH:mm:ss')}`}</Typography>
+                        )} - ${format(getDateWithCorrectOffset(end), 'dd/MM/yyyy HH:mm:ss')}`}</Typography>
                     </Box>
                     <FormInput control={control} name="title" placeholder="Zadejte prosím jméno pacienta" fullWidth />
                 </DialogContent>

@@ -8,7 +8,6 @@ import {
 } from '@assets/SvgIcons'
 import { Divider, Fade, Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import Service from './Service'
 
@@ -36,7 +35,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
         },
     },
 }))
-
+// TODO: Move to db
 const services = [
     {
         icon: <RoutineExaminationIcon />,
@@ -78,21 +77,6 @@ const services = [
 const Services = () => {
     return (
         <StyledGrid className={classes.root} container spacing={2} id="services">
-            {!isMobile && (
-                <Grid item xs={12}>
-                    <Typography variant={'body2'} align="center">
-                        Gynekologie MUDr. Miroslav Vaněk spustila v úterý 5. řijna 2021 nový web.
-                        <br />
-                        Důvodem byla modernizace objednávacího systému
-                        <br />
-                        a přehledné zobrazení informací také na mobilních zařízeních.
-                        <br />
-                        Do 31. října 2021 bude nový web spuštěn v testovacím režimu a bude možné k němu posílat
-                        <br />
-                        připomínky či dotazy, a to na adresu webmaster@gynekologie-vanek.cz.
-                    </Typography>
-                </Grid>
-            )}
             <Grid item xs={12}>
                 <Typography variant="h3">Naše služby</Typography>
             </Grid>
@@ -119,6 +103,4 @@ const Services = () => {
         </StyledGrid>
     )
 }
-Services.propTypes = {}
-
 export default Services

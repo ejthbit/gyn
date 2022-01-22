@@ -47,7 +47,6 @@ const classes = {
     logoContainer: `${PREFIX}-logoContainer`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
     [`& .${classes.root}`]: {
         flexGrow: 1,
@@ -168,7 +167,7 @@ const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
 
 const adminToolbarContent = [
     { id: 1, icon: <Event />, text: 'Objednávky', link: adminPaths.orders },
-    { id: 2, icon: <Schedule />, text: 'Rozpisy směn', link: adminPaths.doctorServices },
+    { id: 2, icon: <Schedule />, text: 'Rozpis směn', link: adminPaths.doctorServices },
     { id: 3, icon: <DateRange />, text: 'Kalendař', link: adminPaths.calendar },
 ]
 
@@ -211,10 +210,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
                             spacing={2}
                         >
                             <Grid item container md={5} alignItems="center" className={classes.ambulanceSelect}>
-                                <Box marginRight={2}>
-                                    <Typography>Ambulance:</Typography>
-                                </Box>
-                                <AmbulanceSelect variant="outlined" />
+                                <AmbulanceSelect variant="outlined" label="Vybraná ambulance:" />
                             </Grid>
                             <Grid item>
                                 <Box marginRight={3}>

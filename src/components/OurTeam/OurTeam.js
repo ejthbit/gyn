@@ -1,14 +1,14 @@
-import Person from '@components/OurTeam/Person'
 import { Fade, Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import React from 'react'
+import React, { lazy } from 'react'
 import Hrtonova from '../../assets/OurTeam/Img/hrtonova.jpg'
 import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
-import Sebestova from '../../assets/OurTeam/Img/sebestova.jpg'
 import UnknownMale from '../../assets/OurTeam/Img/unkown-male-doctor.png'
 import Vanek from '../../assets/OurTeam/Img/vanek.jpg'
 import Vankova from '../../assets/OurTeam/Img/vankova.jpg'
 import { medveckaText, vanekText, vankovaText } from '../../assets/OurTeam/Text/vanek'
+
+const Person = lazy(() => import('@components/OurTeam/Person'))
 
 const PREFIX = 'OurTeam'
 
@@ -54,10 +54,7 @@ const doctors = [
     },
     { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: UnknownMale },
 ]
-const nurses = [
-    { fullName: 'Mgr. Kamila Šebestová', image: Sebestova },
-    { fullName: 'Šárka Hrtoňová', image: Hrtonova },
-]
+const nurses = [{ fullName: 'Šárka Hrtoňová', image: Hrtonova }]
 
 const OurTeam = () => {
     return (

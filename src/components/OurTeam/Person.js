@@ -37,7 +37,7 @@ const Person = ({ image, fullName, specialization, text }) => {
 
     return (
         <StyledBox className={classes.root}>
-            {image && <img src={image} className={classes.image} onClick={handleToggleDetail} />}
+            {image && <img src={image} loading="lazy" className={classes.image} onClick={handleToggleDetail} />}
             <Typography variant="h6">{fullName}</Typography>
             <Typography variant="caption" color="textSecondary">
                 {specialization}

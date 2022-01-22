@@ -52,7 +52,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
     [`& .${classes.logoContainer}`]: {
         marginTop: theme.spacing(2),
         '& svg': {
-            width: '50%',
+            width: '60%',
             maxWidth: 280,
         },
     },
@@ -66,7 +66,7 @@ const Footer = () => {
     return (
         <StyledGrid className={classes.root} container spacing={2} justifyContent="center">
             <Grid item container xs={12} spacing={2} alignContent="center">
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                     <Typography variant="body1" color="primary">
                         MUDr. Miroslav Vaněk
                         <br />
@@ -92,7 +92,7 @@ const Footer = () => {
                         <TransparentLogo />
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                     <Typography variant="body1" color="primary" className={classes.menuItemContainer}>
                         Mapa webu
                     </Typography>

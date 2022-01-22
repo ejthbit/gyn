@@ -1,4 +1,6 @@
 import Dropdown from '@components/buildingbBlocks/Dropdown'
+import { Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
@@ -8,7 +10,7 @@ import { setSelectedAmbulance } from 'src/store/reservationProcess/reservationPr
 import { getSelectedAmbulance, makeArrayOfValueLabelAmbulances } from 'src/store/reservationProcess/selectors'
 
 const selectAmbulancesValueLabelPair = makeArrayOfValueLabelAmbulances()
-const AmbulanceSelect = ({ variant = 'standard' }) => {
+const AmbulanceSelect = ({ variant = 'standard', label }) => {
     const dispatch = useDispatch()
     const ambulances = useSelector(selectAmbulancesValueLabelPair)
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
@@ -19,13 +21,20 @@ const AmbulanceSelect = ({ variant = 'standard' }) => {
     }, [])
 
     return (
-        <Dropdown
-            variant={variant}
-            options={ambulances}
-            value={selectedAmbulanceId}
-            onChange={handleChangeDoctor}
-            label="Ambulance"
-        />
+        <>
+            {label && (
+                <Box marginRight={2}>
+                    <Typography>{label}</Typography>
+                </Box>
+            )}
+            <Dropdown
+                variant={variant}
+                options={ambulances}
+                value={selectedAmbulanceId}
+                onChange={handleChangeDoctor}
+                label="Ambulance"
+            />
+        </>
     )
 }
 

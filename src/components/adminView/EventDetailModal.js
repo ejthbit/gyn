@@ -15,7 +15,7 @@ import {
 import { styled } from '@mui/material/styles'
 import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { addMinutes, format } from 'date-fns'
+import { addMinutes } from 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -72,7 +72,6 @@ const EventDetailModal = ({ event, handleClose }) => {
     })
     const { isDirty } = formState
     const handlePatchBooking = async (updatedBooking) => {
-        console.log(updatedBooking?.start)
         const { error } = await dispatch(
             patchBooking({
                 id: event.id,
@@ -95,7 +94,7 @@ const EventDetailModal = ({ event, handleClose }) => {
             setStartValue(start)
             setCompletedValue(resource?.completed)
             reset({
-                start: start.toISOString(),
+                start: getISODateStringWithCorrectOffset(start),
                 name: name.split(' - ')[0],
                 birthdate: name.split(' - ')[1],
                 completed: resource?.completed,
@@ -129,7 +128,13 @@ const EventDetailModal = ({ event, handleClose }) => {
                     cancelText="zrušit"
                 />
                 <FormInput label="Jméno" control={control} name="name" fullWidth />
-                <FormInput label="Datum narození" control={control} name="birthdate" fullWidth />
+                <FormInput
+                    label="Datum narození"
+                    placeholder="RRRR-MM-DD"
+                    control={control}
+                    name="birthdate"
+                    fullWidth
+                />
                 <FormControlLabel
                     label="Dokončená objednávka"
                     control={

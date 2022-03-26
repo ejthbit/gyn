@@ -18,12 +18,13 @@ import { styled } from '@mui/material/styles'
 import getOpeningHours from '@utilities/getOpeningHours'
 import { format } from 'date-fns'
 import PropTypes from 'prop-types'
-import { addIndex, map, values } from 'ramda'
+import { addIndex, equals, filter, map, values } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { createDoctorServiceForMonth, updateDoctorServiceForMonth } from 'src/store/administration/actions'
 import { getDoctorsForSelectedAmbulance } from 'src/store/reservationProcess/selectors'
+import DoctorEntryMenu from './components/DoctorEntryMenu'
 
 const PREFIX = 'ServicesTable'
 
@@ -61,6 +62,10 @@ const StyledFade = styled(Fade)(({ theme }) => ({
         top: 20,
         width: 1,
     },
+    [`& .${classes.tableRow}`]: {
+        width: 180,
+        maxWidth: 180,
+    },
 }))
 
 const openingHours = getOpeningHours()
@@ -74,12 +79,12 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
         defaultValues: { data },
     })
 
+    console.log(formState)
+    const { fields, update } = useFieldArray({ name: 'data', control, shouldUnregister: true })
     useEffect(() => {
         const subscription = watch((value) => setFormState(value.data))
         return () => subscription.unsubscribe()
     }, [watch])
-
-    const { fields, update } = useFieldArray({ name: 'data', control, shouldUnregister: true })
     const handleAssignDoctorToDay = (index) =>
         update(index, {
             ...formState[index],
@@ -93,15 +98,25 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                 },
             ],
         })
+    const handleRemoveDoctorFromDay = (index, selectedDoctorId) => {
+        return update(index, {
+            ...formState[index],
+            doctors: filter(
+                ({ doctorId }) => !equals(doctorId, formState[index].doctors[selectedDoctorId].doctorId),
+                formState[index].doctors
+            ),
+        })
+    }
     const onSubmit = ({ data }) => {
         const apiData = {
             month: selectedMonth,
             days: data,
             workplace: selectedWorkplaceId,
         }
-        !isEditingServices
-            ? dispatch(createDoctorServiceForMonth(apiData))
-            : dispatch(updateDoctorServiceForMonth(apiData))
+        console.log(apiData)
+        // !isEditingServices
+        //     ? dispatch(createDoctorServiceForMonth(apiData))
+        //     : dispatch(updateDoctorServiceForMonth(apiData))
     }
 
     useEffect(() => {
@@ -116,16 +131,23 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                         <TableRow>
                             <TableCell rowSpan="2">Den</TableCell>
                             <TableCell rowSpan="2">Datum</TableCell>
-                            <TableCell align="center" colSpan="8">
+                            <TableCell align="center" rowSpan="1" colSpan="8">
                                 Seznam doktorů
+                            </TableCell>
+                            <TableCell rowSpan="2" align="center" sx={{ width: 50 }}>
+                                Přídat řádek
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell colSpan={2}>Doktor</TableCell>
-                            <TableCell colSpan={1}>Od</TableCell>
-                            <TableCell colSpan={1}>Do</TableCell>
-                            <TableCell colSpan={3}>Poznámka</TableCell>
-                            <TableCell colSpan={1}>Akce</TableCell>
+                            <TableCell className={classes.tableRow}>Doktor</TableCell>
+                            <TableCell className={classes.tableRow}>Od</TableCell>
+                            <TableCell className={classes.tableRow}>Do</TableCell>
+                            <TableCell align="center" sx={{ width: 250, maxWidth: 250 }}>
+                                Poznámka
+                            </TableCell>
+                            <TableCell align="center" sx={{ width: 50, maxWidth: 50 }}>
+                                Akce
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -144,10 +166,13 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                     <TableCell colSpan={8} sx={{ padding: 0 }}>
                                         <Table>
                                             <TableBody>
+                                                {/*
+                                                 TODO: Move to separate component and fix using this issue solution, move onDelete and OnAssign too
+                                                https://stackoverflow.com/questions/66727547/reset-nested-array-in-react-hook-form */}
                                                 {addIndex(map)(
                                                     ({ id }, index) => (
                                                         <TableRow key={id}>
-                                                            <TableCell colSpan={2}>
+                                                            <TableCell className={classes.tableRow}>
                                                                 <FormSelectInput
                                                                     name={`data.${idx}.doctors.${index}.doctorId`}
                                                                     control={control}
@@ -179,7 +204,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                                                     )}
                                                                 </FormSelectInput>
                                                             </TableCell>
-                                                            <TableCell colSpan={1}>
+                                                            <TableCell className={classes.tableRow}>
                                                                 <FormSelectInput
                                                                     name={`data.${idx}.doctors.${index}.start`}
                                                                     control={control}
@@ -199,7 +224,7 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                                                     )}
                                                                 </FormSelectInput>
                                                             </TableCell>
-                                                            <TableCell colSpan={1}>
+                                                            <TableCell className={classes.tableRow}>
                                                                 <FormSelectInput
                                                                     name={`data.${idx}.doctors.${index}.end`}
                                                                     control={control}
@@ -219,17 +244,20 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                                                     )}
                                                                 </FormSelectInput>
                                                             </TableCell>
-                                                            <TableCell colSpan={3}>
+                                                            <TableCell sx={{ width: 250, maxWidth: 250 }}>
                                                                 <FormInput
                                                                     name={`data.${idx}.doctors.${index}.note`}
                                                                     control={control}
                                                                     fullWidth
                                                                 />
                                                             </TableCell>
-                                                            <TableCell colSpan={1}>
-                                                                <Button onClick={() => handleAssignDoctorToDay(idx)}>
-                                                                    <Add />
-                                                                </Button>
+                                                            <TableCell sx={{ width: 50, maxWidth: 50 }}>
+                                                                <DoctorEntryMenu
+                                                                    onDelete={() =>
+                                                                        handleRemoveDoctorFromDay(idx, index)
+                                                                    }
+                                                                    disabled={formState[idx].doctors.length <= 1}
+                                                                />
                                                             </TableCell>
                                                         </TableRow>
                                                     ),
@@ -237,6 +265,20 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                                 )}
                                             </TableBody>
                                         </Table>
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            width: 50,
+                                            maxWidth: 50,
+                                            display:
+                                                formState[idx].doctors.length < values(selectedDoctors).length
+                                                    ? 'table-cell'
+                                                    : 'none',
+                                        }}
+                                    >
+                                        <Button onClick={() => handleAssignDoctorToDay(idx)}>
+                                            <Add />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ),

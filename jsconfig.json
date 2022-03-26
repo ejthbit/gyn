@@ -1,13 +1,10 @@
 {
     "compilerOptions": {
-        "baseUrl": "src",
+        "jsx": "preserve",
+        "baseUrl": ".",
         "paths": {
-            //Assuming your components/utilities live in ./src
-            //Update this path as necessary
-            "@components/*": ["./src/components/*"],
-            "@utilities/*": ["./src/utils/*"],
-            "@assets/*": ["./src/assets/*"]
+            "*": ["*", "src/*"]
         }
     },
-    "include": ["src"]
+    "exclude": ["node_modules"]
 }

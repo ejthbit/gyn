@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { parseISO, format } from 'date-fns'
 import { equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 

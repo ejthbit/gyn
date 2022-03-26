@@ -91,10 +91,14 @@ const DoctorServicesView = () => {
                 map(
                     (date) => ({
                         date,
-                        doctorId: '',
-                        start: '',
-                        end: '',
-                        note: '',
+                        doctors: [
+                            {
+                                doctorId: '',
+                                start: '',
+                                end: '',
+                                note: '',
+                            },
+                        ],
                     }),
                     workingDates
                 )

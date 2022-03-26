@@ -1,6 +1,9 @@
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { logOutAutomatically } from '../administration/administrationSlice'
 
+/**
+ * If the user's token has expired, log them out and clear the local storage
+ */
 const checkTokenExpirationMiddleware =
     ({ dispatch }) =>
     (next) =>

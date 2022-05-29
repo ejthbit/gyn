@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { equals, filter, includes, map, path } from 'ramda'
+import { isEmpty, propEq, equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
@@ -80,9 +80,11 @@ export const makeServicesForSelectedMonth = () =>
 
 export const makeDoctorServicesByDoctorId = () =>
     createSelector([makeServicesForSelectedMonth(), DOCTOR_ID], (service, doctorId) => {
-        return equals(doctorId, '')
-            ? service?.days ?? []
-            : filter((day) => equals(day.doctorId.toString(), doctorId.toString()), service?.days ?? [])
+        const getDayDoctorsBySelectedId = (doctors) => doctors.find(propEq('doctorId', doctorId))
+
+        return isEmpty(doctorId)
+            ? filter((day) => isNilOrEmpty(getDayDoctorsBySelectedId(day.doctors)), service?.days ?? [])
+            : filter((day) => equals(getDayDoctorsBySelectedId(day.doctors)?.doctorId, doctorId), service?.days ?? [])
     })
 
 export const makeServicesSelector = () =>

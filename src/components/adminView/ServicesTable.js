@@ -79,7 +79,6 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
         defaultValues: { data },
     })
 
-    console.log(formState)
     const { fields, update } = useFieldArray({ name: 'data', control, shouldUnregister: true })
     useEffect(() => {
         const subscription = watch((value) => setFormState(value.data))
@@ -113,10 +112,9 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
             days: data,
             workplace: selectedWorkplaceId,
         }
-        console.log(apiData)
-        // !isEditingServices
-        //     ? dispatch(createDoctorServiceForMonth(apiData))
-        //     : dispatch(updateDoctorServiceForMonth(apiData))
+        !isEditingServices
+            ? dispatch(createDoctorServiceForMonth(apiData))
+            : dispatch(updateDoctorServiceForMonth(apiData))
     }
 
     useEffect(() => {

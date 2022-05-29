@@ -151,7 +151,7 @@ const ReservationTermPicker = () => {
                                 workplace: selectedAmbulanceId,
                             })
                         )
-                    dispatch(setSelectedDate(addHours(date, 1).toISOString()))
+                    dispatch(setSelectedDate(getISODateStringWithCorrectOffset(addHours(date, 1))))
                 }}
                 renderDay={(day, _value, DayComponentProps) => {
                     const isSelected =

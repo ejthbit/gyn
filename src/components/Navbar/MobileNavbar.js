@@ -1,6 +1,6 @@
 import TransparentLogo from '@components/Logo/TransparentLogo'
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
-import { AppBar, Box, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'

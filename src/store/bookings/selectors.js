@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { parseISO, format } from 'date-fns'
 import { equals, filter, includes, map, path } from 'ramda'
 import { createSelector } from 'reselect'
 
@@ -55,7 +54,7 @@ export const makeCalendarEventsSelector = () =>
     createSelector(
         [getBookings],
         (bookings) =>
-            map(({ id, name, start, end, birthdate, completed }) => {
+            map(({ id, name, start, end, birthdate, contact, completed }) => {
                 return {
                     id,
                     start: getDateWithCorrectOffset(start),
@@ -63,6 +62,7 @@ export const makeCalendarEventsSelector = () =>
                     title: `${name} ${!isNilOrEmpty(birthdate) ? `- ${birthdate}` : ''}`,
                     resource: {
                         booked: true,
+                        phone: contact?.phone,
                         completed,
                     },
                 }

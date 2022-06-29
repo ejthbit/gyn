@@ -67,6 +67,7 @@ const EventDetailModal = ({ event, handleClose }) => {
             end: '',
             name: '',
             birthdate: '',
+            phone: '',
             completed: completedValue,
         },
     })
@@ -97,6 +98,7 @@ const EventDetailModal = ({ event, handleClose }) => {
                 start: getISODateStringWithCorrectOffset(start),
                 name: name.split(' - ')[0],
                 birthdate: name.split(' - ')[1],
+                phone: isNilOrEmpty(resource?.phone) ? 'Nevyplněno' : resource?.phone,
                 completed: resource?.completed,
             })
         }
@@ -104,7 +106,7 @@ const EventDetailModal = ({ event, handleClose }) => {
     return (
         <StyledDialog maxWidth="sm" open={!isNilOrEmpty(event)} onClose={handleClose} disableScrollLock fullWidth>
             <DialogTitle className={classes.title}>Detail objednávky</DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{ display: 'grid', gap: 1 }}>
                 <TimePicker
                     id="start"
                     label="Začátek rezervace"
@@ -134,6 +136,14 @@ const EventDetailModal = ({ event, handleClose }) => {
                     control={control}
                     name="birthdate"
                     fullWidth
+                />
+                <FormInput
+                    label="Telefonní číslo"
+                    placeholder="Telefonní číslo"
+                    control={control}
+                    name="phone"
+                    fullWidth
+                    disabled={true ?? !!control.defaultValuesRef.current.phone}
                 />
                 <FormControlLabel
                     label="Dokončená objednávka"

@@ -1,24 +1,13 @@
 import { TextField } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import React from 'react'
 import { useController } from 'react-hook-form'
 
-const PREFIX = 'FormInput'
-
-const classes = {
-    disabled: `${PREFIX}-disabled`,
+const disabledStyling = {
+    opacity: 0.5,
+    pointerEvents: 'none',
+    color: 'rgba(0, 0, 0, 0.38)',
+    cursor: 'default',
 }
-
-const StyledTextField = styled(TextField)(() => ({
-    [`& .${classes.disabled}`]: {
-        opacity: 0.5,
-        pointerEvents: 'none',
-        color: 'rgba(0, 0, 0, 0.38)',
-        cursor: 'default',
-    },
-}))
 
 const FormInput = ({ control, name, disabled, className, ...otherTextFieldProps }) => {
     const {
@@ -33,7 +22,8 @@ const FormInput = ({ control, name, disabled, className, ...otherTextFieldProps 
     return (
         <TextField
             variant="standard"
-            className={disabled ? clsx(className, classes.disabled) : className}
+            className={className}
+            sx={disabled ? { ...disabledStyling } : {}}
             error={invalid}
             helperText={error?.message}
             readOnly={disabled}

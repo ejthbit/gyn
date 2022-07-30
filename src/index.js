@@ -1,6 +1,5 @@
-import { LocalizationProvider } from '@mui/lab'
-import DateAdapter from '@mui/lab/AdapterDateFns'
-import { CssBaseline, StyledEngineProvider } from '@mui/material'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { cs } from 'date-fns/locale'
 import React from 'react'
@@ -9,17 +8,20 @@ import { Provider } from 'react-redux'
 import App from './App'
 import gynBookingTheme from './gynBookingTheme'
 import { store } from './store/store'
+import { LocalizationProvider } from '@mui/x-date-pickers'
 
 ReactDOM.render(
-    <LocalizationProvider dateAdapter={DateAdapter} locale={cs}>
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={gynBookingTheme}>
-                <Provider store={store}>
-                    <CssBaseline />
-                    <App />
-                </Provider>
-            </ThemeProvider>
-        </StyledEngineProvider>
+    <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        locale={cs}
+        localeText={{ okButtonLabel: 'Potvrdit', cancelButtonLabel: 'Zavřít' }}
+    >
+        <ThemeProvider theme={gynBookingTheme}>
+            <Provider store={store}>
+                <CssBaseline />
+                <App />
+            </Provider>
+        </ThemeProvider>
     </LocalizationProvider>,
     document.getElementById('root')
 )

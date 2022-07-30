@@ -1,16 +1,4 @@
-import { Today } from '@mui/icons-material'
-import { MobileDatePicker, PickersDay } from '@mui/lab'
-import {
-    Badge,
-    FormControl,
-    Grid,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-} from '@mui/material'
+import { Badge, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import getDoctorById from '@utilities/getDoctorById'
 import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
@@ -41,6 +29,8 @@ import {
     makeReservationProcessInfo,
 } from 'src/store/reservationProcess/selectors'
 import { fetchBookingCategories } from 'src/store/reservationProcess/actions'
+import { MobileDatePicker, PickersDay } from '@mui/x-date-pickers'
+import DatepickerInput from './Components/DatepickerInput'
 
 const PREFIX = 'ReservationTermPicker'
 
@@ -160,42 +150,26 @@ const ReservationTermPicker = () => {
                         )
                     dispatch(setSelectedDate(getISODateStringWithCorrectOffset(addHours(date, 1))))
                 }}
-                renderDay={(day, _value, DayComponentProps) => {
+                renderDay={(day, selectedDays, pickersDayProps) => {
                     const isSelected =
-                        !DayComponentProps.outsideCurrentMonth &&
+                        !pickersDayProps.outsideCurrentMonth &&
                         find(({ date, doctorId }) => {
                             if (!isNilOrEmpty(doctorId))
                                 return equals(date, format(day, 'yyyy-MM-dd')) && day >= startOfToday()
                         }, doctorServicesBySelectedDoctorIdAndMonth)
                     return (
                         <Badge key={day.toString()} overlap="circular" badgeContent={isSelected ? '👨🏻‍⚕️' : undefined}>
-                            <PickersDay {...DayComponentProps} disabled={isNilOrEmpty(isSelected)} />
+                            <PickersDay {...pickersDayProps} disabled={isNilOrEmpty(isSelected)} />
                         </Badge>
                     )
                 }}
-                okText="Potvrdit"
-                cancelText="Zavřít"
                 views={['year', 'month', 'day']}
-                renderInput={(props) => (
-                    <TextField
-                        ref={props.inputRef}
-                        {...props}
-                        variant="standard"
-                        required
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <Today />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                )}
+                renderInput={DatepickerInput}
                 disablePast
                 onChange={(date) => dispatch(setSelectedDate(getISODateStringWithCorrectOffset(date)))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
-                <StyledGrid container direction="row" spacing={2}>
+                <StyledGrid container direction="row" spacing={1}>
                     <Grid item xs={12} sm={6}>
                         <FormControl variant="standard" sx={{ mt: 0.5, minWidth: 120 }} fullWidth>
                             <InputLabel id="timePickerLabel" required>
@@ -235,9 +209,9 @@ const ReservationTermPicker = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        {isDoctorServing?.note && (
+                        {/* {isDoctorServing?.note && (
                             <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>
-                        )}
+                        )} */}
                     </Grid>
                 </StyledGrid>
             ) : !isNilOrEmpty(isDoctorServing) ? (

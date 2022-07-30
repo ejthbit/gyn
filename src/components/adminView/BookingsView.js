@@ -1,7 +1,7 @@
 import CustomTable from '@components/buildingbBlocks/CustomTable/CustomTable'
-import { MobileDatePicker } from '@mui/lab'
 import { Button, Fade, Grid, TextField, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
 import { endOfDay, endOfMonth, endOfWeek, parseISO, startOfDay, startOfWeek } from 'date-fns'
@@ -114,8 +114,6 @@ const BookingsView = () => {
                             maxDate={!isNilOrEmpty(bookingsViewDate.to) ? parseISO(bookingsViewDate.to) : undefined}
                             renderInput={(props) => <TextField variant="standard" {...props} />}
                             onChange={(date) => handleChangeDate({ from: startOfDay(date).toISOString() })}
-                            okText="Potvrdit"
-                            cancelText="Zavřít"
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>
@@ -131,8 +129,6 @@ const BookingsView = () => {
                             value={isNilOrEmpty(bookingsViewDate.to) ? bookingsViewDate.from : bookingsViewDate.to}
                             renderInput={(props) => <TextField variant="standard" {...props} />}
                             onChange={(date) => handleChangeDate({ to: endOfDay(date).toISOString() })}
-                            okText="Potvrdit"
-                            cancelText="Zavřít"
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>

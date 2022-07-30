@@ -1,6 +1,5 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { Delete } from '@mui/icons-material'
-import { TimePicker } from '@mui/lab'
 import {
     Button,
     Checkbox,
@@ -22,6 +21,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { deleteBooking, patchBooking } from 'src/store/bookings/actions'
+import { TimePicker } from '@mui/x-date-pickers'
 
 const PREFIX = 'EventDetailModal'
 
@@ -129,8 +129,6 @@ const EventDetailModal = ({ event, handleClose }) => {
                     renderInput={(params) => <TextField {...params} variant="standard" required />}
                     ampm={false}
                     minutesStep={15}
-                    okText="potvrdit"
-                    cancelText="zrušit"
                 />
                 <FormInput label="Jméno" control={control} name="name" fullWidth />
                 <FormInput

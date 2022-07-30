@@ -20,7 +20,7 @@ const StyledTextField = styled(TextField)(() => ({
     },
 }))
 
-const FormSelectInput = ({ control, name, children, disabled, className, ...otherTextFieldProps }) => {
+const FormSelectInput = ({ control, name, children, disabled, className, displayEmpty, ...otherTextFieldProps }) => {
     const {
         field: { ref, ...inputProps },
         fieldState: { invalid, error },
@@ -43,6 +43,7 @@ const FormSelectInput = ({ control, name, children, disabled, className, ...othe
                 MenuProps: {
                     disableScrollLock: true,
                 },
+                displayEmpty,
             }}
             {...inputProps}
             {...otherTextFieldProps}
@@ -59,6 +60,7 @@ FormSelectInput.propTypes = {
     name: PropTypes.string,
     disabled: PropTypes.bool,
     className: PropTypes.string,
+    displayEmpty: PropTypes.bool,
 }
 
 export default FormSelectInput

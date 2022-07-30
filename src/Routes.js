@@ -1,7 +1,7 @@
 import LoginPageForm from '@components/LoginPageForm/LoginPageForm'
 import Navbar from '@components/Navbar/Navbar'
 import ProtectedRoute from '@components/ProtectedRoute/ProtectedRoute'
-import { Grid, LinearProgress, Box } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { isMobile } from '@utilities/checkDeviceType'
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -16,9 +16,17 @@ const Routes = () => {
         <Router basename={process.env.NODE_ENV !== 'production' ? '/' : process.env.PROD_WEB_BASE_CONTEXT_PATH}>
             <Suspense
                 fallback={
-                    <Grid>
-                        <LinearProgress />
-                    </Grid>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100vh',
+                        }}
+                    >
+                        <CircularProgress size={40} />
+                    </Box>
                 }
             >
                 <Route path="*" children={<Navbar />} />

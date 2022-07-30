@@ -5,6 +5,7 @@ import axiosGynInstance from '../../api/config'
 import {
     getContactInformation,
     getSelectedAmbulance,
+    getSelectedCategory,
     getSelectedDate,
     getSelectedTime,
 } from '../reservationProcess/selectors'
@@ -42,7 +43,7 @@ export const fetchDoctorServicesForSelectedMonth = createAsyncThunk(
 )
 export const fastBooking = createAsyncThunk(
     'bookings/fastBooking',
-    async ({ name, start, end }, { getState, rejectWithValue }) => {
+    async ({ name, start, end, category }, { getState, rejectWithValue }) => {
         const state = getState()
         const selectedAmbulanceId = getSelectedAmbulance(state)
         const URL = `${ID}/booking`
@@ -54,7 +55,7 @@ export const fastBooking = createAsyncThunk(
                 end,
                 workplace: selectedAmbulanceId,
                 contact: { email: '', phone: '' },
-                category: 1,
+                category,
             })
             return res.data
         } catch (error) {
@@ -70,7 +71,7 @@ export const bookAnAppointment = createAsyncThunk(
         const state = getState()
         const { name, email, phone, birthDate } = getContactInformation(state)
         const selectedAmbulanceId = getSelectedAmbulance(state)
-
+        const selectedCategory = getSelectedCategory(state)
         const selectedDate = getSelectedDate(state)
         const selectedTime = getSelectedTime(state)
 
@@ -84,7 +85,7 @@ export const bookAnAppointment = createAsyncThunk(
                 start: `${selectedDate}T${selectedTime}.000Z`,
                 end: addMinutes(new Date(start), 15).toISOString(),
                 workplace: selectedAmbulanceId,
-                category: 1,
+                category: selectedCategory,
             })
             return res.data
         } catch (error) {

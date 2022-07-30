@@ -10,13 +10,14 @@ import {
     DialogTitle,
     FormControlLabel,
     TextField,
-    Typography,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
+import DialogButtons from '@components/buildingbBlocks/DialogButtons/DialogButtons'
 import { addMinutes } from 'date-fns'
 import PropTypes from 'prop-types'
+import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -61,6 +62,7 @@ const EventDetailModal = ({ event, handleClose }) => {
     const dispatch = useDispatch()
     const [startValue, setStartValue] = useState(null)
     const [completedValue, setCompletedValue] = useState(false)
+    const [precautionaryInspectionValue, setPrecautionaryInspectionValue] = useState(false)
     const { control, handleSubmit, reset, formState, setValue } = useForm({
         defaultValues: {
             start: '',
@@ -94,6 +96,7 @@ const EventDetailModal = ({ event, handleClose }) => {
             const { start, title: name, resource } = event
             setStartValue(start)
             setCompletedValue(resource?.completed)
+            setPrecautionaryInspectionValue(equals(resource?.category, 2))
             reset({
                 start: getISODateStringWithCorrectOffset(start),
                 name: name.split(' - ')[0],
@@ -159,25 +162,36 @@ const EventDetailModal = ({ event, handleClose }) => {
                         />
                     }
                 />
+                <FormControlLabel
+                    label="Preventivní prohlídka"
+                    control={
+                        <Checkbox
+                            color="primary"
+                            name="precautionaryInspection"
+                            checked={precautionaryInspectionValue}
+                            disabled
+                        />
+                    }
+                />
             </DialogContent>
             <DialogActions className={classes.actions}>
-                <Button className={classes.btnItem} variant="outlined" onClick={handleClose} color="primary">
-                    <Typography color="primary" variant="body2">
-                        Zavřít
-                    </Typography>
-                </Button>
-                <Button className={classes.btnItem} variant="contained" onClick={handleDeleteBooking} color="primary">
-                    <Delete />
-                </Button>
-                <Button
-                    className={classes.btnItem}
-                    variant="contained"
-                    onClick={handleSubmit(handlePatchBooking)}
-                    color="primary"
-                    disabled={!isDirty}
-                >
-                    <Typography variant="body2">Odeslat</Typography>
-                </Button>
+                <DialogButtons
+                    onSecondaryClick={handleClose}
+                    secondaryLabel="Zavřit"
+                    primaryLabel="Odeslat"
+                    onPrimaryClick={handleSubmit(handlePatchBooking)}
+                    additionalActionComponent={
+                        <Button
+                            className={classes.btnItem}
+                            variant="contained"
+                            onClick={handleDeleteBooking}
+                            color="primary"
+                        >
+                            <Delete />
+                        </Button>
+                    }
+                    disabledPrimary={!isDirty}
+                />
             </DialogActions>
         </StyledDialog>
     )

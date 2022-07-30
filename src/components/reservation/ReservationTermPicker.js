@@ -19,7 +19,7 @@ import useMemoizedSelector from '@utilities/useMemoSelector'
 import { addHours, startOfToday } from 'date-fns'
 import format from 'date-fns/format'
 import { equals, find } from 'ramda'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAvailableTimeslots, fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
 import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
@@ -32,15 +32,15 @@ import {
     setReservationBtnDisabled,
     setSelectedDate,
     setSelectedTime,
+    setSelectedCategory,
 } from 'src/store/reservationProcess/reservationProcessSlice'
 import {
     getActiveStep,
     getDisabledReservationBtn,
-    getPreferredDoctor,
-    getSelectedAmbulance,
-    getSelectedDate,
-    getSelectedTime,
+    getBookingCategories,
+    makeReservationProcessInfo,
 } from 'src/store/reservationProcess/selectors'
+import { fetchBookingCategories } from 'src/store/reservationProcess/actions'
 
 const PREFIX = 'ReservationTermPicker'
 
@@ -52,6 +52,7 @@ const classes = {
 }
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
     [`& .${classes.dayWithDotContainer}`]: {
         position: 'relative',
     },
@@ -79,24 +80,23 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
         marginTop: theme.spacing(1),
     },
 }))
-
+const getReservationProcessInfo = makeReservationProcessInfo()
 const ReservationTermPicker = () => {
     const dispatch = useDispatch()
-    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
-
-    const selectedDate = useSelector(getSelectedDate)
-    const selectedTime = useSelector(getSelectedTime)
-    const selectedMonth = useMemo(() => selectedDate.slice(0, 7), [selectedDate])
-    const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
-    const selectedDoctor = useSelector(getPreferredDoctor)
-    const activeStep = useSelector(getActiveStep)
     const [isDoctorServing, setIsDoctorServing] = useState(undefined)
+
+    const { selectedAmbulanceId, selectedDate, selectedTime, selectedDoctor, selectedCategory, selectedMonth } =
+        useSelector(getReservationProcessInfo)
+    const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
+    const activeStep = useSelector(getActiveStep)
+
     const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
     const doctorServicesBySelectedDoctorIdAndMonth = useMemoizedSelector(
         makeDoctorServicesByDoctorId,
         { month: selectedMonth, doctorId: selectedDoctor, selectedWorkplace: selectedAmbulanceId },
         [selectedDoctor, selectedDate, selectedAmbulanceId]
     )
+    const bookingCategories = useSelector(getBookingCategories)
     const doctorServices = useMemoizedSelector(makeServicesSelector, {}, [
         selectedDoctor,
         selectedDate,
@@ -120,15 +120,22 @@ const ReservationTermPicker = () => {
             setIsDoctorServing(undefined)
             dispatch(clearTimeslots())
             if (!isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
+            if (!isNilOrEmpty(selectedCategory)) dispatch(setSelectedCategory(''))
         }
     }, [selectedDate, doctorServicesBySelectedDoctorIdAndMonth])
 
     useEffect(() => {
         if (equals(activeStep, 2)) {
-            if (isNilOrEmpty(selectedTime) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
-            else if (!isNilOrEmpty(selectedTime)) dispatch(setReservationBtnDisabled(false))
+            if ((isNilOrEmpty(selectedTime) || isNilOrEmpty(selectedCategory)) && !isReservationBtnDisabled)
+                dispatch(setReservationBtnDisabled(true))
+            else if (!isNilOrEmpty(selectedTime) && !isNilOrEmpty(selectedCategory))
+                dispatch(setReservationBtnDisabled(false))
         }
-    }, [selectedTime, activeStep])
+    }, [selectedTime, selectedCategory, activeStep])
+
+    useEffect(() => {
+        if (isNilOrEmpty(bookingCategories)) dispatch(fetchBookingCategories())
+    }, [])
 
     return (
         <StyledGrid container direction="column">
@@ -161,7 +168,7 @@ const ReservationTermPicker = () => {
                                 return equals(date, format(day, 'yyyy-MM-dd')) && day >= startOfToday()
                         }, doctorServicesBySelectedDoctorIdAndMonth)
                     return (
-                        <Badge key={day.toString()} overlap="circular" badgeContent={isSelected ? '🌚' : undefined}>
+                        <Badge key={day.toString()} overlap="circular" badgeContent={isSelected ? '👨🏻‍⚕️' : undefined}>
                             <PickersDay {...DayComponentProps} disabled={isNilOrEmpty(isSelected)} />
                         </Badge>
                     )
@@ -171,6 +178,7 @@ const ReservationTermPicker = () => {
                 views={['year', 'month', 'day']}
                 renderInput={(props) => (
                     <TextField
+                        ref={props.inputRef}
                         {...props}
                         variant="standard"
                         required
@@ -187,27 +195,51 @@ const ReservationTermPicker = () => {
                 onChange={(date) => dispatch(setSelectedDate(getISODateStringWithCorrectOffset(date)))}
             />
             {!isNilOrEmpty(availableTimeSlots) ? (
-                <>
-                    <FormControl variant="standard" sx={{ mt: 0.5, minWidth: 120 }}>
-                        <InputLabel id="timePickerLabel" required>
-                            Čas návštevy
-                        </InputLabel>
-                        <Select
-                            label="Čas návštevy"
-                            variant="standard"
-                            value={selectedTime}
-                            onChange={(e) => dispatch(setSelectedTime(e.target.value))}
-                            displayEmpty
-                        >
-                            {availableTimeSlots.map(({ timeSlotStart }) => (
-                                <MenuItem key={timeSlotStart} value={timeSlotStart}>
-                                    {timeSlotStart.slice(0, 5)}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    {isDoctorServing?.note && <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>}
-                </>
+                <StyledGrid container direction="row" spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl variant="standard" sx={{ mt: 0.5, minWidth: 120 }} fullWidth>
+                            <InputLabel id="timePickerLabel" required>
+                                Čas návštevy
+                            </InputLabel>
+                            <Select
+                                label="Čas návštevy"
+                                variant="standard"
+                                value={selectedTime}
+                                onChange={(e) => dispatch(setSelectedTime(e.target.value))}
+                                displayEmpty
+                            >
+                                {availableTimeSlots.map(({ timeSlotStart }) => (
+                                    <MenuItem key={timeSlotStart} value={timeSlotStart}>
+                                        {timeSlotStart.slice(0, 5)}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl variant="standard" sx={{ mt: 0.5, minWidth: 120 }} fullWidth>
+                            <InputLabel id="typeOfCategory" required>
+                                Typ vyšetření
+                            </InputLabel>
+                            <Select
+                                label="Typ vyšetření"
+                                variant="standard"
+                                value={selectedCategory}
+                                onChange={(e) => dispatch(setSelectedCategory(e.target.value))}
+                                displayEmpty
+                            >
+                                {bookingCategories.map(({ name, category_id }) => (
+                                    <MenuItem key={category_id} value={category_id}>
+                                        {name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {isDoctorServing?.note && (
+                            <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>
+                        )}
+                    </Grid>
+                </StyledGrid>
             ) : !isNilOrEmpty(isDoctorServing) ? (
                 <Typography>Omlouváme se ale na tento den již nejsou volné termíny</Typography>
             ) : (

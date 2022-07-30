@@ -54,7 +54,7 @@ export const makeCalendarEventsSelector = () =>
     createSelector(
         [getBookings],
         (bookings) =>
-            map(({ id, name, start, end, birthdate, contact, completed }) => {
+            map(({ id, name, start, end, birthdate, contact, category, completed }) => {
                 return {
                     id,
                     start: getDateWithCorrectOffset(start),
@@ -63,6 +63,7 @@ export const makeCalendarEventsSelector = () =>
                     resource: {
                         booked: true,
                         phone: contact?.phone,
+                        category,
                         completed,
                     },
                 }

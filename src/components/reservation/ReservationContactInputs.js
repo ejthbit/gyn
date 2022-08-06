@@ -1,9 +1,9 @@
 import FormInput from '@components/buildingbBlocks/FormInputs/FormInput'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { EmailOutlined, PhoneOutlined, Today } from '@mui/icons-material'
-import { MobileDatePicker } from '@mui/lab'
-import { Grid, InputAdornment, TextField } from '@mui/material'
+import { EmailOutlined, PhoneOutlined } from '@mui/icons-material'
+import { Grid, InputAdornment } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 import VALIDATION_PATTERNS from '@utilities/validationPatterns'
 import { equals } from 'ramda'
 import React, { useEffect, useState } from 'react'
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setContactInformation, setReservationBtnDisabled } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getActiveStep } from 'src/store/reservationProcess/selectors'
 import * as yup from 'yup'
+import DatepickerInput from './Components/DatepickerInput'
 
 const PREFIX = 'ReservationContactInputs'
 
@@ -83,6 +84,8 @@ const ReservationContactInputs = () => {
             <Grid item xs={12} sm={6}>
                 <MobileDatePicker
                     id="bday"
+                    label="Datum narození"
+                    placeholder="Zadejte prosím své datum narození"
                     inputFormat="dd-MM-yyyy"
                     mask="__-__-____"
                     margin="normal"
@@ -95,26 +98,7 @@ const ReservationContactInputs = () => {
                         setBirthDate(date)
                         setValue('birthDate', date.toISOString())
                     }}
-                    renderInput={(props) => (
-                        <TextField
-                            {...props}
-                            variant="standard"
-                            className={classes.input}
-                            label="Datum narození"
-                            placeholder="Zadejte prosím své datum narození"
-                            fullWidth
-                            required
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Today />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    )}
-                    okText="Potvrdit"
-                    cancelText="Zrušit"
+                    renderInput={DatepickerInput}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>

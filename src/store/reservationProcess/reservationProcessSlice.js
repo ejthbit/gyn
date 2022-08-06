@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
 import { createSlice } from '@reduxjs/toolkit'
 import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
-import { addHours } from 'date-fns'
 import { isNil } from 'ramda'
-import { fetchAmbulances, fetchDoctorsForSelectedAmbulance } from './actions'
+import { fetchAmbulances, fetchDoctorsForSelectedAmbulance, fetchBookingCategories } from './actions'
 
 /* RTK uses on background Immer library.
 This means you can write code that "mutates" the state inside the reducer,
@@ -20,12 +19,18 @@ const configurationInitialState = {
         error: undefined,
         data: [],
     },
+    bookingCategories: {
+        isLoading: false,
+        error: undefined,
+        data: [],
+    },
 }
 const reservationProcessInitialState = {
     selectedAmbulance: null,
     preferredDoctor: '',
     selectedDate: getISODateStringWithCorrectOffset(new Date()).slice(0, 10),
     selectedTime: '',
+    selectedCategory: '',
     activeStep: 0,
     contactInformation: {
         name: '',
@@ -50,6 +55,9 @@ const reservationProcessSlice = createSlice({
         },
         setSelectedTime: (state, action) => {
             state.selectedTime = action.payload
+        },
+        setSelectedCategory: (state, action) => {
+            state.selectedCategory = action.payload
         },
         setSelectedAmbulance: (state, action) => {
             state.selectedAmbulance = action.payload
@@ -96,6 +104,19 @@ const reservationProcessSlice = createSlice({
                 state.doctorsForSelectedAmbulance.isLoading = false
                 state.doctorsForSelectedAmbulance.error = action.error
             })
+            .addCase(fetchBookingCategories.pending, (state) => {
+                state.bookingCategories.isLoading = true
+                state.bookingCategories.error = undefined
+            })
+            .addCase(fetchBookingCategories.fulfilled, (state, action) => {
+                const { data } = action.payload
+                state.bookingCategories.isLoading = false
+                state.bookingCategories.data = data
+            })
+            .addCase(fetchBookingCategories.rejected, (state, action) => {
+                state.bookingCategories.isLoading = false
+                state.bookingCategories.error = action.error
+            })
     },
 })
 
@@ -105,6 +126,7 @@ export const {
     setPreferredDoctor,
     setSelectedAmbulance,
     setSelectedTime,
+    setSelectedCategory,
     setContactInformation,
     setOrderFinishedOk,
     clearReservation,

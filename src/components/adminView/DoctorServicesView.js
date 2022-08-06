@@ -1,7 +1,7 @@
 import { ArrowBack } from '@mui/icons-material'
-import { MobileDatePicker } from '@mui/lab'
 import { Alert, Box, Button, Fade, Grid, Snackbar, TextField, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 import { getWorkDaysInMonth } from '@utilities/getDaysInMonth'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import { format, getMonth, getYear } from 'date-fns'
@@ -139,8 +139,6 @@ const DoctorServicesView = () => {
                                     onChange={(date) => handleGenerateDataForTable(date)}
                                     views={['month', 'year']}
                                     renderInput={(props) => <TextField {...props} variant="standard" />}
-                                    okText="Potvrdit"
-                                    cancelText="Zavřít"
                                 />
                             </Grid>
                         </>

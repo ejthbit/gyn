@@ -9,6 +9,12 @@ export const fetchAmbulances = createAsyncThunk('reservationProcess/fetchAmbulan
     return res.data
 })
 
+export const fetchBookingCategories = createAsyncThunk('reservationProcess/fetchBookingCategories', async () => {
+    const URL = `${ID}/getBookingCategories`
+    const res = await axiosGynInstance.get(URL)
+    return res.data
+})
+
 export const fetchDoctorsForSelectedAmbulance = createAsyncThunk(
     'reservationProcess/fetchDoctorsForSelectedAmbulance',
     async (ambulanceId) => {

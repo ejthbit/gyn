@@ -28,7 +28,12 @@ import { adminPaths } from 'src/routingPaths'
 import { logout } from 'src/store/administration/administrationSlice'
 import { getUser } from 'src/store/administration/selectors'
 import { setSelectedAmbulance } from 'src/store/reservationProcess/reservationProcessSlice'
-import { getSelectedAmbulance, makeArrayOfValueLabelAmbulances } from 'src/store/reservationProcess/selectors'
+import {
+    getSelectedAmbulance,
+    makeArrayOfValueLabelAmbulances,
+    getBookingCategories,
+} from 'src/store/reservationProcess/selectors'
+import { fetchBookingCategories } from 'src/store/reservationProcess/actions'
 
 const PREFIX = 'AdminToolbar'
 
@@ -177,7 +182,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
     const loggedUser = useSelector(getUser)
     const ambulances = useSelector(selectAmbulancesValueLabelPair)
     const selectedAmbulanceId = useSelector(getSelectedAmbulance)
-
+    const bookingCategories = useSelector(getBookingCategories)
     const [selectedItem, setSelectedItem] = useState('Administrace')
 
     const handleLogout = (e) => {
@@ -189,6 +194,10 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
         if (loggedUser && !isNilOrEmpty(ambulances) && isNilOrEmpty(selectedAmbulanceId))
             dispatch(setSelectedAmbulance(loggedUser?.default_workplace))
     }, [loggedUser, ambulances])
+
+    useEffect(() => {
+        if (isNilOrEmpty(bookingCategories)) dispatch(fetchBookingCategories())
+    }, [])
 
     return (
         <Root $isDrawerOpen={isDrawerOpen}>

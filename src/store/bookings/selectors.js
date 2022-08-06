@@ -54,7 +54,7 @@ export const makeCalendarEventsSelector = () =>
     createSelector(
         [getBookings],
         (bookings) =>
-            map(({ id, name, start, end, birthdate, completed }) => {
+            map(({ id, name, start, end, birthdate, contact, category, completed }) => {
                 return {
                     id,
                     start: getDateWithCorrectOffset(start),
@@ -62,6 +62,8 @@ export const makeCalendarEventsSelector = () =>
                     title: `${name} ${!isNilOrEmpty(birthdate) ? `- ${birthdate}` : ''}`,
                     resource: {
                         booked: true,
+                        phone: contact?.phone,
+                        category,
                         completed,
                     },
                 }

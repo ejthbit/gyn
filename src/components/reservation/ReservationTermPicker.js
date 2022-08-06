@@ -3,23 +3,17 @@ import { styled } from '@mui/material/styles'
 import getDoctorById from '@utilities/getDoctorById'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
-import { propEq, equals, find } from 'ramda'
-import React, { useEffect, useMemo, useState } from 'react'
+import { equals, find, propEq } from 'ramda'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAvailableTimeslots } from 'src/store/bookings/actions'
 import { clearTimeslots } from 'src/store/bookings/bookingsSlice'
 import { makeAvailableTimeslotsWithTimeOnly, makeDoctorServicesByDoctorId } from 'src/store/bookings/selectors'
-import { setSelectedTime } from 'src/store/reservationProcess/reservationProcessSlice'
-import {
-    getPreferredDoctor,
-    getSelectedAmbulance,
-    getSelectedDate,
-    getSelectedTime,
-} from 'src/store/reservationProcess/selectors'
+import { setSelectedCategory, setSelectedTime } from 'src/store/reservationProcess/reservationProcessSlice'
+import { makeReservationProcessInfo } from 'src/store/reservationProcess/selectors'
 import TermPicker from './Components/TermPicker'
 import TermPickerTime from './Components/TermPickerTime'
 import useReservationButton from './Hooks/useReservationButton'
-
 const PREFIX = 'ReservationTermPicker'
 
 const classes = {
@@ -30,6 +24,7 @@ const classes = {
 }
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
     [`& .${classes.dayWithDotContainer}`]: {
         position: 'relative',
     },
@@ -57,18 +52,13 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
         marginTop: theme.spacing(1),
     },
 }))
-
+const getReservationProcessInfo = makeReservationProcessInfo()
 const ReservationTermPicker = () => {
     const dispatch = useDispatch()
-
-    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
-    const selectedDate = useSelector(getSelectedDate)
-    const selectedTime = useSelector(getSelectedTime)
-    const selectedDoctor = useSelector(getPreferredDoctor)
+    const { selectedAmbulanceId, selectedDate, selectedTime, selectedDoctor, selectedCategory, selectedMonth } =
+        useSelector(getReservationProcessInfo)
 
     useReservationButton({ dependency: selectedTime, step: 2 })
-
-    const selectedMonth = useMemo(() => selectedDate.slice(0, 7), [selectedDate])
 
     const [isDoctorServing, setIsDoctorServing] = useState(undefined)
 
@@ -96,6 +86,7 @@ const ReservationTermPicker = () => {
             setIsDoctorServing(undefined)
             dispatch(clearTimeslots())
             if (!isNilOrEmpty(selectedTime)) dispatch(setSelectedTime(''))
+            if (!isNilOrEmpty(selectedCategory)) dispatch(setSelectedCategory(''))
         }
     }, [selectedDate, doctorServicesBySelectedDoctorIdAndMonth])
 
@@ -103,7 +94,9 @@ const ReservationTermPicker = () => {
         <StyledGrid container direction="column">
             <TermPicker doctorServicesBySelectedDoctorIdAndMonth={doctorServicesBySelectedDoctorIdAndMonth} />
             {!isNilOrEmpty(availableTimeSlots) ? (
-                <TermPickerTime isDoctorServing={isDoctorServing} />
+                <>
+                    <TermPickerTime isDoctorServing={isDoctorServing} />
+                </>
             ) : !isNilOrEmpty(isDoctorServing) ? (
                 <Typography>Omlouváme se ale na tento den již nejsou volné termíny</Typography>
             ) : (

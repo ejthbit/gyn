@@ -3,6 +3,7 @@ import Navbar from '@components/Navbar/Navbar'
 import ProtectedRoute from '@components/ProtectedRoute/ProtectedRoute'
 import { Box, CircularProgress } from '@mui/material'
 import { isMobile } from '@utilities/checkDeviceType'
+import LandingAlert from '@components/LandingWelcome/LandingAlert'
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import routingPaths from './routingPaths'
@@ -29,7 +30,15 @@ const Routes = () => {
                     </Box>
                 }
             >
-                <Route path="*" children={<Navbar />} />
+                <Route
+                    path="*"
+                    children={
+                        <>
+                            <LandingAlert />
+                            <Navbar />
+                        </>
+                    }
+                />
                 <Switch>
                     <Route path="/" exact children={<LandingPage />} />
                     <ProtectedRoute path={routingPaths.admin} children={<AdminView />} shouldLogin />

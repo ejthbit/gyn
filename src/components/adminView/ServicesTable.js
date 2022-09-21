@@ -135,8 +135,19 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                                     Zavřeno
                                                 </MenuItem>
                                                 {map(
-                                                    ({ doctor_id: value, name }) => (
-                                                        <MenuItem key={value} value={value}>
+                                                    ({ doctor_id: value, name, preferred_service_start }) => (
+                                                        <MenuItem
+                                                            key={value}
+                                                            value={value}
+                                                            onClick={() =>
+                                                                setValue(
+                                                                    `data.${index}.start`,
+                                                                    preferred_service_start
+                                                                        ? `${date}T${preferred_service_start}:00.000Z`
+                                                                        : ''
+                                                                )
+                                                            }
+                                                        >
                                                             {name}
                                                         </MenuItem>
                                                     ),

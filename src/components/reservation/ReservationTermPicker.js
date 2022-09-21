@@ -1,6 +1,5 @@
 import { Badge, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import getDoctorById from '@utilities/getDoctorById'
 import getISODateStringWithCorrectOffset from '@utilities/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
 import useMemoizedSelector from '@utilities/useMemoSelector'
@@ -27,6 +26,7 @@ import {
     getDisabledReservationBtn,
     getBookingCategories,
     makeReservationProcessInfo,
+    makeSelectedDoctorItem,
 } from 'src/store/reservationProcess/selectors'
 import { fetchBookingCategories } from 'src/store/reservationProcess/actions'
 import { MobileDatePicker, PickersDay } from '@mui/x-date-pickers'
@@ -77,6 +77,9 @@ const ReservationTermPicker = () => {
 
     const { selectedAmbulanceId, selectedDate, selectedTime, selectedDoctor, selectedCategory, selectedMonth } =
         useSelector(getReservationProcessInfo)
+    const selectedDoctorItem = useMemoizedSelector(makeSelectedDoctorItem, { doctorId: selectedDoctor }, [
+        selectedDoctor,
+    ])
     const isReservationBtnDisabled = useSelector(getDisabledReservationBtn)
     const activeStep = useSelector(getActiveStep)
 
@@ -217,7 +220,7 @@ const ReservationTermPicker = () => {
             ) : !isNilOrEmpty(isDoctorServing) ? (
                 <Typography>Omlouváme se ale na tento den již nejsou volné termíny</Typography>
             ) : (
-                <Typography>Omlouváme se ale tento den {getDoctorById(selectedDoctor).name} neordinuje</Typography>
+                <Typography>Omlouváme se ale tento den {selectedDoctorItem.name} neordinuje</Typography>
             )}
         </StyledGrid>
     )

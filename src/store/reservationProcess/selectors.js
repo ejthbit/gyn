@@ -1,7 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { path, map } from 'ramda'
+import { path, map, equals, find } from 'ramda'
 
 const stateId = 'reservationProcess'
+const DOCTOR_ID = (_, { doctorId }) => doctorId
+
 const makeArrayOfLabelValue = (label, value, arr) =>
     map((record) => ({ label: record[label], value: record[value] }), arr)
 
@@ -39,3 +41,9 @@ export const makeArrayOfValueLabelAmbulances = () =>
 
 export const makeArrayOfValueLabelDoctors = () =>
     createSelector([getDoctorsForSelectedAmbulance], (doctors) => makeArrayOfLabelValue('name', 'doctor_id', doctors))
+export const makeSelectedDoctorItem = () =>
+    createSelector(
+        [getDoctorsForSelectedAmbulance, DOCTOR_ID],
+        (doctors, doctorId) =>
+            find(({ id }) => equals(id, doctorId), doctors) ?? { doctorId: '', name: 'žádný z lékařů' }
+    )

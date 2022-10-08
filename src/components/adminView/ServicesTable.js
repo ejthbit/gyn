@@ -119,17 +119,22 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
 
     return (
         <StyledFade in timeout={500}>
-            <TableContainer component={Paper} className={classes.paper}>
+            <TableContainer component={Paper} sx={{ boxShadow: 'none', width: '100%', marginTop: 2, marginBottom: 2 }}>
                 <Table className={classes.table} size="medium">
-                    <TableHead>
+                    <TableHead sx={{ borderBottom: '1px solid #e0e0e0', borderTop: '1px solid #e0e0e0' }}>
                         <TableRow>
                             <TableCell rowSpan="2">Den</TableCell>
                             <TableCell rowSpan="2">Datum</TableCell>
-                            <TableCell align="center" rowSpan="1" colSpan="8">
+                            <TableCell
+                                align="center"
+                                rowSpan="1"
+                                colSpan="8"
+                                sx={{ borderBottom: '1px solid #e0e0e0' }}
+                            >
                                 Seznam doktorů
                             </TableCell>
-                            <TableCell rowSpan="2" align="center" sx={{ width: 50 }}>
-                                Přídat řádek
+                            <TableCell rowSpan="2" align="center">
+                                Přidělit doktora ke dni
                             </TableCell>
                         </TableRow>
                         <TableRow>
@@ -250,8 +255,6 @@ const ServicesTable = ({ data, selectedMonth, isEditingServices, selectedWorkpla
                                 </TableCell>
                                 <TableCell
                                     sx={{
-                                        width: 50,
-                                        maxWidth: 50,
                                         display:
                                             formState[idx].doctors.length < values(selectedDoctors).length
                                                 ? 'table-cell'

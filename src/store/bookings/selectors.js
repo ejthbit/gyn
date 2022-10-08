@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import getDateWithCorrectOffset from '@utilities/getDateWithCorrectOffset'
 import isNilOrEmpty from '@utilities/isNilOrEmpty'
-import { isEmpty, propEq, equals, filter, includes, map, path } from 'ramda'
+import { isEmpty, propEq, equals, filter, includes, map, path, sortBy } from 'ramda'
 import { createSelector } from 'reselect'
 
 const stateId = 'bookings'
@@ -10,7 +10,7 @@ const BOOKING_IDS = (_, { bookingIds }) => bookingIds
 const MONTH = (_, { month }) => month
 const SELECTED_WORKPLACE = (_, { selectedWorkplace }) => selectedWorkplace
 
-export const getAvailableTimeslots = path([stateId, 'availableTimeslots', 'slots'])
+export const getAvailableTimeSlots = path([stateId, 'availableTimeSlots', 'slots'])
 export const getSonographyDates = path([stateId, 'sonographyDates'])
 export const lastBookingErrors = path([stateId, 'lastBooking', 'errors'])
 export const isSendingBooking = path([stateId, 'lastBooking', 'isLoading'])
@@ -19,14 +19,17 @@ export const getBookingsSelectedDate = path([stateId, 'bookings', 'selectedDate'
 export const getBookings = path([stateId, 'bookings', 'bookings'])
 export const getDoctorServicesForSelectedMonth = path([stateId, 'doctorServices', 'data'])
 
-export const makeAvailableTimeslotsWithTimeOnly = () =>
-    createSelector([getAvailableTimeslots], (timeSlots) =>
-        map(({ timeSlotStart, timeSlotEnd }) => {
-            return {
-                timeSlotStart: timeSlotStart.slice(11, 19),
-                timeSlotEnd: timeSlotEnd.slice(11, 19),
-            }
-        }, timeSlots)
+export const makeAvailableTimeSlotsWithTimeOnly = () =>
+    createSelector([getAvailableTimeSlots], (timeSlots) =>
+        sortBy(
+            propEq('timeSlotStart'),
+            map(({ timeSlotStart, timeSlotEnd }) => {
+                return {
+                    timeSlotStart: timeSlotStart.slice(11, 19),
+                    timeSlotEnd: timeSlotEnd.slice(11, 19),
+                }
+            }, timeSlots)
+        )
     )
 export const makeBookingsByIdsSelector = () =>
     createSelector([getBookings, BOOKING_IDS], (bookings, bookingIds) =>

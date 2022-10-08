@@ -1,18 +1,17 @@
-import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
-import PropTypes from 'prop-types'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { makeAvailableTimeslotsWithTimeOnly } from 'src/store/bookings/selectors'
+import { makeAvailableTimeSlotsWithTimeOnly } from 'src/store/bookings/selectors'
 import { setSelectedTime } from 'src/store/reservationProcess/reservationProcessSlice'
 import { getSelectedDate, getSelectedTime } from 'src/store/reservationProcess/selectors'
 import useMemoizedSelector from 'src/utils/useMemoSelector'
 
-const TermPickerTime = ({ isDoctorServing }) => {
+const TermPickerTime = () => {
     const dispatch = useDispatch()
     const selectedDate = useSelector(getSelectedDate)
     const selectedTime = useSelector(getSelectedTime)
 
-    const availableTimeSlots = useMemoizedSelector(makeAvailableTimeslotsWithTimeOnly, {}, [selectedDate])
+    const availableTimeSlots = useMemoizedSelector(makeAvailableTimeSlotsWithTimeOnly, {}, [selectedDate])
 
     return (
         <>
@@ -35,13 +34,8 @@ const TermPickerTime = ({ isDoctorServing }) => {
                     ))}
                 </Select>
             </FormControl>
-            {isDoctorServing?.note && <Typography color="error">{`Pozn. ${isDoctorServing?.note}`}</Typography>}
         </>
     )
-}
-
-TermPickerTime.propTypes = {
-    isDoctorServing: PropTypes.object,
 }
 
 export default TermPickerTime

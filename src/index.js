@@ -13,7 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 ReactDOM.render(
     <LocalizationProvider
         dateAdapter={AdapterDateFns}
-        locale={cs}
+        adapterLocale={cs}
         localeText={{ okButtonLabel: 'Potvrdit', cancelButtonLabel: 'Zavřít' }}
     >
         <ThemeProvider theme={gynBookingTheme}>

@@ -1,9 +1,10 @@
 import { Today } from '@mui/icons-material'
 import { InputAdornment, TextField } from '@mui/material'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-const TermPickerInput = (props) => (
+const TermPickerInput = forwardRef((props, ref) => (
     <TextField
+        ref={ref}
         {...props}
         variant="standard"
         required
@@ -15,6 +16,8 @@ const TermPickerInput = (props) => (
             ),
         }}
     />
-)
+))
+
+TermPickerInput.displayName = 'TermPickerInput'
 
 export default TermPickerInput

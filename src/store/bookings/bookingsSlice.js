@@ -5,7 +5,8 @@ import {
     bookAnAppointment,
     deleteBooking,
     fastBooking,
-    fetchAvailableTimeslots,
+    fetchAvailableTimeSlots,
+    fetchAvailableTimeSlotsDoctors,
     fetchBookings,
     fetchDoctorServicesForSelectedMonth,
     getCurrentMonthSonographyDates,
@@ -26,7 +27,7 @@ const bookingsInitialState = {
             to: null,
         },
     },
-    availableTimeslots: {
+    availableTimeSlots: {
         isLoading: false,
         errors: undefined,
         slots: [],
@@ -47,8 +48,8 @@ const bookingsSlice = createSlice({
     name: 'bookings',
     initialState: bookingsInitialState,
     reducers: {
-        clearTimeslots: (state) => {
-            state.availableTimeslots.slots = []
+        clearTimeSlots: (state) => {
+            state.availableTimeSlots.slots = []
         },
         clearBooking: (state) => {
             state.lastBooking.errors = undefined
@@ -60,17 +61,29 @@ const bookingsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchAvailableTimeslots.pending, (state) => {
-                state.availableTimeslots.isLoading = true
-                state.availableTimeslots.error = undefined
+            .addCase(fetchAvailableTimeSlots.pending, (state) => {
+                state.availableTimeSlots.isLoading = true
+                state.availableTimeSlots.error = undefined
             })
-            .addCase(fetchAvailableTimeslots.fulfilled, (state, action) => {
-                state.availableTimeslots.isLoading = false
-                state.availableTimeslots.slots = action.payload
+            .addCase(fetchAvailableTimeSlots.fulfilled, (state, action) => {
+                state.availableTimeSlots.isLoading = false
+                state.availableTimeSlots.slots = action.payload
             })
-            .addCase(fetchAvailableTimeslots.rejected, (state, action) => {
-                state.availableTimeslots.isLoading = false
-                state.availableTimeslots.error = action.error
+            .addCase(fetchAvailableTimeSlots.rejected, (state, action) => {
+                state.availableTimeSlots.isLoading = false
+                state.availableTimeSlots.error = action.error
+            })
+            .addCase(fetchAvailableTimeSlotsDoctors.pending, (state) => {
+                state.availableTimeSlots.isLoading = true
+                state.availableTimeSlots.error = undefined
+            })
+            .addCase(fetchAvailableTimeSlotsDoctors.fulfilled, (state, action) => {
+                state.availableTimeSlots.isLoading = false
+                state.availableTimeSlots.slots = [...state.availableTimeSlots.slots, ...action.payload]
+            })
+            .addCase(fetchAvailableTimeSlotsDoctors.rejected, (state, action) => {
+                state.availableTimeSlots.isLoading = false
+                state.availableTimeSlots.error = action.error
             })
             .addCase(bookAnAppointment.pending, (state) => {
                 state.lastBooking.isLoading = true
@@ -131,5 +144,5 @@ const bookingsSlice = createSlice({
     },
 })
 
-export const { clearTimeslots, clearBooking, setBookingsViewDate } = bookingsSlice.actions
+export const { clearTimeSlots, clearBooking, setBookingsViewDate } = bookingsSlice.actions
 export default bookingsSlice.reducer

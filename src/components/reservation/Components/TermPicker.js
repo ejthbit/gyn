@@ -1,25 +1,23 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { MobileDatePicker } from '@mui/lab'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 import { addHours, format } from 'date-fns'
+import PropTypes from 'prop-types'
+import { equals, find } from 'ramda'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
+import { makeServicesSelector } from 'src/store/bookings/selectors'
+import { setSelectedDate } from 'src/store/reservationProcess/reservationProcessSlice'
+import { makeReservationProcessInfo } from 'src/store/reservationProcess/selectors'
+import getISODateStringWithCorrectOffset from 'src/utils/getISODateStringWithCorrectOffset'
 import isNilOrEmpty from 'src/utils/isNilOrEmpty'
+import useMemoizedSelector from 'src/utils/useMemoSelector'
 import TermPickerDay from './TermPickerDay'
 import TermPickerInput from './TermPickerInput'
-import { useDispatch, useSelector } from 'react-redux'
-import { getPreferredDoctor, getSelectedAmbulance, getSelectedDate } from 'src/store/reservationProcess/selectors'
-import { setSelectedDate } from 'src/store/reservationProcess/reservationProcessSlice'
-import getISODateStringWithCorrectOffset from 'src/utils/getISODateStringWithCorrectOffset'
-import { fetchDoctorServicesForSelectedMonth } from 'src/store/bookings/actions'
-import useMemoizedSelector from 'src/utils/useMemoSelector'
-import { makeServicesSelector } from 'src/store/bookings/selectors'
-import { find, equals } from 'ramda'
 
+const getReservationProcessInfo = makeReservationProcessInfo()
 const TermPicker = ({ doctorServicesBySelectedDoctorIdAndMonth }) => {
     const dispatch = useDispatch()
-
-    const selectedDate = useSelector(getSelectedDate)
-    const selectedAmbulanceId = useSelector(getSelectedAmbulance)
-    const selectedDoctor = useSelector(getPreferredDoctor)
+    const { selectedAmbulanceId, selectedDate, selectedDoctor } = useSelector(getReservationProcessInfo)
 
     const doctorServices = useMemoizedSelector(makeServicesSelector, {}, [
         selectedDoctor,
@@ -59,10 +57,8 @@ const TermPicker = ({ doctorServicesBySelectedDoctorIdAndMonth }) => {
                     doctorServicesBySelectedDoctorIdAndMonth={doctorServicesBySelectedDoctorIdAndMonth}
                 />
             )}
-            okText="Potvrdit"
-            cancelText="Zavřít"
             views={['year', 'month', 'day']}
-            renderInput={(props) => <TermPickerInput {...props} />}
+            renderInput={(props) => <TermPickerInput ref={props.inputRef} {...props} />}
             onChange={setTermPickerDate}
             disablePast
         />

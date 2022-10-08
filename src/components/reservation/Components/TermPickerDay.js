@@ -1,6 +1,6 @@
 import { CheckCircle } from '@mui/icons-material'
-import { PickersDay } from '@mui/lab'
 import { Badge } from '@mui/material'
+import { PickersDay } from '@mui/x-date-pickers'
 import { format, startOfToday } from 'date-fns'
 import PropTypes from 'prop-types'
 import { find, equals } from 'ramda'

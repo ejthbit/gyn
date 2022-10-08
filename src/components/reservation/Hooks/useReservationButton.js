@@ -12,8 +12,8 @@ const useReservationButton = ({ dependency, step }) => {
 
     useEffect(() => {
         if (equals(activeStep, step)) {
-            if (isNilOrEmpty(dependency) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
-            else if (!isNilOrEmpty(dependency)) dispatch(setReservationBtnDisabled(false))
+            if (dependency.some(isNilOrEmpty) && !isReservationBtnDisabled) dispatch(setReservationBtnDisabled(true))
+            else if (!dependency.some(isNilOrEmpty)) dispatch(setReservationBtnDisabled(false))
         }
     }, [dependency, activeStep])
 }

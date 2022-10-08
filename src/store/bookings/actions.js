@@ -13,17 +13,38 @@ import { makeBookingsByIdsSelector } from './selectors'
 const getBookingsByIds = makeBookingsByIdsSelector()
 /**
  * @desc fetches availableTimeSlots between from and to dates.
- * @returns {array} Array of object - which contains availableTimeslots between from and to
+ * @returns {array} Array of object - which contains availableTimeSlots between from and to
  */
 const ID = '/bookings'
-export const fetchAvailableTimeslots = createAsyncThunk(
-    'bookings/fetchAvailableTimeslots',
+export const fetchAvailableTimeSlots = createAsyncThunk(
+    'bookings/fetchAvailableTimeSlots',
     async ({ from, to, workplace }) => {
         const URL = `${ID}/getAvailableSlots/${from}/${to}/${workplace}`
         const res = await axiosGynInstance.get(URL)
         return res.data
     }
 )
+
+export const fetchAvailableTimeSlotsDoctors = createAsyncThunk(
+    'bookings/fetchAvailableTimeSlotsDoctors',
+    async ({ from, to, workplace }) => {
+        const URL = `${ID}/getAvailableSlots/${from}/${to}/${workplace}`
+        const res = await axiosGynInstance.get(URL)
+        return res.data
+    }
+)
+export const fetchAvailableTimeSlotsForDoctors = (servingDoctorsForDay, selectedAmbulanceId) => (dispatch) =>
+    forEach(
+        ({ start, end }) =>
+            dispatch(
+                fetchAvailableTimeSlotsDoctors({
+                    from: start,
+                    to: end,
+                    workplace: selectedAmbulanceId,
+                })
+            ),
+        servingDoctorsForDay
+    )
 
 // TODO: fetchBookingsByCriteria
 

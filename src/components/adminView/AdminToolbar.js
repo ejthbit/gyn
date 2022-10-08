@@ -52,7 +52,9 @@ const classes = {
     logoContainer: `${PREFIX}-logoContainer`,
 }
 
-const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
+const Root = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isDrawerOpen',
+})(({ theme, isDrawerOpen }) => ({
     [`& .${classes.root}`]: {
         flexGrow: 1,
         color: '#000',
@@ -73,7 +75,7 @@ const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
     [`& .${classes.appBar}`]: {
         marginLeft: 200,
         [theme.breakpoints.down('md')]: {
-            marginLeft: $isDrawerOpen ? 60 : 8,
+            marginLeft: isDrawerOpen ? 60 : 8,
         },
     },
     [`& .${classes.title}`]: {
@@ -200,7 +202,7 @@ const AdminToolbar = ({ isDrawerOpen, handleOpenDrawer }) => {
     }, [])
 
     return (
-        <Root $isDrawerOpen={isDrawerOpen}>
+        <Root isDrawerOpen={isDrawerOpen}>
             <AppBar position="static" className={classes.root} color="primary">
                 <Toolbar className={classes.appBar}>
                     <Grid container spacing={2} alignItems="center" className={classes.headerContent}>

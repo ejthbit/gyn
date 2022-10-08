@@ -13,7 +13,7 @@ const disabledStyling = {
 const FormInput = ({ control, name, disabled, className, ...otherTextFieldProps }) => {
     const {
         field: { ref, ...inputProps },
-        fieldState: { invalid, error },
+        fieldState: { error },
     } = useController({
         name,
         control,
@@ -25,7 +25,7 @@ const FormInput = ({ control, name, disabled, className, ...otherTextFieldProps 
             variant="standard"
             className={className}
             sx={disabled ? { ...disabledStyling } : {}}
-            error={invalid}
+            error={!!error}
             helperText={error?.message}
             readOnly={disabled}
             inputRef={ref}

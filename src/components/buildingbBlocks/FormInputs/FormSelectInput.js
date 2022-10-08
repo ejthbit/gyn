@@ -20,10 +20,18 @@ const StyledTextField = styled(TextField)(() => ({
     },
 }))
 
-const FormSelectInput = ({ control, name, children, disabled, className, displayEmpty, ...otherTextFieldProps }) => {
+const FormSelectInput = ({
+    control,
+    name,
+    children,
+    disabled,
+    className,
+    displayEmpty = true,
+    ...otherTextFieldProps
+}) => {
     const {
         field: { ref, ...inputProps },
-        fieldState: { invalid, error },
+        fieldState: { error },
     } = useController({
         name,
         control,
@@ -35,7 +43,7 @@ const FormSelectInput = ({ control, name, children, disabled, className, display
             select
             variant="standard"
             className={disabled ? clsx(className, classes.disabled) : className}
-            error={invalid}
+            error={!!error}
             helperText={error?.message}
             readOnly={disabled}
             inputRef={ref}

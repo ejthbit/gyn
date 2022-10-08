@@ -15,15 +15,15 @@ const classes = {
     root: `${PREFIX}-root`,
 }
 
-const Root = styled('div')(({ theme, $isDrawerOpen }) => ({
+const Root = styled('div', { shouldForwardProp: (prop) => prop !== 'isDrawerOpen' })(({ theme, isDrawerOpen }) => ({
     [`& .${classes.root}`]: {
         backgroundColor: '#FFF',
         padding: 20,
         border: `1px solid ${theme.palette.common.white} `,
         borderRadius: 6,
-        margin: `20px 20px 20px ${$isDrawerOpen ? '220px' : '20px'}`,
+        margin: `20px 20px 20px ${isDrawerOpen ? '220px' : '20px'}`,
         [theme.breakpoints.down('md')]: {
-            marginLeft: $isDrawerOpen ? 80 : theme.spacing(1),
+            marginLeft: isDrawerOpen ? 80 : theme.spacing(1),
         },
         transition: 'all 0.7s ease-in-out',
     },
@@ -34,7 +34,7 @@ const AdminView = () => {
 
     const handleOpenDrawer = () => setIsDrawerOpen((prevState) => !prevState)
     return (
-        <Root $isDrawerOpen={isDrawerOpen}>
+        <Root isDrawerOpen={isDrawerOpen}>
             <Route
                 path="*"
                 children={<AdminToolbar isDrawerOpen={isDrawerOpen} handleOpenDrawer={handleOpenDrawer} />}

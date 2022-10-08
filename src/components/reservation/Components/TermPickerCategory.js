@@ -37,6 +37,4 @@ const TermPickerCategory = () => {
     )
 }
 
-TermPickerCategory.propTypes = {}
-
 export default TermPickerCategory

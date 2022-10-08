@@ -1,6 +1,6 @@
 export { default as DatepickerInput } from './DatepickerInput'
 export { default as TermPicker } from './TermPicker'
-export * from './TermPickerCategory'
+export { default as TermPickerCategory } from './TermPickerCategory'
 export { default as TermPickerDay } from './TermPickerDay'
 export { default as TermPickerInput } from './TermPickerInput'
 export { default as TermPickerTime } from './TermPickerTime'

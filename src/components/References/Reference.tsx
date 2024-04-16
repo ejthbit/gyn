@@ -1,7 +1,6 @@
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 import { Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import PropTypes from 'prop-types'
 import React from 'react'
 
 const PREFIX = 'Reference'
@@ -50,8 +49,11 @@ const Root = styled('div')(({ theme }) => ({
         marginTop: theme.spacing(1),
     },
 }))
-
-const Reference = ({ text, author }) => {
+type ReferenceProps = {
+    text: string
+    author: string
+}
+const Reference = ({ text, author }: ReferenceProps) => {
     return (
         <Root>
             <Grid item xs={12} className={classes.quoteLeft}>
@@ -68,11 +70,6 @@ const Reference = ({ text, author }) => {
             </Grid>
         </Root>
     )
-}
-
-Reference.propTypes = {
-    text: PropTypes.string,
-    author: PropTypes.string,
 }
 
 export default Reference

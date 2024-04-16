@@ -7,10 +7,9 @@ import {
 } from '@mui/icons-material'
 import { Box, Button, Grid, Hidden, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import getGoogleMapsUrl from '@utilities/getGoogleMapsUrl'
 import { map } from 'ramda'
 import React from 'react'
-
+import { getGoogleMapsUrl } from '../../utils'
 const PREFIX = 'Contacts'
 
 const classes = {

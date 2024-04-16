@@ -21,12 +21,10 @@ export default [
         },
         rules: {
             'no-unused-vars': 'error',
-            'react/no-unused-prop-types': 'warn',
             'no-console': 'warn',
             'react/jsx-filename-extension': 'off',
             'react/no-array-index-key': 'warn',
             'react/jsx-indent': 'off',
-            'react/prop-types': 'warn',
             indent: 'off',
             semi: 'off',
             'comma-dangle': 'off',

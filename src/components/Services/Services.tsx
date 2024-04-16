@@ -5,7 +5,7 @@ import {
     RoutineExaminationIcon,
     SonographyIcon,
     SpecialTreatmentIcon,
-} from '@assets/SvgIcons'
+} from '../../assets/SvgIcons'
 import { Divider, Fade, Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React from 'react'

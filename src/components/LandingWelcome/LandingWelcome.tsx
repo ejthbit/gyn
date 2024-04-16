@@ -1,9 +1,10 @@
+// @ts-nocheck
 import { Box, Button, ButtonGroup, Grid, Slide, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { isMobile } from '@utilities/checkDeviceType'
 import React from 'react'
 import LandingPageImg from '../../assets/landingImg.jpg'
 import LandingMobileImg from '../../assets/landingMobile.png'
+import { isMobile } from '../../utils'
 
 const PREFIX = 'LandingWelcome'
 
@@ -50,6 +51,7 @@ const Root = styled(Box)(({ theme }) => ({
 
     [`& .${classes.btnsContainer}`]: {
         maxWidth: '100%',
+        paddingTop: theme.spacing(1),
         [theme.breakpoints.down('sm')]: {
             maxWidth: '100%',
             padding: `${theme.spacing(1)} !important`,
@@ -58,7 +60,7 @@ const Root = styled(Box)(({ theme }) => ({
 
     [`& .${classes.btn}`]: {
         '& .MuiButton-label': {
-            color: '#FFF',
+            color: '#000',
         },
     },
 }))
@@ -80,14 +82,8 @@ const LandingWelcome = () => {
                     <Grid item xs={12} md={6}>
                         <Slide direction="right" in mountOnEnter unmountOnExit timeout={700}>
                             <ButtonGroup variant="contained" orientation={isMobile ? 'vertical' : 'horizontal'}>
-                                <Button
-                                    className={classes.btn}
-                                    size="large"
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                >
-                                    <Typography>Objednat se</Typography>
+                                <Button className={classes.btn} size="large" variant="contained" fullWidth>
+                                    Objednat se
                                 </Button>
                             </ButtonGroup>
                         </Slide>

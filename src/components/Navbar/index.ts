@@ -1,4 +1,3 @@
-export { default as HideOnScroll } from './HideOnScroll'
 export { default as MobileNavbar } from './MobileNavbar'
-export { default as Navbar } from './Navbar'
+export * from './DesktopNavbar'
 export { default as ScrollToElevate } from './ScrollToElevate'

@@ -1,4 +1,4 @@
-import { createTheme, lighten } from '@mui/material'
+import { createTheme, darken, lighten } from '@mui/material'
 
 const theme = createTheme({
     typography: {
@@ -6,16 +6,14 @@ const theme = createTheme({
     },
     palette: {
         primary: {
-            main: '#1f7672',
+            main: '#86a5a5',
         },
         secondary: {
             main: '#11cb5f',
         },
-        primaryText: {
-            main: '#292c47',
-        },
-        textSecondary: {
-            main: '#FFF',
+        text: {
+            primary: '#292c47',
+            secondary: '#FFF',
         },
     },
     components: {
@@ -39,29 +37,6 @@ const theme = createTheme({
                 },
             },
         },
-        MuiPickersCalendar: {
-            styleOverrides: {
-                transitionContainer: {
-                    marginBottom: 12,
-                },
-            },
-        },
-        MuiPickersSlideTransition: {
-            styleOverrides: {
-                transitionContainer: {
-                    marginBottom: 12,
-                },
-            },
-        },
-        MuiPickersModal: {
-            styleOverrides: {
-                dialogRoot: {
-                    '& .MuiDialogActions-root': {
-                        display: `none !important`,
-                    },
-                },
-            },
-        },
         MuiTableRow: {
             styleOverrides: {
                 root: {
@@ -78,18 +53,10 @@ const theme = createTheme({
             styleOverrides: {
                 containedPrimary: {
                     color: '#FFF',
-                },
-            },
-        },
-        MuiMonthPicker: {
-            styleOverrides: {
-                root: {
-                    '& button': {
-                        backgroundColor: '#FFF',
-                        border: 'none',
-                        '&:hover': {
-                            backgroundColor: lighten('#1f7672', 0.7),
-                        },
+                    backgroundColor: '#86a5a5',
+                    boxShadow: 'none',
+                    '&:hover': {
+                        backgroundColor: darken('#86a5a5', 0.2),
                     },
                 },
             },

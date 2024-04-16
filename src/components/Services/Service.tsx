@@ -1,6 +1,5 @@
 import { Card, CardContent, Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import PropTypes from 'prop-types'
 import React from 'react'
 const PREFIX = 'Service'
 
@@ -44,7 +43,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
     },
 }))
 
-const Service = ({ icon, label, description }) => {
+type ServiceProps = {
+    icon: React.ReactElement
+    label: string
+    description: string
+}
+const Service = ({ icon, label, description }: ServiceProps) => {
     return (
         <StyledCard className={classes.root}>
             <CardContent>
@@ -64,12 +68,6 @@ const Service = ({ icon, label, description }) => {
             </CardContent>
         </StyledCard>
     )
-}
-
-Service.propTypes = {
-    icon: PropTypes.element,
-    label: PropTypes.string,
-    description: PropTypes.string,
 }
 
 export default Service

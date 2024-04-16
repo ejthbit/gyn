@@ -1,15 +1,12 @@
-import TransparentLogo from '@components/Logo/TransparentLogo'
-import { AccountCircleOutlined } from '@mui/icons-material'
 import { AppBar, Box, Grid, Toolbar, Typography } from '@mui/material'
-import { styled } from '@mui/system'
-import { isMobile } from '@utilities/checkDeviceType'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
+import { darken, styled } from '@mui/material/styles'
+
+import { Link, useMatchRoute } from '@tanstack/react-router'
 import React from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { HashLink } from 'react-router-hash-link'
 import routingPaths from '../../routingPaths'
 import MobileNavbar from './MobileNavbar'
-
+import { isMobile, scrollElementIntoView } from '../../utils'
+import TransparentLogo from '../Logo/TransparentLogo'
 const PREFIX = 'Navbar'
 
 const classes = {
@@ -24,17 +21,21 @@ const Root = styled('div')(({ theme }) => ({
         '& .MuiToolbar-root': {
             paddingTop: 20,
         },
+        boxShadow: 'none',
         height: 80,
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: '#C0ECED',
     },
 
     [`& .${classes.logo}`]: {
         '& svg': {
             width: '100%',
             maxWidth: 280,
+            '& path': {
+                fill: '#000',
+            },
             '&:hover': {
                 '& path': {
-                    fill: theme.palette.common.black,
+                    fill: 'grey',
                 },
                 cursor: 'pointer',
             },
@@ -46,11 +47,10 @@ const Root = styled('div')(({ theme }) => ({
         marginRight: theme.spacing(2),
         '& a': {
             fontSize: 20,
-            color: theme.palette.common.white,
+            color: darken(theme.palette.primary.main, 0.2),
             textDecoration: 'none',
             '&:hover': {
                 color: '#000',
-                borderBottom: '1px solid black',
             },
         },
         '& svg': {
@@ -79,18 +79,13 @@ export const routes = [
         text: 'Kontakt',
         link: routingPaths.contact,
     },
-    {
-        text: <AccountCircleOutlined />,
-        link: routingPaths.login,
-    },
 ]
 
-const Navbar = () => {
-    const location = useLocation()
+export const Navbar = () => {
+    const matchRoute = useMatchRoute()
     return (
         <Box width="100%">
-            <Outlet />
-            {!location.pathname.match(routingPaths.admin) &&
+            {!matchRoute({ to: routingPaths.admin }) &&
                 (isMobile ? (
                     <MobileNavbar routes={routes} />
                 ) : (
@@ -99,9 +94,9 @@ const Navbar = () => {
                             <Toolbar>
                                 <Grid container spacing={3} alignItems="center">
                                     <Grid item md={2}>
-                                        <NavLink to={'/'} className={classes.logo}>
+                                        <Link to={'/'} className={classes.logo}>
                                             <TransparentLogo />
-                                        </NavLink>
+                                        </Link>
                                     </Grid>
                                     <Grid
                                         container
@@ -114,12 +109,13 @@ const Navbar = () => {
                                         {routes.map(({ text, link }) => (
                                             <Grid key={link} item>
                                                 <Typography variant="body1" className={classes.menuItem}>
-                                                    <HashLink
-                                                        to={link}
-                                                        scroll={(e) => scrollElementIntoView(e, 'smooth')}
+                                                    <Link
+                                                        to="/"
+                                                        hash={link}
+                                                        onScroll={(e) => scrollElementIntoView(e, 'smooth')}
                                                     >
                                                         {text}
-                                                    </HashLink>
+                                                    </Link>
                                                 </Typography>
                                             </Grid>
                                         ))}
@@ -132,5 +128,3 @@ const Navbar = () => {
         </Box>
     )
 }
-
-export default Navbar

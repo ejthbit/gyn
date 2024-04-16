@@ -1,13 +1,11 @@
-import TransparentLogo from '@components/Logo/TransparentLogo'
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
-import { AppBar, Box, Drawer, Grid, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
 import { styled } from '@mui/material/styles'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
-import PropTypes from 'prop-types'
+import { Link } from '@tanstack/react-router'
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { HashLink } from 'react-router-hash-link'
+import { scrollElementIntoView } from '../../utils'
+import TransparentLogo from '../Logo/TransparentLogo'
 
 const PREFIX = 'MobileNavbar'
 
@@ -75,7 +73,13 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
     },
 }))
 
-const MobileNavbar = ({ routes }) => {
+type MobileNavbarProps = {
+    routes: {
+        text: string
+        link: string
+    }[]
+}
+const MobileNavbar = ({ routes }: MobileNavbarProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const handleToggleDrawer = () => setIsDrawerOpen((prevState) => !prevState)
@@ -86,9 +90,9 @@ const MobileNavbar = ({ routes }) => {
                 <Toolbar className={classes.toolbar}>
                     <Grid container alignItems="center" justifyContent="space-between">
                         <Grid item xs={6}>
-                            <NavLink to={'/'} className={classes.logo}>
+                            <Link to={'/'} className={classes.logo}>
                                 <TransparentLogo />
-                            </NavLink>
+                            </Link>
                         </Grid>
                         <Grid item container xs={3} direction="column">
                             <IconButton onClick={handleToggleDrawer} size="large">
@@ -108,15 +112,15 @@ const MobileNavbar = ({ routes }) => {
                         <IconButton onClick={handleToggleDrawer} size="large">
                             <CloseIcon />
                         </IconButton>
-                        <NavLink to={'/'} className={classes.drawerLogo} onClick={handleToggleDrawer}>
+                        <Link to={'/'} className={classes.drawerLogo} onClick={handleToggleDrawer}>
                             <TransparentLogo />
-                        </NavLink>
+                        </Link>
                         {routes.map(({ text, link }) => (
                             <Grid key={link} item onClick={handleToggleDrawer}>
                                 <Typography variant="body1" className={classes.menuItem}>
-                                    <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                    <Link hash={link} onScroll={(e) => scrollElementIntoView(e, 'smooth')}>
                                         {text}
-                                    </HashLink>
+                                    </Link>
                                 </Typography>
                             </Grid>
                         ))}
@@ -126,10 +130,6 @@ const MobileNavbar = ({ routes }) => {
             <Box className={classes.offSet} />
         </Root>
     )
-}
-
-MobileNavbar.propTypes = {
-    routes: PropTypes.array,
 }
 
 export default MobileNavbar

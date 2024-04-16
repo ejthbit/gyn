@@ -1,7 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import PropTypes from 'prop-types'
 import React from 'react'
 
 const PREFIX = 'PersonDetail'
@@ -28,10 +27,19 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
 }))
 
-const PersonDetail = ({ open, handleClose, title, text }) => {
+type PersonDetailProps = {
+    open: boolean
+    handleClose: () => void
+    title: string
+    text: {
+        section1: []
+        section2: []
+    }
+}
+const PersonDetail = ({ open, handleClose, title, text }: PersonDetailProps) => {
     return (
         <StyledDialog onClose={handleClose} open={open} disableScrollLock>
-            <DialogTitle onClose={handleClose}>
+            <DialogTitle>
                 <Typography variant="h6">{title}</Typography>
                 <IconButton className={classes.closeButton} onClick={handleClose} color="primary" size="large">
                     <CloseIcon />
@@ -55,13 +63,6 @@ const PersonDetail = ({ open, handleClose, title, text }) => {
             </DialogContent>
         </StyledDialog>
     )
-}
-
-PersonDetail.propTypes = {
-    open: PropTypes.bool,
-    handleClose: PropTypes.func,
-    title: PropTypes.string,
-    text: PropTypes.object,
 }
 
 export default PersonDetail

@@ -2,21 +2,20 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 import federation from '@originjs/vite-plugin-federation'
 import path from 'node:path'
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
+
 export default ({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
     return defineConfig({
         plugins: [
             react(),
+            TanStackRouterVite(),
             federation({
                 name: 'app',
                 filename: 'app.js',
                 remotes: {
                     'reservation-app': {
-                        external: `${
-                            process.env.NODE_ENV === 'production'
-                                ? process.env.VITE_RESERVATION_APP_URL
-                                : process.env.VITE_RESERVATION_APP_URL_LOCAL
-                        }/assets/remoteEntry.js`,
+                        external: `${process.env.VITE_RESERVATION_APP_URL}/assets/remoteEntry.js`,
                         from: 'vite',
                         externalType: 'url',
                     },
@@ -24,7 +23,7 @@ export default ({ mode }) => {
                 exposes: {
                     './theme': './src/theme.js',
                 },
-                shared: ['react', 'react-dom', 'react-router-dom'],
+                shared: ['react', 'react-dom', '@tanstack/react-router'],
             }),
         ],
         resolve: {

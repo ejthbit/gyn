@@ -1,11 +1,10 @@
-import TransparentLogo from '@components/Logo/TransparentLogo'
-import { routes } from '@components/Navbar/Navbar'
+import { TransparentLogo, routes } from '../'
 import { Box, Grid, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
+import { Link } from '@tanstack/react-router'
 import { equals } from 'ramda'
 import React from 'react'
-import { HashLink } from 'react-router-hash-link'
+import { scrollElementIntoView } from '../../utils'
 
 const PREFIX = 'Footer'
 
@@ -19,7 +18,7 @@ const classes = {
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
     [`&.${classes.root}`]: {
-        background: '#103c3a',
+        background: theme.palette.primary.main,
         color: 'white',
         paddingLeft: theme.spacing(6),
         paddingRight: theme.spacing(6),
@@ -100,9 +99,9 @@ const Footer = () => {
                             equals(typeof text, 'string') && (
                                 <Grid key={link} item className={classes.menuItemContainer}>
                                     <Typography variant="body2" className={classes.menuItem}>
-                                        <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
+                                        <Link hash={link} onScroll={(e) => scrollElementIntoView(e, 'smooth')}>
                                             {text}
-                                        </HashLink>
+                                        </Link>
                                     </Typography>
                                 </Grid>
                             )

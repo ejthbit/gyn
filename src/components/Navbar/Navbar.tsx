@@ -43,7 +43,7 @@ const Root = styled('div')(({ theme }) => ({
         },
         '& svg': { paddingTop: theme.spacing(0.5), height: 27 },
     },
-    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
+    [`& .${classes.offSet}`]: { minHeight: theme.spacing(10) },
 }))
 
 export const routes = [

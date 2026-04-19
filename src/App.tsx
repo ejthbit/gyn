@@ -1,8 +1,8 @@
-import { AdministrationPage, Login, ProtectedRoute } from '@ejthbit/reservation-app'
-import { Box, CircularProgress } from '@mui/material'
-import React, { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
 import Navbar from '@components/Navbar/Navbar'
+import { AdministrationPage, AnnouncementsList, Login, ProtectedRoute } from '@ejthbit/reservation-app'
+import { Box, CircularProgress } from '@mui/material'
+import { lazy, Suspense } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import routingPaths from './routingPaths'
 
 const LandingPage = lazy(() => import('./pages/LandingPage/LandingPage'))
@@ -17,6 +17,7 @@ const App = () => (
         }
     >
         <Navbar />
+        {!location.pathname.startsWith(routingPaths.admin) ? <AnnouncementsList /> : null}
         <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path={routingPaths.reservation} element={<ReservationPage />} />

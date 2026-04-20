@@ -22,6 +22,18 @@ export default defineConfig({
             },
         },
     },
+    build: {
+        emptyOutDir: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-router-hash-link'],
+                    'vendor-mui': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+                    'vendor-misc': ['axios', 'date-fns', 'ramda', 'react-hook-form', '@hookform/resolvers', 'yup'],
+                },
+            },
+        },
+    },
     resolve: {
         alias: {
             '@components': resolve(__dirname, 'src/components'),

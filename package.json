@@ -5,7 +5,8 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "reinstall": "rm -rf node_modules && pnpm install"
     },
     "dependencies": {
         "@ejthbit/reservation-app": "file:../reservation-app",

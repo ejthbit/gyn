@@ -8,6 +8,7 @@ import {
 } from '@assets/SvgIcons'
 import LandingSection from '@components/LandingSection/LandingSection'
 import SectionHeading from '@components/LandingSection/SectionHeading'
+import Reveal from '@components/Reveal/Reveal'
 import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React from 'react'
@@ -78,8 +79,10 @@ const Services = () => (
             </p>
         </SectionHeading>
         <Box className={classes.grid}>
-            {services.map(({ icon, label, description }) => (
-                <Service key={label} icon={icon} label={label} description={description} />
+            {services.map(({ icon, label, description }, index) => (
+                <Reveal key={label} delay={(index % 3) * 100}>
+                    <Service icon={icon} label={label} description={description} />
+                </Reveal>
             ))}
         </Box>
     </Root>

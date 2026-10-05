@@ -2,7 +2,7 @@ import TransparentLogo from '@components/Logo/TransparentLogo'
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
 import { AppBar, Box, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
-import { lighten, styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import NavRouteLink from './NavRouteLink'
@@ -13,7 +13,8 @@ type MobileNavbarProps = {
     routes: Route[]
 }
 
-export const MOBILE_NAVBAR_HEIGHT = 96
+// Fixed toolbar height; the spacer below the fixed AppBar and the hero's min-height both use it, so they can't drift apart.
+export const MOBILE_NAVBAR_HEIGHT = 76
 
 const PREFIX = 'MobileNavbar'
 const classes = {
@@ -35,15 +36,12 @@ const Root = styled('div')(({ theme }) => ({
     },
     [`& .${classes.root}`]: { boxShadow: 'none', backgroundColor: 'transparent' },
     [`& .${classes.toolbar}`]: {
-        // Same tint as the landing hero.
-        background: lighten(theme.palette.primary.main, 0.94),
+        background: '#E5EFEF',
         paddingTop: theme.spacing(2),
-    },
-    // Spacer is taller than the toolbar; tint it so no white strip shows above the hero.
-    [`& .${classes.offSet}`]: {
+        height: MOBILE_NAVBAR_HEIGHT,
         minHeight: MOBILE_NAVBAR_HEIGHT,
-        background: lighten(theme.palette.primary.main, 0.94),
     },
+    [`& .${classes.offSet}`]: { minHeight: MOBILE_NAVBAR_HEIGHT },
 }))
 
 const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({

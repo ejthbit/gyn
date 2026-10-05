@@ -1,4 +1,5 @@
 import SectionHeading from '@components/LandingSection/SectionHeading'
+import Reveal from '@components/Reveal/Reveal'
 import {
     AccessTime as AccessTimeIcon,
     Email as EmailIcon,
@@ -55,6 +56,7 @@ const Root = styled('section')(({ theme }) => {
             [theme.breakpoints.down('md')]: { gridTemplateColumns: '1fr' },
         },
         [`& .${classes.card}`]: {
+            height: '100%',
             padding: theme.spacing(5),
             borderRadius: theme.spacing(3),
             backgroundColor: theme.palette.common.white,
@@ -106,44 +108,50 @@ const Contacts = () => (
         <Box className={classes.inner}>
             <SectionHeading title="Kontakt" />
             <Box className={classes.cards}>
-                {AMBULANCES.map(({ name, contact, openingHours, address, location }) => (
-                    <Box component="article" key={name} className={classes.card}>
-                        <Typography component="h3" sx={{ fontWeight: 900, fontSize: '1.75rem', mb: 3 }}>
-                            {name}
-                        </Typography>
-                        <ContactRow icon={<LocationOnIcon />} label="Adresa">
-                            <Typography>{address}</Typography>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                endIcon={<MapIcon />}
-                                onClick={() => window.open(getGoogleMapsUrl(location))}
-                                sx={{ mt: 1.5, borderRadius: 999, textTransform: 'none', px: 2 }}
-                            >
-                                Navigovat
-                            </Button>
-                        </ContactRow>
-                        <ContactRow icon={<AccessTimeIcon />} label="Ordinační hodiny">
-                            <Box component="dl" className={classes.hours}>
-                                {openingHours.map(({ day, hours }) => (
-                                    <React.Fragment key={day}>
-                                        <dt>{day}</dt>
-                                        <dd>{hours}</dd>
-                                    </React.Fragment>
-                                ))}
-                            </Box>
-                        </ContactRow>
-                        <ContactRow icon={<PhoneIcon />} label="Telefon">
-                            <Link href={`tel:+420${contact.phone.replace(/\s/g, '')}`} underline="hover">
-                                {contact.phone}
-                            </Link>
-                        </ContactRow>
-                        <ContactRow icon={<EmailIcon />} label="E-mail">
-                            <Link href={`mailto:${contact.email}`} underline="hover" sx={{ wordBreak: 'break-all' }}>
-                                {contact.email}
-                            </Link>
-                        </ContactRow>
-                    </Box>
+                {AMBULANCES.map(({ name, contact, openingHours, address, location }, index) => (
+                    <Reveal key={name} delay={index * 100}>
+                        <Box component="article" className={classes.card}>
+                            <Typography component="h3" sx={{ fontWeight: 900, fontSize: '1.75rem', mb: 3 }}>
+                                {name}
+                            </Typography>
+                            <ContactRow icon={<LocationOnIcon />} label="Adresa">
+                                <Typography>{address}</Typography>
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    endIcon={<MapIcon />}
+                                    onClick={() => window.open(getGoogleMapsUrl(location))}
+                                    sx={{ mt: 1.5, borderRadius: 999, textTransform: 'none', px: 2 }}
+                                >
+                                    Navigovat
+                                </Button>
+                            </ContactRow>
+                            <ContactRow icon={<AccessTimeIcon />} label="Ordinační hodiny">
+                                <Box component="dl" className={classes.hours}>
+                                    {openingHours.map(({ day, hours }) => (
+                                        <React.Fragment key={day}>
+                                            <dt>{day}</dt>
+                                            <dd>{hours}</dd>
+                                        </React.Fragment>
+                                    ))}
+                                </Box>
+                            </ContactRow>
+                            <ContactRow icon={<PhoneIcon />} label="Telefon">
+                                <Link href={`tel:+420${contact.phone.replace(/\s/g, '')}`} underline="hover">
+                                    {contact.phone}
+                                </Link>
+                            </ContactRow>
+                            <ContactRow icon={<EmailIcon />} label="E-mail">
+                                <Link
+                                    href={`mailto:${contact.email}`}
+                                    underline="hover"
+                                    sx={{ wordBreak: 'break-all' }}
+                                >
+                                    {contact.email}
+                                </Link>
+                            </ContactRow>
+                        </Box>
+                    </Reveal>
                 ))}
             </Box>
         </Box>

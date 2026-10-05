@@ -1,5 +1,6 @@
 import LandingSection from '@components/LandingSection/LandingSection'
 import SectionHeading from '@components/LandingSection/SectionHeading'
+import Reveal from '@components/Reveal/Reveal'
 import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React from 'react'
@@ -36,8 +37,10 @@ const References = () => (
     <Root>
         <SectionHeading title="Naši spokojení pacienti" />
         <Box className={classes.grid}>
-            {references.map(({ text, author }) => (
-                <Reference key={author} text={text} author={author} />
+            {references.map(({ text, author }, index) => (
+                <Reveal key={author} delay={index * 100}>
+                    <Reference text={text} author={author} />
+                </Reveal>
             ))}
         </Box>
     </Root>

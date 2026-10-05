@@ -4,13 +4,14 @@ import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import MedveckaAvif from '../../assets/OurTeam/Img/medvecka.avif'
 import MedveckaWebp from '../../assets/OurTeam/Img/medvecka.webp'
-import UnknownMaleAvif from '../../assets/OurTeam/Img/unkown-male-doctor.avif'
-import UnknownMaleWebp from '../../assets/OurTeam/Img/unkown-male-doctor.webp'
+import JaroslavVanekAvif from '../../assets/OurTeam/Img/jaroslav-vanek.avif'
+import JaroslavVanekWebp from '../../assets/OurTeam/Img/jaroslav-vanek.webp'
 import VanekAvif from '../../assets/OurTeam/Img/vanek.avif'
 import VanekWebp from '../../assets/OurTeam/Img/vanek.webp'
 import VankovaAvif from '../../assets/OurTeam/Img/vankova.avif'
 import VankovaWebp from '../../assets/OurTeam/Img/vankova.webp'
 import { medveckaText, vanekText, vankovaText } from '../../assets/OurTeam/Text/vanek'
+import Reveal from '@components/Reveal/Reveal'
 import Person from './Person'
 
 const PREFIX = 'OurTeam'
@@ -48,7 +49,7 @@ const doctors = [
     {
         fullName: 'MUDr. Jaroslav Vaněk',
         specialization: 'Gynekologie a porodnictví',
-        image: { avif: UnknownMaleAvif, webp: UnknownMaleWebp },
+        image: { avif: JaroslavVanekAvif, webp: JaroslavVanekWebp },
     },
 ]
 
@@ -69,8 +70,10 @@ const OurTeam = () => (
             Lékaři
         </Typography>
         <Box className={classes.grid}>
-            {doctors.map((doctor) => (
-                <Person key={doctor.fullName} {...doctor} />
+            {doctors.map((doctor, index) => (
+                <Reveal key={doctor.fullName} delay={(index % 4) * 100}>
+                    <Person {...doctor} />
+                </Reveal>
             ))}
         </Box>
     </Root>

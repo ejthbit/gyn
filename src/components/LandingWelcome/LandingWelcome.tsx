@@ -1,6 +1,7 @@
 import { NAVBAR_HEIGHT } from '@components/Navbar/Navbar'
 import { MOBILE_NAVBAR_HEIGHT } from '@components/Navbar/MobileNavbar'
 import { useReservationDialog } from '@components/Reservation/ReservationProvider'
+import { keyframes } from '@emotion/react'
 import { Box, Button, Stack, Typography } from '@mui/material'
 import { alpha, lighten, styled } from '@mui/material/styles'
 import scrollElementIntoView from '@utilities/scrollElementIntoView'
@@ -21,7 +22,42 @@ const classes = {
     subtitle: `${PREFIX}-subtitle`,
     pill: `${PREFIX}-pill`,
     secondaryPill: `${PREFIX}-secondaryPill`,
+    bottomLinks: `${PREFIX}-bottomLinks`,
+    cta: `${PREFIX}-cta`,
 }
+
+// Ambient motion uses transform/opacity only (composited, no layout shift) and every loop starts
+// from the element's resting position, so nothing in the first screen paints later because of it.
+const drift = keyframes`
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(18px, -22px) scale(1.06); }
+`
+const breathe = keyframes`
+    from { transform: translate(-50%, -50%) scale(1); }
+    to { transform: translate(-50%, -50%) scale(1.05); }
+`
+const float = keyframes`
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+`
+const fadeUp = keyframes`
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+`
+// Headline/subtitle may be the LCP element on some screens: they slide but never start transparent,
+// so they are painted (and counted for LCP) in the very first frame.
+const slideUp = keyframes`
+    from { transform: translateY(20px); }
+    to { transform: none; }
+`
+const ctaIn = keyframes`
+    from { opacity: 0; transform: translateY(12px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+`
+const ctaPulse = keyframes`
+    0% { box-shadow: 0 0 0 0 rgba(31, 118, 114, 0.45); }
+    70%, 100% { box-shadow: 0 0 0 14px rgba(31, 118, 114, 0); }
+`
 
 const Root = styled('section')(({ theme }) => {
     const primary = theme.palette.primary.main
@@ -47,6 +83,9 @@ const Root = styled('section')(({ theme }) => {
             position: 'absolute',
             borderRadius: '50%',
             pointerEvents: 'none',
+            animation: `${drift} 18s ease-in-out infinite alternate`,
+            '&:nth-of-type(2)': { animationDuration: '22s', animationDelay: '-6s' },
+            '&:nth-of-type(3)': { animationDuration: '15s', animationDelay: '-3s' },
         },
         [`& .${classes.content}`]: {
             position: 'relative',
@@ -67,6 +106,8 @@ const Root = styled('section')(({ theme }) => {
             '& img': {
                 position: 'relative',
                 display: 'block',
+                // LCP element: it floats from its final position and is never hidden, so LCP isn't delayed.
+                animation: `${float} 6s ease-in-out infinite alternate`,
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
@@ -85,6 +126,7 @@ const Root = styled('section')(({ theme }) => {
             width: '92%',
             aspectRatio: '1',
             transform: 'translate(-50%, -50%)',
+            animation: `${breathe} 8s ease-in-out infinite alternate`,
             borderRadius: '50%',
             backgroundColor: alpha(primary, 0.08),
         },
@@ -100,6 +142,7 @@ const Root = styled('section')(({ theme }) => {
             textWrap: 'balance',
             textTransform: 'uppercase',
             color: theme.palette.text.primary,
+            animation: `${slideUp} 700ms cubic-bezier(0.22, 1, 0.36, 1) both`,
         },
         [`& .${classes.accent}`]: { display: 'block', color: primary },
         [`& .${classes.subtitle}`]: {
@@ -107,8 +150,23 @@ const Root = styled('section')(({ theme }) => {
             fontSize: 'clamp(1.1rem, 1.6vw, 1.5rem)',
             color: theme.palette.text.secondary,
             [theme.breakpoints.down('md')]: { marginTop: theme.spacing(1.5) },
+            animation: `${slideUp} 700ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both`,
         },
         [`& .${classes.pill}`]: { borderRadius: 999, textTransform: 'none' },
+        // Main call to action isn't the LCP element: short entrance, then a single soft pulse to draw the eye.
+        [`& .${classes.cta}`]: {
+            animation: `${ctaIn} 600ms 250ms cubic-bezier(0.22, 1, 0.36, 1) both, ${ctaPulse} 1.6s 1.2s ease-out 2`,
+            transition: theme.transitions.create(['transform', 'box-shadow']),
+            '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 10px 24px ${alpha(primary, 0.35)}` },
+            '&:active': { transform: 'none' },
+        },
+        // Secondary links aren't the LCP element, so a short entrance is safe here.
+        [`& .${classes.bottomLinks}`]: { animation: `${fadeUp} 700ms 300ms cubic-bezier(0.22, 1, 0.36, 1) both` },
+        '@media (prefers-reduced-motion: reduce)': {
+            [`& .${classes.circle}, & .${classes.illustration} img, & .${classes.illustrationBackdrop}, & .${classes.bottomLinks}, & .${classes.headline}, & .${classes.subtitle}, & .${classes.cta}`]:
+                { animation: 'none' },
+            [`& .${classes.cta}`]: { transition: 'none', '&:hover': { transform: 'none' } },
+        },
         [`& .${classes.secondaryPill}`]: {
             padding: theme.spacing(1, 4),
             minWidth: 240,
@@ -176,7 +234,7 @@ const LandingWelcome = () => {
                     </Typography>
                     <Typography className={classes.subtitle}>Zarezervujte si svůj termín již dnes.</Typography>
                     <Button
-                        className={classes.pill}
+                        className={`${classes.pill} ${classes.cta}`}
                         variant="contained"
                         size="large"
                         onClick={openReservation}
@@ -187,6 +245,7 @@ const LandingWelcome = () => {
                 </Box>
             </Box>
             <Stack
+                className={classes.bottomLinks}
                 direction="row"
                 spacing={{ xs: 1.5, sm: 6 }}
                 justifyContent="center"

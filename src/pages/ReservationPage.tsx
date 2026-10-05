@@ -1,17 +1,18 @@
-import { ReservationDialog } from '@ejthbit/reservation-app'
-import React, { useState } from 'react'
+import { useReservationDialog } from '@components/Reservation/ReservationProvider'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// Direct visits to /rezervace (bookmarks, external links) open the reservation dialog over the landing page.
 const ReservationPage = () => {
     const navigate = useNavigate()
-    const [open, setOpen] = useState(true)
+    const { openReservation } = useReservationDialog()
 
-    const handleClose = () => {
-        setOpen(false)
-        navigate('/')
-    }
+    useEffect(() => {
+        openReservation()
+        navigate('/', { replace: true })
+    }, [])
 
-    return <ReservationDialog isOpen={open} onClose={handleClose} />
+    return null
 }
 
 export default ReservationPage

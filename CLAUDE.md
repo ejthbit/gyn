@@ -30,6 +30,7 @@ The app uses dotenv loaded via `webpack.common.js`. You need a `.env` file in th
 - `API_URL` — backend API base URL for development
 - `API_PROD_URL` — backend API base URL for production
 - `PROD_WEB_BASE_CONTEXT_PATH` — router basename and webpack `publicPath` in production
+- `VITE_GA_MEASUREMENT_ID` — optional Google Analytics 4 ID (`G-…`); gtag.js loads only after the visitor accepts the cookie banner (`src/components/CookieConsent`, `src/utilities/googleAnalytics.ts`). Unset → no analytics.
 
 ## Architecture
 
@@ -73,7 +74,7 @@ A custom middleware (`src/store/middlewares/checkTokenExpiration.js`) automatica
 
 ### Theme
 
-MUI theme is defined in `src/gynBookingTheme.js`. Primary color is `#1f7672` (teal). Font is Nunito (loaded externally).
+MUI theme is defined in `src/gynBookingTheme.js`. Primary color is `#1f7672` (teal). Font is Nunito, self-hosted via `@fontsource/nunito` (imported in `src/main.tsx`; no Google Fonts requests).
 
 ### API Error Translations
 

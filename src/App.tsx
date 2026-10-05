@@ -1,5 +1,6 @@
+import AnnouncementsOverlay from '@components/Announcements/AnnouncementsOverlay'
 import Navbar from '@components/Navbar/Navbar'
-import { AdministrationPage, AnnouncementsList, Login, ProtectedRoute } from '@ejthbit/reservation-app'
+import { AdministrationPage, Login, ProtectedRoute } from '@ejthbit/reservation-app'
 import { Box, CircularProgress } from '@mui/material'
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
@@ -17,7 +18,7 @@ const App = () => (
         }
     >
         <Navbar />
-        {!location.pathname.startsWith(routingPaths.admin) ? <AnnouncementsList /> : null}
+        {!location.pathname.startsWith(routingPaths.admin) ? <AnnouncementsOverlay /> : null}
         <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path={routingPaths.reservation} element={<ReservationPage />} />

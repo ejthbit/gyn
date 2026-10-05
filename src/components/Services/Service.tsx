@@ -1,5 +1,5 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, Typography } from '@mui/material'
+import { alpha, lighten, styled } from '@mui/material/styles'
 import React, { ReactElement } from 'react'
 
 type ServiceProps = {
@@ -12,52 +12,45 @@ const PREFIX = 'Service'
 const classes = {
     root: `${PREFIX}-root`,
     icon: `${PREFIX}-icon`,
-    label: `${PREFIX}-label`,
 }
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const Root = styled('article')(({ theme }) => ({
     [`&.${classes.root}`]: {
-        color: '#000',
-        borderRadius: 6,
+        height: '100%',
+        padding: theme.spacing(4),
+        borderRadius: theme.spacing(3),
+        backgroundColor: lighten(theme.palette.primary.main, 0.94),
         wordBreak: 'break-word',
-        backgroundClip: 'border-box',
-        boxShadow: 'none',
-        border: 'none',
-        background: 'transparent',
-        '& .MuiTypography-h5': { marginBottom: theme.spacing(1.5) },
-        '& .MuiTypography-body2': { color: '#8f8f8f' },
+        transition: theme.transitions.create(['transform', 'box-shadow']),
+        '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: `0 16px 32px ${alpha(theme.palette.primary.main, 0.12)}`,
+        },
+        [theme.breakpoints.down('sm')]: { padding: theme.spacing(3) },
     },
     [`& .${classes.icon}`]: {
-        padding: theme.spacing(1),
-        '& svg': {
-            padding: 6,
-            width: 65,
-            height: 65,
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderRadius: 6,
-        },
+        display: 'grid',
+        placeItems: 'center',
+        width: 72,
+        height: 72,
+        marginBottom: theme.spacing(2.5),
+        borderRadius: '50%',
+        backgroundColor: theme.palette.common.white,
+        boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.12)}`,
+        '& svg': { width: 44, height: 44 },
     },
-    [`& .${classes.label}`]: { paddingTop: theme.spacing(0.5), textAlign: 'center' },
 }))
 
 const Service = ({ icon, label, description }: ServiceProps) => (
-    <StyledCard className={classes.root}>
-        <CardContent>
-            <Grid container direction="column" alignItems="center" justifyContent="center">
-                <Grid item xs={12} className={classes.icon}>
-                    {icon}
-                </Grid>
-                <Grid item xs={12} className={classes.label}>
-                    <Typography variant="h5">{label}</Typography>
-                </Grid>
-                <Grid item xs={10}>
-                    <Typography variant="body2" component="p" align="center">
-                        {description}
-                    </Typography>
-                </Grid>
-            </Grid>
-        </CardContent>
-    </StyledCard>
+    <Root className={classes.root}>
+        <Box className={classes.icon}>{icon}</Box>
+        <Typography component="h3" sx={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1.3, mb: 1 }}>
+            {label}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+            {description}
+        </Typography>
+    </Root>
 )
 
 export default Service

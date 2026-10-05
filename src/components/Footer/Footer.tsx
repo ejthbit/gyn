@@ -1,105 +1,150 @@
 import ContactForm from '@components/Contacts/ContactForm'
+import { useCookieConsent } from '@components/CookieConsent/CookieConsent'
+import CookiesInfoDialog from '@components/CookieConsent/CookiesInfoDialog'
 import TransparentLogo from '@components/Logo/TransparentLogo'
 import { routes } from '@components/Navbar/Navbar'
-import { Box, Divider, Grid, Hidden, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
-import React from 'react'
-import { HashLink } from 'react-router-hash-link'
+import NavRouteLink from '@components/Navbar/NavRouteLink'
+import { Box, Link, Typography } from '@mui/material'
+import { alpha, lighten, styled } from '@mui/material/styles'
+import React, { useState } from 'react'
+import { AMBULANCES } from '../../constants/ambulances'
 
 const PREFIX = 'Footer'
 const classes = {
     root: `${PREFIX}-root`,
-    menuItemContainer: `${PREFIX}-menuItemContainer`,
-    menuItem: `${PREFIX}-menuItem`,
-    logoContainer: `${PREFIX}-logoContainer`,
-    copyright: `${PREFIX}-copyright`,
+    inner: `${PREFIX}-inner`,
+    columns: `${PREFIX}-columns`,
+    logo: `${PREFIX}-logo`,
+    heading: `${PREFIX}-heading`,
+    links: `${PREFIX}-links`,
+    bottomBar: `${PREFIX}-bottomBar`,
 }
 
-const StyledGrid = styled(Grid)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        background: '#103c3a',
-        color: 'white',
-        paddingLeft: theme.spacing(6),
-        paddingRight: theme.spacing(6),
-        paddingTop: theme.spacing(3),
-        '& .MuiDivider-root': { backgroundColor: 'grey' },
-    },
-    [`& .${classes.menuItemContainer}`]: { marginBottom: theme.spacing(1) },
-    [`& .${classes.menuItem}`]: {
-        '& a': {
-            color: theme.palette.common.white,
-            textDecoration: 'none',
-            '&:hover': { color: '#000', borderBottom: '1px solid black' },
-        },
-        '& svg': { paddingTop: theme.spacing(0.5), height: 27 },
-    },
-    [`& .${classes.logoContainer}`]: {
-        marginTop: theme.spacing(2),
-        '& svg': { width: '60%', maxWidth: 280 },
-    },
-    [`& .${classes.copyright}`]: { textAlign: 'center' },
-}))
+const Root = styled('footer')(({ theme }) => {
+    const white = theme.palette.common.white
+    const link = {
+        color: alpha(white, 0.8),
+        textDecoration: 'none',
+        transition: theme.transitions.create('color'),
+        '&:hover': { color: white, textDecoration: 'underline' },
+    }
 
-const Footer = () => (
-    <StyledGrid className={classes.root} container spacing={2} justifyContent="center">
-        <Grid item container xs={12} spacing={2} alignContent="center">
-            <Grid item xs={12} md={3}>
-                <Typography variant="body1" color="primary">
-                    MUDr. Miroslav Vaněk
-                    <br />
-                    Gynekologická ambulance s.r.o.
-                    <br />
-                    <br />
-                </Typography>
-                <Typography variant="body2">
-                    Pobočka Frýdek-Místek
-                    <br />
-                    tř. T. G. Masaryka 602, 738 01 Frýdek-Místek
-                    <br />
-                    +420 558 632 133
-                    <br />
-                    <br />
-                    Pobočka Šenov
-                    <br />
-                    Vráclavská 1281, 739 34 Šenov
-                    <br />
-                    +420 605 414 988
-                </Typography>
-                <Box className={classes.logoContainer}>
-                    <TransparentLogo />
-                </Box>
-            </Grid>
-            <Grid item xs={12} md={2}>
-                <Typography variant="body1" color="primary" className={classes.menuItemContainer}>
-                    Mapa webu
-                </Typography>
-                {routes.map(
-                    ({ text, link }) =>
-                        typeof text === 'string' && (
-                            <Grid key={link} item className={classes.menuItemContainer}>
-                                <Typography variant="body2" className={classes.menuItem}>
-                                    <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
-                                        {text}
-                                    </HashLink>
+    return {
+        [`&.${classes.root}`]: {
+            backgroundColor: '#103c3a',
+            color: alpha(white, 0.8),
+            padding: theme.spacing(10, '5%', 4),
+            [theme.breakpoints.down('md')]: { padding: theme.spacing(6, 3, 3) },
+        },
+        [`& .${classes.inner}`]: { maxWidth: 1200, margin: '0 auto' },
+        [`& .${classes.columns}`]: {
+            display: 'grid',
+            gridTemplateColumns: '4fr 2fr 6fr',
+            gap: theme.spacing(6),
+            alignItems: 'start',
+            [theme.breakpoints.down('md')]: { gridTemplateColumns: '1fr 1fr', gap: theme.spacing(5) },
+            [theme.breakpoints.down('sm')]: { gridTemplateColumns: '1fr' },
+        },
+        [`& .${classes.logo}`]: {
+            display: 'block',
+            width: 220,
+            marginBottom: theme.spacing(3),
+            '& svg': { width: '100%' },
+        },
+        [`& .${classes.heading}`]: {
+            marginBottom: theme.spacing(1.5),
+            fontWeight: 700,
+            fontSize: '0.8rem',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: lighten(theme.palette.primary.main, 0.55),
+        },
+        [`& .${classes.links}`]: {
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+            display: 'grid',
+            gap: theme.spacing(1.25),
+            '& a': link,
+        },
+        // Contact form spans the full width once the columns wrap.
+        [`& .${classes.columns} > :last-child`]: {
+            [theme.breakpoints.down('md')]: { gridColumn: '1 / -1' },
+        },
+        [`& .${classes.bottomBar}`]: {
+            marginTop: theme.spacing(8),
+            paddingTop: theme.spacing(3),
+            borderTop: `1px solid ${alpha(white, 0.12)}`,
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: theme.spacing(2, 3),
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            '& .MuiLink-root': link,
+        },
+    }
+})
+
+const Footer = () => {
+    const [isCookiesInfoOpen, setIsCookiesInfoOpen] = useState(false)
+    const { openCookieSettings } = useCookieConsent()
+
+    return (
+        <Root className={classes.root}>
+            <Box className={classes.inner}>
+                <Box className={classes.columns}>
+                    <Box>
+                        <Box className={classes.logo}>
+                            <TransparentLogo />
+                        </Box>
+                        <Typography sx={{ color: 'common.white', fontWeight: 700 }}>MUDr. Miroslav Vaněk</Typography>
+                        <Typography variant="body2" sx={{ mb: 3 }}>
+                            Gynekologická ambulance s.r.o.
+                        </Typography>
+                        {AMBULANCES.map(({ name, address, contact }) => (
+                            <Box key={name} sx={{ mb: 2 }}>
+                                <Typography variant="body2" sx={{ color: 'common.white', fontWeight: 700 }}>
+                                    Pobočka {name}
                                 </Typography>
-                            </Grid>
-                        ),
-                )}
-            </Grid>
-            <Hidden mdDown>
-                <Divider variant="middle" orientation="vertical" />
-            </Hidden>
-            <Grid item xs={12} md={6}>
-                <ContactForm />
-            </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.copyright}>
-            <Typography variant="caption">
-                {`Copyright © ${new Date().getFullYear()} ejthbit. All rights reserved.`}
-            </Typography>
-        </Grid>
-    </StyledGrid>
-)
+                                <Typography variant="body2">{address}</Typography>
+                                <Typography variant="body2" className={classes.links} sx={{ mt: 0.5 }}>
+                                    <a href={`tel:+420${contact.phone.replace(/\s/g, '')}`}>+420 {contact.phone}</a>
+                                </Typography>
+                            </Box>
+                        ))}
+                    </Box>
+                    <Box component="nav" aria-label="Mapa webu">
+                        <Typography className={classes.heading}>Mapa webu</Typography>
+                        <Box component="ul" className={classes.links}>
+                            {routes.map(
+                                ({ text, link }) =>
+                                    typeof text === 'string' && (
+                                        <Typography key={link} component="li" variant="body2">
+                                            <NavRouteLink link={link}>{text}</NavRouteLink>
+                                        </Typography>
+                                    )
+                            )}
+                        </Box>
+                    </Box>
+                    <ContactForm onShowPrivacyInfo={() => setIsCookiesInfoOpen(true)} />
+                </Box>
+                <Box className={classes.bottomBar}>
+                    <Typography variant="caption">
+                        {`Copyright © ${new Date().getFullYear()} ejthbit. All rights reserved.`}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 3 }}>
+                        <Link component="button" variant="body2" onClick={() => setIsCookiesInfoOpen(true)}>
+                            GDPR a cookies
+                        </Link>
+                        <Link component="button" variant="body2" onClick={openCookieSettings}>
+                            Nastavení cookies
+                        </Link>
+                    </Box>
+                </Box>
+            </Box>
+            <CookiesInfoDialog open={isCookiesInfoOpen} handleClose={() => setIsCookiesInfoOpen(false)} />
+        </Root>
+    )
+}
 
 export default Footer

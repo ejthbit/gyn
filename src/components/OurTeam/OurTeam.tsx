@@ -1,4 +1,6 @@
-import { Fade, Grid, Typography } from '@mui/material'
+import LandingSection from '@components/LandingSection/LandingSection'
+import SectionHeading from '@components/LandingSection/SectionHeading'
+import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
 import UnknownMale from '../../assets/OurTeam/Img/unkown-male-doctor.png'
@@ -8,28 +10,15 @@ import { medveckaText, vanekText, vankovaText } from '../../assets/OurTeam/Text/
 import Person from './Person'
 
 const PREFIX = 'OurTeam'
-const classes = {
-    root: `${PREFIX}-root`,
-    personSectionTypo: `${PREFIX}-personSectionTypo`,
-}
+const classes = { grid: `${PREFIX}-grid` }
 
-const StyledGrid = styled(Grid)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        paddingLeft: '10%',
-        paddingRight: '10%',
-        paddingBottom: '10%',
-        '& .MuiTypography-h3': {
-            marginBottom: theme.spacing(2),
-            fontWeight: 'bold',
-            textAlign: 'center',
-            [theme.breakpoints.down('sm')]: { textAlign: 'center' },
-        },
-        '& .MuiTypography-body1': { color: '#8f8f8f', marginBottom: theme.spacing(2) },
-    },
-    [`& .${classes.personSectionTypo}`]: {
-        margin: 'auto',
-        marginBottom: '20px',
-        marginTop: '20px',
+const Root = styled(LandingSection)(({ theme }) => ({
+    [`& .${classes.grid}`]: {
+        display: 'grid',
+        gap: theme.spacing(3),
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        [theme.breakpoints.down('lg')]: { gridTemplateColumns: 'repeat(2, 1fr)' },
+        [theme.breakpoints.down('sm')]: { gridTemplateColumns: '1fr' },
     },
 }))
 
@@ -46,31 +35,27 @@ const doctors = [
 ]
 
 const OurTeam = () => (
-    <StyledGrid className={classes.root} container spacing={2} id="personnel">
-        <Grid item xs={12}>
-            <Typography variant="h3">Náš tým</Typography>
-        </Grid>
-        <Grid item xs={12}>
-            <Typography variant="body1" component="p" align="center">
+    <Root id="personnel">
+        <SectionHeading title="Náš tým">
+            <p>
                 Naši vysoce kvalifikovaní lékaři a sestry se věnují ženám všech věkových kategorii při zvládání různých
                 stavů, problémů a poruch, ale také při udržování plného zdraví.
-            </Typography>
-        </Grid>
-        <Grid item xs={12}>
-            <Typography variant="h5" className={classes.personSectionTypo}>
-                Lékaři
-            </Typography>
-        </Grid>
-        <Grid container justifyContent="center" spacing={8}>
-            {doctors.map((doctor, index) => (
-                <Fade key={doctor.fullName} in timeout={1000 * (index + 1)}>
-                    <Grid item md={3}>
-                        <Person {...doctor} />
-                    </Grid>
-                </Fade>
+            </p>
+        </SectionHeading>
+        <Typography
+            component="h3"
+            variant="overline"
+            color="primary"
+            sx={{ display: 'block', textAlign: 'center', fontWeight: 700, fontSize: '0.9rem', mb: 2 }}
+        >
+            Lékaři
+        </Typography>
+        <Box className={classes.grid}>
+            {doctors.map((doctor) => (
+                <Person key={doctor.fullName} {...doctor} />
             ))}
-        </Grid>
-    </StyledGrid>
+        </Box>
+    </Root>
 )
 
 export default OurTeam

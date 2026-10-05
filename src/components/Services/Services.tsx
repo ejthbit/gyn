@@ -6,26 +6,23 @@ import {
     SonographyIcon,
     SpecialTreatmentIcon,
 } from '@assets/SvgIcons'
-import { Divider, Fade, Grid, Typography } from '@mui/material'
+import LandingSection from '@components/LandingSection/LandingSection'
+import SectionHeading from '@components/LandingSection/SectionHeading'
+import { Box } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import Service from './Service'
 
 const PREFIX = 'Services'
-const classes = { root: `${PREFIX}-root` }
+const classes = { grid: `${PREFIX}-grid` }
 
-const StyledGrid = styled(Grid)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        paddingLeft: '15%',
-        paddingRight: '15%',
-        paddingBottom: '10%',
-        '& .MuiTypography-h3': {
-            marginBottom: theme.spacing(2),
-            fontWeight: 'bold',
-            textAlign: 'center',
-            [theme.breakpoints.down('sm')]: { textAlign: 'center' },
-        },
-        '& .MuiTypography-body1': { color: '#8f8f8f' },
+const Root = styled(LandingSection)(({ theme }) => ({
+    [`& .${classes.grid}`]: {
+        display: 'grid',
+        gap: theme.spacing(3),
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        [theme.breakpoints.down('md')]: { gridTemplateColumns: 'repeat(2, 1fr)' },
+        [theme.breakpoints.down('sm')]: { gridTemplateColumns: '1fr' },
     },
 }))
 
@@ -68,30 +65,24 @@ const services = [
 ]
 
 const Services = () => (
-    <StyledGrid className={classes.root} container spacing={2} id="services">
-        <Grid item xs={12}>
-            <Typography variant="h3">Naše služby</Typography>
-        </Grid>
-        <Grid item xs={12}>
-            <Typography variant="body1" component="p" align="center">
-                {`Naše ambulance nabízí těhotenskou a gynekologickou péči pro ženy ve všech fázích života, od předpubertálních let po postmenopauzální období.`}
-                <br />
-                {`Svým pacientkám chceme dopřát co nejkomplexnější péči, proto nabízíme speciální služby včetně mateřské fetální medicíny, gynekologické onkologie, antikoncepčního poradenství a dalších.`}
-                <br />
-                {`Další informace o tom, jak vám můžeme pomoci, naleznete v níže uvedených službách.`}
-            </Typography>
-        </Grid>
-        {services.map(({ icon, label, description }, index) => (
-            <Fade key={label} in timeout={3000 * (index + 1)}>
-                <Grid xs={12} sm={6} item>
-                    <Service icon={icon} label={label} description={description} />
-                </Grid>
-            </Fade>
-        ))}
-        <Grid item xs={12}>
-            <Divider variant="middle" />
-        </Grid>
-    </StyledGrid>
+    <Root id="services">
+        <SectionHeading title="Naše služby">
+            <p>
+                Naše ambulance nabízí těhotenskou a gynekologickou péči pro ženy ve všech fázích života, od
+                předpubertálních let po postmenopauzální období.
+            </p>
+            <p>
+                Svým pacientkám chceme dopřát co nejkomplexnější péči, proto nabízíme speciální služby včetně mateřské
+                fetální medicíny, gynekologické onkologie, antikoncepčního poradenství a dalších. Další informace o tom,
+                jak vám můžeme pomoci, naleznete v níže uvedených službách.
+            </p>
+        </SectionHeading>
+        <Box className={classes.grid}>
+            {services.map(({ icon, label, description }) => (
+                <Service key={label} icon={icon} label={label} description={description} />
+            ))}
+        </Box>
+    </Root>
 )
 
 export default Services

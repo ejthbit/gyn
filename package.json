@@ -12,6 +12,7 @@
         "@ejthbit/reservation-app": "file:../reservation-app",
         "@emotion/react": "^11.11.0",
         "@emotion/styled": "^11.11.0",
+        "@fontsource/nunito": "^5.3.0",
         "@hookform/resolvers": "^5.2.2",
         "@mui/icons-material": "^5.14.0",
         "@mui/material": "^5.14.0",

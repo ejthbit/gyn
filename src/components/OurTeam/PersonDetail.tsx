@@ -11,10 +11,8 @@ type PersonDetailProps = {
 }
 
 const PersonDetail = ({ open, handleClose, title, text }: PersonDetailProps) => (
-    <Dialog maxWidth="sm" open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>
-            <Typography variant="h5">{title}</Typography>
-        </DialogTitle>
+    <Dialog maxWidth="sm" open={open} onClose={handleClose} fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ fontWeight: 900, fontSize: '1.5rem' }}>{title}</DialogTitle>
         <DialogContent>
             <Box mb={2}>
                 {text.section1.map((line) => (
@@ -34,7 +32,7 @@ const PersonDetail = ({ open, handleClose, title, text }: PersonDetailProps) => 
             )}
         </DialogContent>
         <DialogActions>
-            <Button variant="outlined" onClick={handleClose} color="primary">
+            <Button variant="outlined" onClick={handleClose} sx={{ borderRadius: 999, textTransform: 'none', px: 3 }}>
                 Zavřít
             </Button>
         </DialogActions>

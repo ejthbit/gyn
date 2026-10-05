@@ -1,39 +1,57 @@
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
-import { Grid, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, Typography } from '@mui/material'
+import { lighten, styled } from '@mui/material/styles'
 import React from 'react'
 
 type ReferenceProps = { text: string; author: string }
 
 const PREFIX = 'Reference'
 const classes = {
-    quoteLeft: `${PREFIX}-quoteLeft`,
-    quote: `${PREFIX}-quote`,
-    quoteRight: `${PREFIX}-quoteRight`,
-    source: `${PREFIX}-source`,
+    root: `${PREFIX}-root`,
+    quoteIcon: `${PREFIX}-quoteIcon`,
+    avatar: `${PREFIX}-avatar`,
 }
 
-const Root = styled('div')(({ theme }) => ({
-    [`& .${classes.quoteLeft}`]: { height: 42, '& svg': { fill: 'lightgrey', width: '1.1rem' } },
-    [`& .${classes.quote}`]: { paddingLeft: '1.1rem', fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.48 },
-    [`& .${classes.quoteRight}`]: { textAlign: 'end', '& svg': { fill: 'lightgrey', width: '1.1rem' } },
-    [`& .${classes.source}`]: { textAlign: 'end', fontStyle: 'italic', lineHeight: '1.3', marginTop: theme.spacing(1) },
-}))
+const Root = styled('figure')(({ theme }) => {
+    const primary = theme.palette.primary.main
+
+    return {
+        [`&.${classes.root}`]: {
+            height: '100%',
+            margin: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: theme.spacing(4),
+            borderRadius: theme.spacing(3),
+            backgroundColor: lighten(primary, 0.94),
+            [theme.breakpoints.down('sm')]: { padding: theme.spacing(3) },
+        },
+        [`& .${classes.quoteIcon}`]: { fontSize: 48, color: primary, marginLeft: theme.spacing(-1) },
+        [`& .${classes.avatar}`]: {
+            display: 'grid',
+            placeItems: 'center',
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            color: theme.palette.common.white,
+            backgroundColor: primary,
+            fontWeight: 700,
+        },
+    }
+})
 
 const Reference = ({ text, author }: ReferenceProps) => (
-    <Root>
-        <Grid item xs={12} className={classes.quoteLeft}>
-            <FormatQuoteIcon />
-        </Grid>
-        <Grid item xs={12} className={classes.quote}>
-            <Typography variant="body1">{text}</Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.quoteRight}>
-            <FormatQuoteIcon />
-        </Grid>
-        <Grid item xs={12}>
-            <Typography className={classes.source}>&mdash; {author}</Typography>
-        </Grid>
+    <Root className={classes.root}>
+        <FormatQuoteIcon className={classes.quoteIcon} aria-hidden />
+        <Typography component="blockquote" sx={{ m: 0, mt: 1, mb: 3, fontSize: '1.05rem', lineHeight: 1.6 }}>
+            {text}
+        </Typography>
+        <Box component="figcaption" sx={{ mt: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box className={classes.avatar} aria-hidden>
+                {author.charAt(0)}
+            </Box>
+            <Typography sx={{ fontWeight: 700 }}>{author}</Typography>
+        </Box>
     </Root>
 )
 

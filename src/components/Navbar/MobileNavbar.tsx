@@ -2,17 +2,18 @@ import TransparentLogo from '@components/Logo/TransparentLogo'
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material'
 import { AppBar, Box, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
-import scrollElementIntoView from '@utilities/scrollElementIntoView'
+import { lighten, styled } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { HashLink } from 'react-router-hash-link'
+import NavRouteLink from './NavRouteLink'
 
 type Route = { text: React.ReactNode; link: string }
 
 type MobileNavbarProps = {
     routes: Route[]
 }
+
+export const MOBILE_NAVBAR_HEIGHT = 96
 
 const PREFIX = 'MobileNavbar'
 const classes = {
@@ -29,12 +30,20 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${classes.logo}`]: {
         '& svg': {
             padding: theme.spacing(1),
-            '& path': { fill: `${theme.palette.common.black} !important` },
+            '& path': { fill: `${theme.palette.primary.main} !important` },
         },
     },
     [`& .${classes.root}`]: { boxShadow: 'none', backgroundColor: 'transparent' },
-    [`& .${classes.toolbar}`]: { background: '#f8f8f8', paddingTop: theme.spacing(2) },
-    [`& .${classes.offSet}`]: { minHeight: theme.spacing(12) },
+    [`& .${classes.toolbar}`]: {
+        // Same tint as the landing hero.
+        background: lighten(theme.palette.primary.main, 0.94),
+        paddingTop: theme.spacing(2),
+    },
+    // Spacer is taller than the toolbar; tint it so no white strip shows above the hero.
+    [`& .${classes.offSet}`]: {
+        minHeight: MOBILE_NAVBAR_HEIGHT,
+        background: lighten(theme.palette.primary.main, 0.94),
+    },
 }))
 
 const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
@@ -45,7 +54,7 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
             '& svg': {
                 width: '80%',
                 padding: theme.spacing(1),
-                '& path': { fill: `${theme.palette.common.black} !important` },
+                '& path': { fill: `${theme.palette.primary.main} !important` },
             },
         },
     },
@@ -53,9 +62,9 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
         padding: theme.spacing(1.5),
         '& a': {
             fontSize: 20,
-            color: theme.palette.common.black,
+            color: theme.palette.text.primary,
             textDecoration: 'none',
-            '&:hover': { color: '#000', borderBottom: '1px solid black' },
+            '&:hover': { color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}` },
         },
         '& .MuiSvgIcon-root': { height: 27, padding: theme.spacing(0.5, 0, 0, 0) },
     },
@@ -75,12 +84,9 @@ const MobileNavbar = ({ routes }: MobileNavbarProps) => {
                                 <TransparentLogo />
                             </NavLink>
                         </Grid>
-                        <Grid item container xs={3} direction="column">
-                            <IconButton onClick={handleToggleDrawer} size="large">
-                                <MenuIcon />
-                                <Box marginLeft={0.5}>
-                                    <Typography>Menu</Typography>
-                                </Box>
+                        <Grid item>
+                            <IconButton onClick={handleToggleDrawer} size="large" color="primary" aria-label="Menu">
+                                <MenuIcon fontSize="large" />
                             </IconButton>
                         </Grid>
                     </Grid>
@@ -99,9 +105,7 @@ const MobileNavbar = ({ routes }: MobileNavbarProps) => {
                         {routes.map(({ text, link }) => (
                             <Grid key={link} item onClick={handleToggleDrawer}>
                                 <Typography variant="body1" className={classes.menuItem}>
-                                    <HashLink to={link} scroll={(e) => scrollElementIntoView(e, 'smooth')}>
-                                        {text}
-                                    </HashLink>
+                                    <NavRouteLink link={link}>{text}</NavRouteLink>
                                 </Typography>
                             </Grid>
                         ))}

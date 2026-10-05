@@ -4,14 +4,19 @@ import { CampaignOutlined as CampaignIcon, Remove as MinimizeIcon } from '@mui/i
 import { Box, Button, IconButton, Typography, useMediaQuery, useScrollTrigger } from '@mui/material'
 import { styled, useTheme } from '@mui/material/styles'
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import routingPaths from '../../routingPaths'
 
 const PREFIX = 'Announcements'
 const classes = { body: `${PREFIX}-body` }
 
-// Floating bottom-left widget: announcements stay reachable while scrolling and never shift page layout.
+// Floating bottom-right widget: announcements stay reachable while scrolling and never shift page layout.
 const Root = styled('div')(({ theme }) => ({
     position: 'fixed',
-    left: theme.spacing(3),
+    right: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
     zIndex: theme.zIndex.speedDial,
     maxWidth: 380,
     transition: theme.transitions.create(['bottom', 'transform', 'opacity', 'visibility']),
@@ -36,6 +41,10 @@ const AnnouncementsOverlay = () => {
     const isExpanded = userExpanded ?? !(isMobile && bannerHeight > 0)
     // The hero fills the first screen; past ~60% of it the visitor has left the landing welcome.
     const isPastHero = useScrollTrigger({ disableHysteresis: true, threshold: Math.round(window.innerHeight * 0.6) })
+    const { pathname } = useLocation()
+
+    // Announcements are for patients; staff screens (login, administration) don't show them.
+    if (pathname.startsWith(routingPaths.admin) || pathname.startsWith(routingPaths.login)) return null
 
     return (
         <Root
@@ -48,6 +57,7 @@ const AnnouncementsOverlay = () => {
             <Box
                 sx={{
                     display: isExpanded ? 'block' : 'none',
+                    alignSelf: 'stretch',
                     borderRadius: 3,
                     overflow: 'hidden',
                     boxShadow: 8,

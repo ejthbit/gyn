@@ -5,8 +5,10 @@ import PersonDetail from './PersonDetail'
 
 type PersonText = { section1: string[]; section2?: string[] }
 
+type PersonImage = { avif: string; webp: string }
+
 type PersonProps = {
-    image?: string
+    image?: PersonImage
     fullName: string
     specialization?: string
     text?: PersonText
@@ -50,7 +52,19 @@ const Person = ({ image, fullName, specialization, text }: PersonProps) => {
 
     return (
         <Root className={classes.root}>
-            {image && <img src={image} loading="lazy" className={classes.image} alt={fullName} />}
+            {image && (
+                <picture>
+                    <source srcSet={image.avif} type="image/avif" />
+                    <img
+                        src={image.webp}
+                        width={168}
+                        height={168}
+                        loading="lazy"
+                        className={classes.image}
+                        alt={fullName}
+                    />
+                </picture>
+            )}
             <Typography component="h3" sx={{ fontWeight: 700, fontSize: '1.15rem', lineHeight: 1.3 }}>
                 {fullName}
             </Typography>

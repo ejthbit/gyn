@@ -1,0 +1,32 @@
+# llms.txt and friends contain Czech diacritics; without a charset some clients decode them as Latin-1.
+AddCharset UTF-8 .txt .xml
+RewriteEngine on
+# Old links to the former PHP site: permanent redirect to the homepage, dropping old query strings.
+RewriteRule ^index\.php$ / [R=301,L,QSD]
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Missing machine-readable files (/.well-known/*, *.json, *.txt, *.xml) must 404, not return the app's HTML;
+# crawlers and Lighthouse would otherwise treat that HTML as an invalid ai-catalog.json / llms.txt.
+RewriteCond %{REQUEST_URI} !(^/\.well-known/|\.(json|txt|xml)$)
+RewriteRule (.+) index.html?path=$1 [L,QSA]
+<IfModule mod_headers.c>
+    # Vite fingerprints every file in /assets, so a name never changes content: cache for a year.
+    <If "%{REQUEST_URI} =~ m#^/assets/#">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+    # The HTML points at the current asset names; always revalidate it so new deploys show up immediately.
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
+php_flag display_errors 0
+php_flag short_open_tag 1
+php_flag allow_url_include 0
+php_flag ignore_repeated_errors 0
+php_flag expose_php 1
+php_value allow_url_fopen 1
+php_value max_input_vars 10000
+php_value register_argc_argv 0
+php_value file_uploads 1
+php_value max_file_uploads 20

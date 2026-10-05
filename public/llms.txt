@@ -1,0 +1,11 @@
+# Vaněk Gynekologie
+
+> Gynekologická ambulance MUDr. Miroslava Vaňka (Gynekologická ambulance s.r.o.) s pobočkami ve Frýdku-Místku a Šenově. Nabízí preventivní prohlídky, péči o těhotné, poradenství, sonografii prsu, prevenci a diagnostiku nádorových onemocnění a speciální vyšetření. Termín je možné rezervovat online.
+
+## Stránky
+
+- [Úvodní stránka](https://vanek-gynekologie.cz/): přehled ambulance a objednání termínu
+- [Naše služby](https://vanek-gynekologie.cz/#services): preventivní prohlídky, péče o těhotné, poradenství, sonografie prsu, onkologická prevence, speciální vyšetření
+- [Náš tým](https://vanek-gynekologie.cz/#personnel): lékaři ambulance a jejich specializace
+- [Kontakt](https://vanek-gynekologie.cz/#contact): adresy poboček, ordinační hodiny, telefon a e-mail
+- [Online rezervace](https://vanek-gynekologie.cz/rezervace): rezervační formulář pro objednání termínu

@@ -74,7 +74,7 @@ export const routes = [
     { text: 'Personál', link: routingPaths.employees },
     { text: 'Rezervace', link: routingPaths.reservation },
     { text: 'Kontakt', link: routingPaths.contact },
-    { text: <AccountCircleOutlined />, link: routingPaths.login },
+    { text: <AccountCircleOutlined titleAccess="Přihlášení" />, link: routingPaths.login },
 ]
 
 const Navbar = () => {

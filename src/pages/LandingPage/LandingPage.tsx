@@ -8,11 +8,13 @@ import React from 'react'
 
 const LandingPage = () => (
     <>
-        <LandingWelcome />
-        <Services />
-        <OurTeam />
-        <Contacts />
-        <References />
+        <main>
+            <LandingWelcome />
+            <Services />
+            <OurTeam />
+            <Contacts />
+            <References />
+        </main>
         <Footer />
     </>
 )

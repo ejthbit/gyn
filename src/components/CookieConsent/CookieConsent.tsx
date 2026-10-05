@@ -106,7 +106,7 @@ export const CookieConsentProvider = ({ children }: PropsWithChildren) => {
                         justifyContent="space-between"
                     >
                         <Box>
-                            <Typography variant="subtitle1" color="primary">
+                            <Typography variant="subtitle1" component="p" color="primary">
                                 GDPR a cookies
                             </Typography>
                             <Typography variant="body2">

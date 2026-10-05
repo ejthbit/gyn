@@ -80,7 +80,7 @@ const MobileNavbar = ({ routes }: MobileNavbarProps) => {
                 <Toolbar className={classes.toolbar}>
                     <Grid container alignItems="center" justifyContent="space-between">
                         <Grid item xs={6}>
-                            <NavLink to="/" className={classes.logo}>
+                            <NavLink to="/" className={classes.logo} aria-label="Úvodní stránka">
                                 <TransparentLogo />
                             </NavLink>
                         </Grid>
@@ -99,7 +99,12 @@ const MobileNavbar = ({ routes }: MobileNavbarProps) => {
                         <IconButton onClick={handleToggleDrawer} size="large">
                             <CloseIcon />
                         </IconButton>
-                        <NavLink to="/" className={classes.drawerLogo} onClick={handleToggleDrawer}>
+                        <NavLink
+                            to="/"
+                            className={classes.drawerLogo}
+                            onClick={handleToggleDrawer}
+                            aria-label="Úvodní stránka"
+                        >
                             <TransparentLogo />
                         </NavLink>
                         {routes.map(({ text, link }) => (

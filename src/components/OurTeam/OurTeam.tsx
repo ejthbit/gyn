@@ -2,10 +2,14 @@ import LandingSection from '@components/LandingSection/LandingSection'
 import SectionHeading from '@components/LandingSection/SectionHeading'
 import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import Medvecka from '../../assets/OurTeam/Img/medvecka.jpg'
-import UnknownMale from '../../assets/OurTeam/Img/unkown-male-doctor.png'
-import Vanek from '../../assets/OurTeam/Img/vanek.jpg'
-import Vankova from '../../assets/OurTeam/Img/vankova.jpg'
+import MedveckaAvif from '../../assets/OurTeam/Img/medvecka.avif'
+import MedveckaWebp from '../../assets/OurTeam/Img/medvecka.webp'
+import UnknownMaleAvif from '../../assets/OurTeam/Img/unkown-male-doctor.avif'
+import UnknownMaleWebp from '../../assets/OurTeam/Img/unkown-male-doctor.webp'
+import VanekAvif from '../../assets/OurTeam/Img/vanek.avif'
+import VanekWebp from '../../assets/OurTeam/Img/vanek.webp'
+import VankovaAvif from '../../assets/OurTeam/Img/vankova.avif'
+import VankovaWebp from '../../assets/OurTeam/Img/vankova.webp'
 import { medveckaText, vanekText, vankovaText } from '../../assets/OurTeam/Text/vanek'
 import Person from './Person'
 
@@ -23,15 +27,29 @@ const Root = styled(LandingSection)(({ theme }) => ({
 }))
 
 const doctors = [
-    { fullName: 'MUDr. Miroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: Vanek, text: vanekText },
-    { fullName: 'prim. MUDr. Hana Vaňková', specialization: 'Sonografie prsou', image: Vankova, text: vankovaText },
+    {
+        fullName: 'MUDr. Miroslav Vaněk',
+        specialization: 'Gynekologie a porodnictví',
+        image: { avif: VanekAvif, webp: VanekWebp },
+        text: vanekText,
+    },
+    {
+        fullName: 'prim. MUDr. Hana Vaňková',
+        specialization: 'Sonografie prsou',
+        image: { avif: VankovaAvif, webp: VankovaWebp },
+        text: vankovaText,
+    },
     {
         fullName: 'MUDr. Jana Medvecká',
         specialization: 'Gynekologie a porodnictví',
-        image: Medvecka,
+        image: { avif: MedveckaAvif, webp: MedveckaWebp },
         text: medveckaText,
     },
-    { fullName: 'MUDr. Jaroslav Vaněk', specialization: 'Gynekologie a porodnictví', image: UnknownMale },
+    {
+        fullName: 'MUDr. Jaroslav Vaněk',
+        specialization: 'Gynekologie a porodnictví',
+        image: { avif: UnknownMaleAvif, webp: UnknownMaleWebp },
+    },
 ]
 
 const OurTeam = () => (

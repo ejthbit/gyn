@@ -120,6 +120,10 @@ const Root = styled('section')(({ theme }) => {
     }
 })
 
+// The illustration is the LCP element. React 18 doesn't map `fetchPriority` to the DOM attribute,
+// so pass the lowercase HTML attribute through a spread (unknown lowercase attributes are forwarded as-is).
+const highFetchPriority = { fetchpriority: 'high' }
+
 const LandingWelcome = () => {
     const { openReservation } = useReservationDialog()
 
@@ -160,6 +164,7 @@ const LandingWelcome = () => {
                     <Box className={classes.illustrationBackdrop} />
                     <img
                         src={LandingIllustration}
+                        {...highFetchPriority}
                         width={370}
                         height={281}
                         alt="Lékařka vysvětluje pacientce v gynekologickém křesle"
